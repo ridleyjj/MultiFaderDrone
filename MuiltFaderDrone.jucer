@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="qsusKF" name="MuiltFaderDrone" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              pluginFormats="buildAUv3,buildStandalone,buildVST3">
+  <MAINGROUP id="n0vA9i" name="MuiltFaderDrone">
+    <GROUP id="{14812914-56F5-7AF6-83E5-A09F001AB246}" name="Source">
+      <FILE id="UH8u2r" name="FontResources.cpp" compile="1" resource="0"
+            file="Source/FontResources.cpp"/>
+      <FILE id="XxbrS5" name="FontResources.h" compile="0" resource="0" file="Source/FontResources.h"/>
+      <GROUP id="{BC387E24-C95D-9341-76CB-399380B476BC}" name="LookAndFeel">
+        <GROUP id="{83DF4031-8BA6-182E-BC55-808B2A70CBD2}" name="Resources">
+          <GROUP id="{52BAC379-BE5E-468F-ED07-B80A6D1E0CC8}" name="Assets">
+            <FILE id="O2Dro1" name="WorkSans-Regular.ttf" compile="0" resource="1"
+                  file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Assets/WorkSans-Regular.ttf"/>
+            <FILE id="pIkQi3" name="WorkSans-SemiBold.ttf" compile="0" resource="1"
+                  file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Assets/WorkSans-SemiBold.ttf"/>
+          </GROUP>
+          <FILE id="upb3Ou" name="Resources.cpp" compile="1" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Resources.cpp"/>
+          <FILE id="f3Duos" name="Resources.h" compile="0" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Resources.h"/>
+        </GROUP>
+        <FILE id="o0h5iK" name="Test.cpp" compile="1" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Test.cpp"/>
+        <FILE id="FDBx74" name="Test.h" compile="0" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Test.h"/>
+        <FILE id="JGqgag" name="StyleSheet.cpp" compile="1" resource="0" file="Source/StyleSheet.cpp"/>
+        <FILE id="PPbHHg" name="StyleSheet.h" compile="0" resource="0" file="Source/StyleSheet.h"/>
+      </GROUP>
+      <FILE id="M6SNm5" name="jr_FaderPairs.h" compile="0" resource="0" file="Source/jr_FaderPairs.h"/>
+      <FILE id="UrZDOZ" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="z3TJJt" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="yepTqY" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="sFfieP" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="FOY5E3" name="jr_MultiFader.h" compile="0" resource="0" file="Source/jr_MultiFader.h"/>
+      <FILE id="BGGaDp" name="jr_Oscillators.h" compile="0" resource="0"
+            file="Source/jr_Oscillators.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="MuiltFaderDrone"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="MuiltFaderDrone"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../modules"/>
+        <MODULEPATH id="juce_core" path="../../modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../modules"/>
+        <MODULEPATH id="juce_events" path="../../modules"/>
+        <MODULEPATH id="juce_graphics" path="../../modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+</JUCERPROJECT>
