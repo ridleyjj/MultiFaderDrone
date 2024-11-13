@@ -218,3 +218,7 @@ void MuiltFaderDroneAudioProcessor::setLfoRate(float _rate) {
 void MuiltFaderDroneAudioProcessor::resetFreqs() {
     faders.reset();
 }
+
+void MuiltFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz) {
+    faders.setOscFreqRange(minHz, maxHz);
+}

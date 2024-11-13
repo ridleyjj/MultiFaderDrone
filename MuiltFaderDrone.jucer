@@ -5,11 +5,11 @@
               pluginFormats="buildAUv3,buildStandalone,buildVST3">
   <MAINGROUP id="n0vA9i" name="MuiltFaderDrone">
     <GROUP id="{14812914-56F5-7AF6-83E5-A09F001AB246}" name="Source">
-      <FILE id="UH8u2r" name="FontResources.cpp" compile="1" resource="0"
-            file="Source/FontResources.cpp"/>
-      <FILE id="XxbrS5" name="FontResources.h" compile="0" resource="0" file="Source/FontResources.h"/>
       <GROUP id="{BC387E24-C95D-9341-76CB-399380B476BC}" name="LookAndFeel">
         <GROUP id="{83DF4031-8BA6-182E-BC55-808B2A70CBD2}" name="Resources">
+          <FILE id="UH8u2r" name="FontResources.cpp" compile="1" resource="0"
+                file="Source/FontResources.cpp"/>
+          <FILE id="XxbrS5" name="FontResources.h" compile="0" resource="0" file="Source/FontResources.h"/>
           <GROUP id="{52BAC379-BE5E-468F-ED07-B80A6D1E0CC8}" name="Assets">
             <FILE id="O2Dro1" name="WorkSans-Regular.ttf" compile="0" resource="1"
                   file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Assets/WorkSans-Regular.ttf"/>
@@ -19,8 +19,6 @@
           <FILE id="upb3Ou" name="Resources.cpp" compile="1" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Resources.cpp"/>
           <FILE id="f3Duos" name="Resources.h" compile="0" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Resources.h"/>
         </GROUP>
-        <FILE id="o0h5iK" name="Test.cpp" compile="1" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Test.cpp"/>
-        <FILE id="FDBx74" name="Test.h" compile="0" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Test.h"/>
         <FILE id="JGqgag" name="StyleSheet.cpp" compile="1" resource="0" file="Source/StyleSheet.cpp"/>
         <FILE id="PPbHHg" name="StyleSheet.h" compile="0" resource="0" file="Source/StyleSheet.h"/>
       </GROUP>
@@ -32,7 +30,6 @@
       <FILE id="yepTqY" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="sFfieP" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="FOY5E3" name="jr_MultiFader.h" compile="0" resource="0" file="Source/jr_MultiFader.h"/>
       <FILE id="BGGaDp" name="jr_Oscillators.h" compile="0" resource="0"
             file="Source/jr_Oscillators.h"/>
     </GROUP>

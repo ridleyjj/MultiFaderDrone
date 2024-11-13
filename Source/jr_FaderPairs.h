@@ -104,6 +104,12 @@ public:
 		}
 	}
 
+	// TODO: no need to store min and max for each pair, instead save these in parent
+	void setOscFreqRange(float minHz, float maxHz) {
+		minOscFreq = minHz;
+		maxOscFreq = maxHz;
+	}
+
 private:
 	float getRandomLfoFrequency() {
 		return (random.nextFloat() * (maxLfoFreq - minLfoFreq)) + minLfoFreq;
@@ -139,9 +145,23 @@ private:
 		lfo.setFrequency(getRandomLfoFrequency());
 	}
 
+	void resetOsc(int index) {
+		if (index < 0 || index >= oscs.size()) {
+			return;
+		}
+		oscs.at(index).setFrequency(getRandomOscFrequency());
+	}
+
 	float processLevels() {
 		maxLevel.getNextValue();
-		return lfo.process() * avgLevel.getNextValue();
+		float lfoVal = lfo.process();
+		if (lfoVal >= 1.0f) {
+			resetOsc(1);
+		}
+		else if (lfoVal <= -1.0f) {
+			resetOsc(0);
+		}
+		return lfoVal * avgLevel.getNextValue();
 	}
 
 	SineOsc lfo;											// LFO to control mix level of faders
@@ -239,6 +259,15 @@ public:
 		}
 	}
 
+	void setOscFreqRange(float minHz, float maxHz) {
+		minHz = setAndConstrain(minHz, 120.0f, 2000.0f);
+		maxHz = setAndConstrain(maxHz, 120.0f, 2000.0f);
+		for (auto& pair : pairs)
+		{
+			pair.setOscFreqRange(minHz, maxHz);
+		}
+	}
+
 private:
 	void setGainOffset() {
 		gainOffset = (numActivePairs - 1) / 7.0f;
@@ -248,6 +277,16 @@ private:
 
 		// gain offset is now 0.0f if numActiveParis is 2, or 1.0f if numActivePairs is 14 or greater
 		gain.setTargetValue(0.6f + 0.4f * gainOffset);
+	}
+
+	float setAndConstrain(float newValue, float min, float max) {
+		if (newValue > max) {
+			return max;
+		}
+		else if (newValue < min) {
+			return min;
+		}
+		return newValue;
 	}
 
 	std::vector<FaderPair> pairs;

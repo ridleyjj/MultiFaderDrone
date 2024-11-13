@@ -11,7 +11,6 @@
 #include <JuceHeader.h>
 #include <vector>
 #include "jr_Oscillators.h"
-#include "jr_MultiFader.h"
 #include "jr_FaderPairs.h"
 
 //==============================================================================
@@ -64,6 +63,8 @@ public:
     void setLfoRate(float _rate);
 
     void resetFreqs();
+
+    void setOscFreqRange(float minHz, float maxHz);
 
     size_t getMaxOscCount() {
         return maxOscCount;

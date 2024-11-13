@@ -41,7 +41,8 @@ private:
     juce::Slider voicesSlider{ juce::Slider::SliderStyle::RotaryVerticalDrag, juce::Slider::TextBoxBelow };
     juce::Slider freqSpreadSlider{ juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow };
     juce::Slider lfoRateSlider{ juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow };
-    juce::Label voicesLabel, freqSpreadLabel, lfoRateLabel;
+    juce::Slider freqRangeSlider{ juce::Slider::SliderStyle::TwoValueVertical, juce::Slider::TextBoxBelow };
+    juce::Label voicesLabel, freqSpreadLabel, lfoRateLabel, freqRangeLabel;
 
     // buttons
 

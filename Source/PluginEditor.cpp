@@ -25,6 +25,13 @@ MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltF
     initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices", 2, 30, 2);
     initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate", 0.0, 1.0, 0.01);
     initSimpleSlider(&freqSpreadSlider, &freqSpreadLabel, "Spread", -1.0f, 1.0f, 0.01f);
+    initSimpleSlider(&freqRangeSlider, &freqRangeLabel, "Range", 80.0f, 2000.0f, 5.0f);
+    freqRangeSlider.setMinAndMaxValues(120.0f, 1200.0f, juce::dontSendNotification);
+    freqRangeSlider.textFromValueFunction = [&](double value)
+        {
+            return juce::String(freqRangeSlider.getMinValue()) + "Hz - " + juce::String(freqRangeSlider.getMaxValue()) + "Hz";
+        };
+    freqRangeSlider.updateText();
 
     freqSpreadSlider.setValue(0.0f);
 
@@ -73,7 +80,9 @@ void MuiltFaderDroneAudioProcessorEditor::resized()
 
     resetButton.setBoundsRelative(0.4f, 0.1f, 0.2f, 0.1f);
 
-    freqSpreadSlider.setBoundsRelative(0.1f, 0.1f, 0.2f, 0.8f);
+    freqRangeSlider.setBoundsRelative(0.2f, 0.1f, 0.2f, 0.8f);
+
+    freqSpreadSlider.setBoundsRelative(0.0f, 0.1f, 0.2f, 0.8f);
 
     lfoRateSlider.setBoundsRelative(0.75f, 0.1f, 0.1f, 0.8f);
 }
@@ -89,6 +98,11 @@ void MuiltFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slide
     }
     else if (slider == &lfoRateSlider) {
         audioProcessor.setLfoRate(lfoRateSlider.getValue());
+    }
+    else if (slider == &freqRangeSlider)
+    {
+        freqRangeSlider.updateText();
+        audioProcessor.setOscFreqRange(freqRangeSlider.getMinValue(), freqRangeSlider.getMaxValue());
     }
 }
 
