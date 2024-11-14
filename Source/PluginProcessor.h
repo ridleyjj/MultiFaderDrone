@@ -57,8 +57,6 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     void setOscCount(size_t _oscCount);
-
-    void setFrequencySpread(float spread);
     
     void setLfoRate(float _rate);
 

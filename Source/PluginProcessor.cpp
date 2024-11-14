@@ -207,10 +207,6 @@ void MuiltFaderDroneAudioProcessor::setOscCount(size_t _oscCount) {
     }
 }
 
-void MuiltFaderDroneAudioProcessor::setFrequencySpread(float spread) {
-    faders.setSpread(spread);
-}
-
 void MuiltFaderDroneAudioProcessor::setLfoRate(float _rate) {
     faders.setLfoRate(_rate);
 }

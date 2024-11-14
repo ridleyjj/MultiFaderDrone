@@ -9,10 +9,7 @@ class FaderPair
 public:
 	FaderPair() {};
 
-	void init(float _sampleRate, float _minOscFreq, float _maxOscFreq, float _maxLevel = 1.0f, bool _silenced = false) {
-		minOscFreq = _minOscFreq;
-		maxOscFreq = _maxOscFreq;
-
+	void init(float _sampleRate, float _maxLevel = 1.0f, bool _silenced = false) {
 		silenced = _silenced;
 
 		masterGain.reset(_sampleRate, rampTime);
@@ -25,10 +22,17 @@ public:
 		maxLevel.setTargetValue(_maxLevel);
 		avgLevel.setTargetValue(_maxLevel / 2.0f);
 
-		lfoBaseFreq = getRandomLfoFrequency();
+		lfoBaseFreq = FaderPair::getRandomLfoFrequency();
 		lfo.setFrequency(lfoBaseFreq);
 
 		initOscs(_sampleRate);
+	}
+
+	static void initFreqs(float _minOscFreq, float _maxOscFreq, float _minLfoFreq = 0.01f, float _maxLfoFreq = 0.1f) {
+		FaderPair::minOscFreq = _minOscFreq;
+		FaderPair::maxOscFreq = _maxOscFreq;
+		FaderPair::minLfoFreq = _minLfoFreq;
+		FaderPair::maxLfoFreq = _maxLfoFreq;
 	}
 
 	float process() {
@@ -96,60 +100,28 @@ public:
 		lfo.setFrequency(lfoBaseFreq + (lfoSpread * lfoRate));
 	}
 
-	void spreadFreq(float spread, float medianFreq) {
-		// spread is between -0.1 and 0.1
-		// new freq will be currentFreq + (medianFreq - currentFreq) * spread
-		for (auto& osc : oscs) {
-			osc.setFrequencyOverTime(osc.getCurrentFrequency() + ((medianFreq - osc.getCurrentFrequency()) * spread));
-		}
-	}
-
-	// TODO: no need to store min and max for each pair, instead save these in parent
-	void setOscFreqRange(float minHz, float maxHz) {
-		minOscFreq = minHz;
-		maxOscFreq = maxHz;
-	}
-
 private:
-	float getRandomLfoFrequency() {
-		return (random.nextFloat() * (maxLfoFreq - minLfoFreq)) + minLfoFreq;
-	}
-	
-	float getRandomOscFrequency() {
-		return (random.nextFloat() * (maxOscFreq - minOscFreq)) + minOscFreq;
-	}
-
-	float setAndConstrain(float newValue) {
-		if (newValue > maxLevel.getCurrentValue()) {
-			return maxLevel.getCurrentValue();
-		}
-		else if (newValue < 0.0f) {
-			return 0.0f;
-		}
-		return newValue;
-	}
-
 	void initOscs(float _sampleRate) {
 		for (int i{}; i < 2; i++) {
 			SineOsc osc = SineOsc();
 			osc.setSampleRate(_sampleRate);
-			osc.setFrequency(getRandomOscFrequency());
+			osc.setFrequency(FaderPair::getRandomOscFrequency());
 			oscs.push_back(osc);
 		}
 	}
 
 	void resetFrequencies() {
 		for (auto& osc : oscs) {
-			osc.setFrequency(getRandomOscFrequency());
+			osc.setFrequency(FaderPair::getRandomOscFrequency());
 		}
-		lfo.setFrequency(getRandomLfoFrequency());
+		lfo.setFrequency(FaderPair::getRandomLfoFrequency());
 	}
 
 	void resetOsc(int index) {
 		if (index < 0 || index >= oscs.size()) {
 			return;
 		}
-		oscs.at(index).setFrequency(getRandomOscFrequency());
+		oscs.at(index).setFrequency(FaderPair::getRandomOscFrequency());
 	}
 
 	float processLevels() {
@@ -167,12 +139,7 @@ private:
 	SineOsc lfo;											// LFO to control mix level of faders
 	juce::SmoothedValue<float> maxLevel;											// the maximum combined level of both faders
 	juce::SmoothedValue<float> avgLevel;						
-	juce::Random random;									// used for generating random frequency
-	float minLfoFreq{ 0.001f };								// minimum lfo frequency when generating random in Hz
-	float maxLfoFreq{ 0.1f };								// range when picking a random frequency in Hz
 	std::vector<SineOsc > oscs;
-	float minOscFreq{ 120.0f };								// minimum lfo frequency when generating random in Hz
-	float maxOscFreq{ 1200.0f };							// range when picking a random frequency in Hz
 	float rampTime{ 0.1f };									// time in seconds for fading in and out
 	juce::SmoothedValue<float> masterGain{ 0.0f };			// master gain for fading in and out
 	bool silenced{ false };
@@ -180,6 +147,22 @@ private:
 	float lfoRate{ 0.0f };									// rate to modify the LFO freq by (0-1)
 	float lfoBaseFreq{};
 	float lfoSpread{ 1.0f };
+	
+	// shared static variables and methods
+
+	static inline juce::Random random;									// used for generating random frequency
+	static inline float minLfoFreq;								// minimum lfo frequency when generating random in Hz
+	static inline float maxLfoFreq;								// range when picking a random frequency in Hz
+	static inline float minOscFreq;								// minimum lfo frequency when generating random in Hz
+	static inline float maxOscFreq;							// range when picking a random frequency in Hz
+
+	static float getRandomOscFrequency() {
+		return (FaderPair::random.nextFloat() * (FaderPair::maxOscFreq - FaderPair::minOscFreq)) + FaderPair::minOscFreq;
+	}
+
+	static float getRandomLfoFrequency() {
+		return (FaderPair::random.nextFloat() * (FaderPair::maxLfoFreq - FaderPair::minLfoFreq)) + FaderPair::minLfoFreq;
+	}
 };
 
 class FaderPairs
@@ -187,19 +170,19 @@ class FaderPairs
 public:
 	FaderPairs() {};
 
-	void init(size_t numPairs, float _sampleRate, size_t maxNumPairs, float minFreq = 120.0f, float maxFreq = 1200.0f) {
+	void init(size_t numPairs, float _sampleRate, size_t maxNumPairs, float minOscFreq = 120.0f, float maxOscFreq = 1200.0f) {
 		sampleRate = _sampleRate;
 		gain.reset(sampleRate, 0.1f);
 
-		medianFreq = minFreq + (maxFreq - minFreq) * 0.5f;
-
+		FaderPair::initFreqs(minOscFreq, maxOscFreq);
 
 		const float maxLevel = 0.5f / (float)numPairs;
 		for (int i{}; i < maxNumPairs; i++) {
 			pairs.push_back(FaderPair());
-			pairs.at(i).init(sampleRate, minFreq, maxFreq, maxLevel, i >= numPairs);
+			pairs.at(i).init(sampleRate, maxLevel, i >= numPairs);
 		}
 		numActivePairs = numPairs;
+
 		setGainOffset();
 	}
 
@@ -241,31 +224,14 @@ public:
 		}
 	}
 
-	void setSpread(float spread) {
-		if (spread < -1.0f) {
-			spread = -1.0f;
-		}
-		else if (spread > 1.0f) {
-			spread = 1.0f;
-		}
-		for (auto& pair : pairs) {
-			pair.spreadFreq(spread, medianFreq);
-		}
-	}
-
 	void reset() {
 		for (int i{}; i < numActivePairs; i++) {
 			pairs.at(i).restart();
 		}
 	}
 
-	void setOscFreqRange(float minHz, float maxHz) {
-		minHz = setAndConstrain(minHz, 120.0f, 2000.0f);
-		maxHz = setAndConstrain(maxHz, 120.0f, 2000.0f);
-		for (auto& pair : pairs)
-		{
-			pair.setOscFreqRange(minHz, maxHz);
-		}
+	void setOscFreqRange(float _minHz, float _maxHz) {
+		FaderPair::initFreqs(setAndConstrain(_minHz, 80.0f, 2000.0f), setAndConstrain(_maxHz, 80.0f, 2000.0f));
 	}
 
 private:
@@ -294,7 +260,6 @@ private:
 	size_t numActivePairs;
 	size_t maxNumPairs;
 	float gainOffset;							// offset to manage gain difference between few voices and many voices
-	float medianFreq{};
 	juce::SmoothedValue<float> gain{ 0.0f };
 };
 
