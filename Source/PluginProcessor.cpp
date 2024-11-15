@@ -219,11 +219,11 @@ void MuiltFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz) {
 }
 
 void MuiltFaderDroneAudioProcessor::setGain(double _gain) {
-    if (_gain > maxGain) {
-        _gain = maxGain;
+    if (_gain > 1.0) {
+        _gain = 1.0;
     }
     else if (_gain < 0.0) {
         _gain = 0.0;
     }
-    gain.setTargetValue(_gain);
+    gain.setTargetValue(_gain * maxGain);
 }
