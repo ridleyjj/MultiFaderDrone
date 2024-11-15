@@ -23,19 +23,18 @@ MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltF
     // sliders
 
     initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices", 2, 30, 2);
+    initSimpleSlider(&gainSlider, &gainLabel, "Master Gain", 0.0, 1.0, 0.01);
     initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate", 0.0, 1.0, 0.01);
     initSimpleSlider(&freqRangeSlider, &freqRangeLabel, "Range", 80.0f, 2000.0f, 5.0f);
     freqRangeSlider.setMinAndMaxValues(120.0f, 1200.0f, juce::dontSendNotification);
-    freqRangeSlider.textFromValueFunction = [&](double value)
+    freqRangeSlider.textFromValueFunction = [=](double value)
         {
             return juce::String(freqRangeSlider.getMinValue()) + "Hz - " + juce::String(freqRangeSlider.getMaxValue()) + "Hz";
         };
     freqRangeSlider.updateText();
 
-    // buttons
-
-    resetButton.addListener(this);
-    addAndMakeVisible(resetButton);
+    gainSlider.setValue(1.0, juce::dontSendNotification);
+    gainSlider.setName("gain");
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -73,9 +72,9 @@ void MuiltFaderDroneAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
 
-    voicesSlider.setBoundsRelative(0.35f, 0.5f, 0.3f, 0.3f);
+    voicesSlider.setBoundsRelative(0.35f, 0.6f, 0.3f, 0.3f);
 
-    resetButton.setBoundsRelative(0.4f, 0.1f, 0.2f, 0.1f);
+    gainSlider.setBoundsRelative(0.35f, 0.1f, 0.3f, 0.3f);
 
     freqRangeSlider.setBoundsRelative(0.1f, 0.1f, 0.2f, 0.8f);
 
@@ -96,11 +95,7 @@ void MuiltFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slide
         freqRangeSlider.updateText();
         audioProcessor.setOscFreqRange(freqRangeSlider.getMinValue(), freqRangeSlider.getMaxValue());
     }
-}
-
-void MuiltFaderDroneAudioProcessorEditor::buttonClicked(juce::Button* button) {
-    if (button == &resetButton) {
-        audioProcessor.resetFreqs();
-        lfoRateSlider.setValue(0.0f, juce::dontSendNotification);
+    else if (slider == &gainSlider) {
+        audioProcessor.setGain(gainSlider.getValue());
     }
 }

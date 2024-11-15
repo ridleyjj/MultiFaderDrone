@@ -5,7 +5,6 @@
               pluginFormats="buildAUv3,buildStandalone,buildVST3">
   <MAINGROUP id="n0vA9i" name="MuiltFaderDrone">
     <GROUP id="{14812914-56F5-7AF6-83E5-A09F001AB246}" name="Source">
-      <FILE id="r7sFsg" name="jr_FaderPair.h" compile="0" resource="0" file="Source/jr_FaderPair.h"/>
       <GROUP id="{BC387E24-C95D-9341-76CB-399380B476BC}" name="LookAndFeel">
         <GROUP id="{83DF4031-8BA6-182E-BC55-808B2A70CBD2}" name="Resources">
           <FILE id="UH8u2r" name="FontResources.cpp" compile="1" resource="0"

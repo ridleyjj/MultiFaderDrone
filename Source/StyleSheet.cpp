@@ -13,7 +13,7 @@
 void CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& slider)
 {
     auto outline = slider.findColour(juce::Slider::rotarySliderOutlineColourId);
-    auto fill = roseQuartz;
+    auto fill = slider.getName() == "gain" ? verdigris : roseQuartz;
     auto thumbColour = juce::Colours::lightgrey;
     auto backgroundColour = slider.findColour(juce::Slider::rotarySliderFillColourId);
 

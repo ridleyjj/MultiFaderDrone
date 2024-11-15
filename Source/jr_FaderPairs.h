@@ -224,12 +224,6 @@ public:
 		}
 	}
 
-	void reset() {
-		for (int i{}; i < numActivePairs; i++) {
-			pairs.at(i).restart();
-		}
-	}
-
 	void setOscFreqRange(float _minHz, float _maxHz) {
 		FaderPair::initFreqs(setAndConstrain(_minHz, 80.0f, 2000.0f), setAndConstrain(_maxHz, 80.0f, 2000.0f));
 	}

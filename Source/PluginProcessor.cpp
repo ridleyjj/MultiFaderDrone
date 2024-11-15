@@ -94,6 +94,7 @@ void MuiltFaderDroneAudioProcessor::changeProgramName (int index, const juce::St
 void MuiltFaderDroneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     faders.init(oscCount / 2, sampleRate, maxOscCount / 2);
+    gain.reset(sampleRate, 0.1f);
 }
 
 void MuiltFaderDroneAudioProcessor::releaseResources()
@@ -160,8 +161,10 @@ void MuiltFaderDroneAudioProcessor::processBlock(juce::AudioBuffer<float>& buffe
     {
         float sampleOut = faders.process();
 
-        leftChannel[i] = sampleOut * gain;
-        rightChannel[i] = sampleOut * gain;
+        float currentGain = gain.getNextValue();
+
+        leftChannel[i] = sampleOut * currentGain;
+        rightChannel[i] = sampleOut * currentGain;
     }
 }
 
@@ -211,10 +214,16 @@ void MuiltFaderDroneAudioProcessor::setLfoRate(float _rate) {
     faders.setLfoRate(_rate);
 }
 
-void MuiltFaderDroneAudioProcessor::resetFreqs() {
-    faders.reset();
-}
-
 void MuiltFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz) {
     faders.setOscFreqRange(minHz, maxHz);
+}
+
+void MuiltFaderDroneAudioProcessor::setGain(double _gain) {
+    if (_gain > maxGain) {
+        _gain = maxGain;
+    }
+    else if (_gain < 0.0) {
+        _gain = 0.0;
+    }
+    gain.setTargetValue(_gain);
 }

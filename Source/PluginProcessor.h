@@ -60,9 +60,9 @@ public:
     
     void setLfoRate(float _rate);
 
-    void resetFreqs();
-
     void setOscFreqRange(float minHz, float maxHz);
+
+    void setGain(double _gain);
 
     size_t getMaxOscCount() {
         return maxOscCount;
@@ -87,7 +87,8 @@ public:
 private:
     size_t oscCount{ 2 };          // total number of oscillators
     juce::Random random;            // random value generator
-    float gain = 0.2;               // master output level
+    float maxGain = 0.3;
+    juce::SmoothedValue<float> gain{ maxGain };               // master output level
     FaderPairs faders;              // pair of connected faders
     size_t maxOscCount{ 30 };
     float maxFreq{ 2400.0f };       // max freq in Hz that Osc Freq slider can be set
