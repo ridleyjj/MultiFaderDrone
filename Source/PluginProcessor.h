@@ -62,6 +62,11 @@ public:
 
     void setOscFreqRange(float minHz, float maxHz);
 
+    /*
+    * Sets stereo width to a value between 0 - 1.0 where 1.0 is full stereo width and 0 is mono
+    */
+    void setStereoWidth(float width);
+
     void setGain(double _gain);
 
     size_t getMaxOscCount() {
@@ -87,7 +92,7 @@ public:
 private:
     size_t oscCount{ 2 };          // total number of oscillators
     juce::Random random;            // random value generator
-    float maxGain = 0.25;
+    float maxGain = 0.1;
     juce::SmoothedValue<float> gain{ maxGain };               // master output level
     FaderPairs faders;              // pair of connected faders
     size_t maxOscCount{ 30 };

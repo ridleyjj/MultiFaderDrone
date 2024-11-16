@@ -25,6 +25,8 @@ MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltF
     initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices", 2, 30, 2);
     initSimpleSlider(&gainSlider, &gainLabel, "Master Gain", 0.0, 1.0, 0.01);
     initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate", 0.0, 1.0, 0.01);
+    initSimpleSlider(&stereoSlider, &stereoLabel, "Width", -1.0, 1.0, 0.01);
+    stereoSlider.setMinAndMaxValues(0.0, 0.0, juce::dontSendNotification);
     initSimpleSlider(&freqRangeSlider, &freqRangeLabel, "Range", 80.0f, 2000.0f, 5.0f);
     freqRangeSlider.setMinAndMaxValues(120.0f, 1200.0f, juce::dontSendNotification);
     freqRangeSlider.textFromValueFunction = [=](double value)
@@ -33,12 +35,14 @@ MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltF
         };
     freqRangeSlider.updateText();
 
+    
+
     gainSlider.setValue(1.0, juce::dontSendNotification);
     gainSlider.setName("gain");
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 400);
+    setSize (400, 450);
 }
 
 void MuiltFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxVal, double step) {
@@ -69,16 +73,15 @@ void MuiltFaderDroneAudioProcessorEditor::paint (juce::Graphics& g)
 
 void MuiltFaderDroneAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
-
-    voicesSlider.setBoundsRelative(0.35f, 0.6f, 0.3f, 0.3f);
+    voicesSlider.setBoundsRelative(0.35f, 0.5f, 0.3f, 0.3f);
 
     gainSlider.setBoundsRelative(0.35f, 0.1f, 0.3f, 0.3f);
 
-    freqRangeSlider.setBoundsRelative(0.1f, 0.1f, 0.2f, 0.8f);
+    freqRangeSlider.setBoundsRelative(0.1f, 0.1f, 0.2f, 0.7f);
 
-    lfoRateSlider.setBoundsRelative(0.75f, 0.1f, 0.1f, 0.8f);
+    lfoRateSlider.setBoundsRelative(0.75f, 0.1f, 0.1f, 0.7f);
+
+    stereoSlider.setBoundsRelative(0.1f, 0.9f, 0.8f, 0.1f);
 }
 
 void MuiltFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
@@ -95,7 +98,25 @@ void MuiltFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slide
         freqRangeSlider.updateText();
         audioProcessor.setOscFreqRange(freqRangeSlider.getMinValue(), freqRangeSlider.getMaxValue());
     }
-    else if (slider == &gainSlider) {
+    else if (slider == &gainSlider)
+    {
         audioProcessor.setGain(gainSlider.getValue());
+    }
+    else if (slider == &stereoSlider)
+    {
+        float newVal{};
+        if (stereoSlider.getMinValue() != prevStereoMin)
+        {
+            newVal = std::abs(stereoSlider.getMinValue());
+        }
+        else
+        {
+            newVal = std::abs(stereoSlider.getMaxValue());
+        }
+        stereoSlider.setMinAndMaxValues(newVal * -1.0, newVal, juce::dontSendNotification);
+
+        audioProcessor.setStereoWidth(stereoSlider.getMaxValue());
+        prevStereoMin = stereoSlider.getMinValue();
+        prevStereoMax = stereoSlider.getMaxValue();
     }
 }

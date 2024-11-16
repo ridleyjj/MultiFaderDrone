@@ -25,6 +25,9 @@ public:
 		lfoBaseFreq = FaderPair::getRandomLfoFrequency();
 		lfo.setFrequency(lfoBaseFreq);
 
+		resetPan(0);
+		resetPan(1);
+
 		initOscs(_sampleRate);
 	}
 
@@ -35,7 +38,10 @@ public:
 		FaderPair::maxLfoFreq = _maxLfoFreq;
 	}
 
-	float process() {
+	std::pair<float, float> process() {
+		if (oscs.size() == 0) {
+			return out;
+		}
 
 		if (masterGain.getCurrentValue() == 0.0f && waitingToRestart) {
 			waitingToRestart = false;
@@ -44,10 +50,27 @@ public:
 
 		// process next sampleOut
 		float delta = processLevels(); // avgLevel gets incremented in here
-		float sampleOut{};
-		sampleOut += oscs.at(0).process() * (avgLevel.getCurrentValue() + delta);
-		sampleOut += oscs.at(1).process() * (avgLevel.getCurrentValue() - delta);
-		return sampleOut * masterGain.getNextValue();
+		
+		// reset sample out
+		out.first = 0.0f;
+		out.second = 0.0f;
+
+		// raw values before panning
+		float osc1RawOut = oscs.at(0).process() * (avgLevel.getCurrentValue() + delta);
+		float osc2RawOut = oscs.at(1).process() * (avgLevel.getCurrentValue() - delta);
+
+		// add panned signals to out pair
+		out.first += osc1RawOut * (1.0f - pan.at(0));
+		out.second += osc1RawOut * (pan.at(0));
+		out.first += osc2RawOut * (1.0f - pan.at(1));
+		out.second += osc2RawOut * (pan.at(1));
+
+		// apply master gain
+		masterGain.getNextValue();
+		out.first *= masterGain.getCurrentValue();
+		out.second *= masterGain.getCurrentValue();
+
+		return out;
 	}
 
 	void silence() {
@@ -100,6 +123,10 @@ public:
 		lfo.setFrequency(lfoBaseFreq + (lfoSpread * lfoRate));
 	}
 
+	static void setStereoWidth(float width) {
+		FaderPair::stereoWidth = width;
+	}
+
 private:
 	void initOscs(float _sampleRate) {
 		for (int i{}; i < 2; i++) {
@@ -124,37 +151,49 @@ private:
 		oscs.at(index).setFrequency(FaderPair::getRandomOscFrequency());
 	}
 
+	void resetPan(int index) {
+		if (index < 0 || index >= oscs.size()) {
+			return;
+		}
+		pan.at(index) = 0.5f + (random.nextFloat() - 0.5f) * FaderPair::stereoWidth; // set to 0.5f +/- 0.5f at max or 0.0f at min
+	}
+
 	float processLevels() {
 		maxLevel.getNextValue();
 		float lfoVal = lfo.process();
 		if (lfoVal >= 1.0f) {
 			resetOsc(1);
+			resetPan(1);
 		}
 		else if (lfoVal <= -1.0f) {
 			resetOsc(0);
+			resetPan(0);
 		}
 		return lfoVal * avgLevel.getNextValue();
 	}
 
 	SineOsc lfo;											// LFO to control mix level of faders
-	juce::SmoothedValue<float> maxLevel;											// the maximum combined level of both faders
+	juce::SmoothedValue<float> maxLevel;					// the maximum combined level of both faders
 	juce::SmoothedValue<float> avgLevel;						
 	std::vector<SineOsc > oscs;
-	float rampTime{ 0.1f };									// time in seconds for fading in and out
+	float rampTime{ 0.05f };									// time in seconds for fading in and out
 	juce::SmoothedValue<float> masterGain{ 0.0f };			// master gain for fading in and out
 	bool silenced{ false };
 	bool waitingToRestart{ false };							// true if the voice is waiting to reach 0 master gain before restarting
 	float lfoRate{ 0.0f };									// rate to modify the LFO freq by (0-1)
 	float lfoBaseFreq{};
 	float lfoSpread{ 1.0f };
+	std::pair<float, float> out{ 0.5f, 0.5f };
+	std::vector<float> pan{ 0.5f, 0.5f };					// array of pan values for oscs, 0=L 1=R 0.5=C
 	
 	// shared static variables and methods
 
-	static inline juce::Random random;									// used for generating random frequency
-	static inline float minLfoFreq;								// minimum lfo frequency when generating random in Hz
-	static inline float maxLfoFreq;								// range when picking a random frequency in Hz
-	static inline float minOscFreq;								// minimum lfo frequency when generating random in Hz
+	static inline juce::Random random;						// used for generating random frequency
+	static inline float minLfoFreq;							// minimum lfo frequency when generating random in Hz
+	static inline float maxLfoFreq;							// range when picking a random frequency in Hz
+	static inline float minOscFreq;							// minimum lfo frequency when generating random in Hz
 	static inline float maxOscFreq;							// range when picking a random frequency in Hz
+	static inline float stereoWidth{ 0.0f };				// pan range 0 - 1.0
 
 	static float getRandomOscFrequency() {
 		return (FaderPair::random.nextFloat() * (FaderPair::maxOscFreq - FaderPair::minOscFreq)) + FaderPair::minOscFreq;
@@ -186,12 +225,23 @@ public:
 		setGainOffset();
 	}
 
-	float process() {
+	std::pair<float, float> process() {
+		out.first = 0.0f;
+		out.second = 0.0f;
+
 		float sampleOut{};
 		for (auto& pair : pairs) {
-			sampleOut += pair.process();
+			auto pairOut = pair.process();
+			out.first += pairOut.first;
+			out.second += pairOut.second;
 		}
-		return sampleOut * gain.getNextValue();
+
+		gain.getNextValue();
+
+		out.first *= gain.getCurrentValue();
+		out.second *= gain.getCurrentValue();
+
+		return out;
 	}
 
 	void setNumPairs(size_t numPairs) {
@@ -228,6 +278,10 @@ public:
 		FaderPair::initFreqs(setAndConstrain(_minHz, 80.0f, 2000.0f), setAndConstrain(_maxHz, 80.0f, 2000.0f));
 	}
 
+	void setStereoWidth(float width) {
+		FaderPair::setStereoWidth(setAndConstrain(width, 0.0f, 1.0f));
+	}
+
 private:
 	void setGainOffset() {
 		gainOffset = (numActivePairs - 1) / 7.0f;
@@ -255,5 +309,6 @@ private:
 	size_t maxNumPairs;
 	float gainOffset;							// offset to manage gain difference between few voices and many voices
 	juce::SmoothedValue<float> gain{ 0.0f };
+	std::pair<float, float> out{};
 };
 

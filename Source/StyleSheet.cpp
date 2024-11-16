@@ -77,7 +77,6 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
     float maxSliderPos,
     const juce::Slider::SliderStyle style, juce::Slider& slider)
 {
-    bool hasZeroMidPoint = slider.getMinimum() < 0.0;
     auto isTwoVal = (style == juce::Slider::SliderStyle::TwoValueVertical || style == juce::Slider::SliderStyle::TwoValueHorizontal);
 
     auto backgroundTrackColour = slider.findColour(juce::Slider::backgroundColourId);
@@ -110,21 +109,7 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
     }
     else
     {
-        // draw value track from middle point 0.0 if present
-        if (hasZeroMidPoint)
-        {
-            float unitLength = height / (slider.getMaximum() - slider.getMinimum());
-            float zeroPos = slider.isHorizontal() ? sliderPos - (slider.getValue() * unitLength) : sliderPos + (slider.getValue() * unitLength);
-            minPoint = {
-                slider.isHorizontal() ? zeroPos : (float)x + (float)width * 0.5f,
-                slider.isHorizontal() ? (float)y + (float)height * 0.5f : zeroPos
-            };
-        }
-        else
-        {
-            // draw value track from start of slider
-            minPoint = startPoint;
-        }
+        minPoint = startPoint;
 
         // draw value track to current slider pos
         auto kx = slider.isHorizontal() ? sliderPos : ((float)x + (float)width * 0.5f);
@@ -136,45 +121,22 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
     valueTrack.startNewSubPath(minPoint);
     valueTrack.lineTo(maxPoint);
     g.setColour(valueTrackColour);
-    const auto endStrokeType = hasZeroMidPoint ? juce::PathStrokeType::butt : juce::PathStrokeType::rounded;
+    const auto endStrokeType = juce::PathStrokeType::rounded;
     g.strokePath(valueTrack, { trackWidth, juce::PathStrokeType::curved, endStrokeType });
-
-    if (hasZeroMidPoint)
-    {
-        // draw zero line mark
-        juce::Path zeroLine;
-        
-        if (slider.isHorizontal())
-        {
-            auto markerHalfWidth = height / 4.0f;
-            zeroLine.addLineSegment(juce::Line{
-                    juce::Point{ minPoint.getX(), minPoint.getY() + markerHalfWidth },
-                    juce::Point{ minPoint.getX(), minPoint.getY() - markerHalfWidth },
-                }, 0);
-        }
-        else
-        {
-            auto markerHalfWidth = width / 4.0f;
-            zeroLine.addLineSegment(juce::Line{ 
-                    juce::Point{ minPoint.getX() - markerHalfWidth, minPoint.getY() },
-                    juce::Point{ minPoint.getX() + markerHalfWidth, minPoint.getY() },
-                }, 0);
-        }
-
-        g.setColour(zeroMarkColour);
-        g.strokePath(zeroLine, juce::PathStrokeType(2.0, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
-    }
 
     auto thumbWidth = getSliderThumbRadius(slider);
 
     // head marker(s)
     g.setColour(dark);
-    g.fillRoundedRectangle(juce::Rectangle<float>(static_cast<float> (thumbWidth * 2.0f), static_cast<float> (thumbWidth)).withCentre(maxPoint), 1.0f);
+    juce::Rectangle thumbRect = slider.isVertical() ?
+        juce::Rectangle<float>(static_cast<float> (thumbWidth * 2.0f), static_cast<float> (thumbWidth)) :
+        juce::Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth * 2.0f));
+    g.fillRoundedRectangle(thumbRect.withCentre(maxPoint), 1.0f);
 
     if (isTwoVal)
     {
         g.setColour(dark);
-        g.fillRoundedRectangle(juce::Rectangle<float>(static_cast<float> (thumbWidth * 2.0f), static_cast<float> (thumbWidth)).withCentre(minPoint), 1.0f);
+        g.fillRoundedRectangle(thumbRect.withCentre(minPoint), 1.0f);
     }
 
 }

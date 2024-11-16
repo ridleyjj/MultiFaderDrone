@@ -39,8 +39,14 @@ private:
     juce::Slider voicesSlider{ juce::Slider::SliderStyle::RotaryVerticalDrag, juce::Slider::TextBoxBelow };
     juce::Slider gainSlider{ juce::Slider::SliderStyle::RotaryVerticalDrag, juce::Slider::TextBoxBelow };
     juce::Slider lfoRateSlider{ juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow };
+    juce::Slider stereoSlider{ juce::Slider::SliderStyle::TwoValueHorizontal, juce::Slider::NoTextBox };
     juce::Slider freqRangeSlider{ juce::Slider::SliderStyle::TwoValueVertical, juce::Slider::TextBoxBelow };
-    juce::Label voicesLabel, lfoRateLabel, freqRangeLabel, gainLabel;
+    juce::Label voicesLabel, lfoRateLabel, freqRangeLabel, gainLabel, stereoLabel;
+
+    // stereo width state
+
+    double prevStereoMin = 0.0;
+    double prevStereoMax = 0.0;
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

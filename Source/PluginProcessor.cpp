@@ -159,12 +159,12 @@ void MuiltFaderDroneAudioProcessor::processBlock(juce::AudioBuffer<float>& buffe
     //======================================== DSP LOOP ========================================
     for (int i = 0; i < numSamples; i++)
     {
-        float sampleOut = faders.process();
+        auto sampleOut = faders.process();
 
-        float currentGain = gain.getNextValue();
+        gain.getNextValue();
 
-        leftChannel[i] = sampleOut * currentGain;
-        rightChannel[i] = sampleOut * currentGain;
+        leftChannel[i] = sampleOut.first * gain.getCurrentValue();
+        rightChannel[i] = sampleOut.second * gain.getCurrentValue();
     }
 }
 
@@ -226,4 +226,8 @@ void MuiltFaderDroneAudioProcessor::setGain(double _gain) {
         _gain = 0.0;
     }
     gain.setTargetValue(_gain * maxGain);
+}
+
+void MuiltFaderDroneAudioProcessor::setStereoWidth(float width) {
+    faders.setStereoWidth(width);
 }
