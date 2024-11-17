@@ -3,29 +3,7 @@
 #include <JuceHeader.h>
 #include <vector>
 #include "jr_Oscillators.h"
-
-namespace jr 
-{
-	class Utils
-	{
-	public:
-		/*
-		* returns the value of the float provided, constrained by the min and max values given. By default constrains between 0 and 1
-		*/
-		static float constrainFloat(float val, float min = 0.0f, float max = 1.0f)
-		{
-			if (val < min)
-			{
-				val = min;
-			}
-			else if (val > max)
-			{
-				val = max;
-			}
-			return val;
-		}
-	};
-}
+#include "jr_utils.h"
 
 class FaderPair
 {
