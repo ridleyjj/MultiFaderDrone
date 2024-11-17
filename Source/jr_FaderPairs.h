@@ -4,6 +4,29 @@
 #include <vector>
 #include "jr_Oscillators.h"
 
+namespace jr 
+{
+	class Utils
+	{
+	public:
+		/*
+		* returns the value of the float provided, constrained by the min and max values given. By default constrains between 0 and 1
+		*/
+		static float constrainFloat(float val, float min = 0.0f, float max = 1.0f)
+		{
+			if (val < min)
+			{
+				val = min;
+			}
+			else if (val > max)
+			{
+				val = max;
+			}
+			return val;
+		}
+	};
+}
+
 class FaderPair
 {
 public:
@@ -22,8 +45,8 @@ public:
 		maxLevel.setTargetValue(_maxLevel);
 		avgLevel.setTargetValue(_maxLevel / 2.0f);
 
-		lfoBaseFreq = FaderPair::getRandomLfoFrequency();
-		lfo.setFrequency(lfoBaseFreq);
+		lfoBaseFreq = random.nextFloat();
+		lfo.setFrequency(getLfoFreqFromScale(lfoBaseFreq));
 
 		resetPan(0);
 		resetPan(1);
@@ -112,19 +135,16 @@ public:
 		avgLevel.setTargetValue(_maxLevel / 2.0f);
 	}
 
-	void setLfoRate(float _rate) {
-		if (_rate < 0.0f) {
-			_rate = 0.0f;
-		}
-		else if (_rate > 1.0f) {
-			_rate = 1.0f;
-		}
-		lfoRate = _rate;
-		lfo.setFrequency(lfoBaseFreq + (lfoSpread * lfoRate));
+	void updateLfoFreq() {
+		lfo.setFrequency(getLfoFreqFromScale(lfoBaseFreq));
 	}
 
 	static void setStereoWidth(float width) {
 		FaderPair::stereoWidth = width;
+	}
+
+	static void setLfoRate(float _rate) {
+		FaderPair::lfoRate = jr::Utils::constrainFloat(_rate);
 	}
 
 private:
@@ -141,7 +161,7 @@ private:
 		for (auto& osc : oscs) {
 			osc.setFrequency(FaderPair::getRandomOscFrequency());
 		}
-		lfo.setFrequency(FaderPair::getRandomLfoFrequency());
+		lfo.setFrequency(getLfoFreqFromScale(lfoBaseFreq));
 	}
 
 	void resetOsc(int index) {
@@ -156,6 +176,12 @@ private:
 			return;
 		}
 		pan.at(index) = 0.5f + (random.nextFloat() - 0.5f) * FaderPair::stereoWidth; // set to 0.5f +/- 0.5f at max or 0.0f at min
+	}
+
+	float getLfoFreqFromScale(float scale) {
+		// scale between 0 and 1
+		scale = jr::Utils::constrainFloat(scale);
+		return minLfoFreq + ((maxLfoFreq + lfoRate * lfoSpread) - minLfoFreq) * scale;
 	}
 
 	float processLevels() {
@@ -180,15 +206,15 @@ private:
 	juce::SmoothedValue<float> masterGain{ 0.0f };			// master gain for fading in and out
 	bool silenced{ false };
 	bool waitingToRestart{ false };							// true if the voice is waiting to reach 0 master gain before restarting
-	float lfoRate{ 0.0f };									// rate to modify the LFO freq by (0-1)
 	float lfoBaseFreq{};
-	float lfoSpread{ 1.0f };
 	std::pair<float, float> out{ 0.5f, 0.5f };
 	std::vector<float> pan{ 0.5f, 0.5f };					// array of pan values for oscs, 0=L 1=R 0.5=C
 	
 	// shared static variables and methods
 
 	static inline juce::Random random;						// used for generating random frequency
+	static inline float lfoRate{ 0.0f };					// rate to modify the LFO freq by (0-1)
+	static inline float lfoSpread{ 1.0f };
 	static inline float minLfoFreq;							// minimum lfo frequency when generating random in Hz
 	static inline float maxLfoFreq;							// range when picking a random frequency in Hz
 	static inline float minOscFreq;							// minimum lfo frequency when generating random in Hz
@@ -197,10 +223,6 @@ private:
 
 	static float getRandomOscFrequency() {
 		return (FaderPair::random.nextFloat() * (FaderPair::maxOscFreq - FaderPair::minOscFreq)) + FaderPair::minOscFreq;
-	}
-
-	static float getRandomLfoFrequency() {
-		return (FaderPair::random.nextFloat() * (FaderPair::maxLfoFreq - FaderPair::minLfoFreq)) + FaderPair::minLfoFreq;
 	}
 };
 
@@ -269,17 +291,18 @@ public:
 	}
 
 	void setLfoRate(float _rate) {
+		FaderPair::setLfoRate(_rate);
 		for (auto& pair : pairs) {
-			pair.setLfoRate(_rate);
+			pair.updateLfoFreq();
 		}
 	}
 
 	void setOscFreqRange(float _minHz, float _maxHz) {
-		FaderPair::initFreqs(setAndConstrain(_minHz, 80.0f, 2000.0f), setAndConstrain(_maxHz, 80.0f, 2000.0f));
+		FaderPair::initFreqs(jr::Utils::constrainFloat(_minHz, 80.0f, 2000.0f), jr::Utils::constrainFloat(_maxHz, 80.0f, 2000.0f));
 	}
 
 	void setStereoWidth(float width) {
-		FaderPair::setStereoWidth(setAndConstrain(width, 0.0f, 1.0f));
+		FaderPair::setStereoWidth(jr::Utils::constrainFloat(width));
 	}
 
 private:
@@ -291,16 +314,6 @@ private:
 
 		// gain offset is now 0.0f if numActiveParis is 2, or 1.0f if numActivePairs is 14 or greater
 		gain.setTargetValue(0.6f + 0.4f * gainOffset);
-	}
-
-	float setAndConstrain(float newValue, float min, float max) {
-		if (newValue > max) {
-			return max;
-		}
-		else if (newValue < min) {
-			return min;
-		}
-		return newValue;
 	}
 
 	std::vector<FaderPair> pairs;
