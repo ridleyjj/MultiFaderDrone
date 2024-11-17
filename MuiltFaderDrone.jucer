@@ -23,6 +23,8 @@
         <FILE id="PPbHHg" name="StyleSheet.h" compile="0" resource="0" file="Source/StyleSheet.h"/>
       </GROUP>
       <FILE id="M6SNm5" name="jr_FaderPairs.h" compile="0" resource="0" file="Source/jr_FaderPairs.h"/>
+      <FILE id="nBKpRu" name="jr_FaderPairs.cpp" compile="1" resource="0"
+            file="Source/jr_FaderPairs.cpp"/>
       <FILE id="UrZDOZ" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="z3TJJt" name="PluginProcessor.h" compile="0" resource="0"
