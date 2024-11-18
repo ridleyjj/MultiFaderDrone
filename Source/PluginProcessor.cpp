@@ -203,25 +203,31 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 //==============================================================================
 // update method calls from Editor
 
-void MuiltFaderDroneAudioProcessor::setOscCount(size_t _oscCount) {
-    if (_oscCount != oscCount) {
+void MuiltFaderDroneAudioProcessor::setOscCount(size_t _oscCount)
+{
+    if (_oscCount != oscCount)
+    {
         oscCount = _oscCount;
         faders.setNumPairs(oscCount / 2);
     }
 }
 
-void MuiltFaderDroneAudioProcessor::setLfoRate(float _rate) {
+void MuiltFaderDroneAudioProcessor::setLfoRate(float _rate)
+{
     faders.setLfoRate(_rate);
 }
 
-void MuiltFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz) {
+void MuiltFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz)
+{
     faders.setOscFreqRange(minHz, maxHz);
 }
 
-void MuiltFaderDroneAudioProcessor::setGain(double _gain) {
+void MuiltFaderDroneAudioProcessor::setGain(double _gain)
+{
     gain.setTargetValue(jr::Utils::constrainFloat(_gain) * maxGain);
 }
 
-void MuiltFaderDroneAudioProcessor::setStereoWidth(float width) {
+void MuiltFaderDroneAudioProcessor::setStereoWidth(float width)
+{
     faders.setStereoWidth(width);
 }

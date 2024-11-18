@@ -27,6 +27,8 @@ public:
 
     void sliderValueChanged(juce::Slider* slider) override;
 
+    void toggleRangeFrozen();
+
 private:
     // helpers
 
@@ -47,6 +49,15 @@ private:
 
     double prevStereoMin = 0.0;
     double prevStereoMax = 0.0;
+
+    // buttons
+
+    juce::ToggleButton freezeRangeButton{ "Freeze" };
+
+    bool rangeFrozen{ false };
+    double frozenRangeAmount{ 0.0f };
+    double prevRangeMin{};
+    double prevRangeMax{};
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

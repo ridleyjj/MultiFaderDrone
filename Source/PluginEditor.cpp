@@ -18,6 +18,9 @@ MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltF
     myLookAndFeel.setColour(juce::Label::textColourId, juce::Colours::black);
     myLookAndFeel.setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
     myLookAndFeel.setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::black.withAlpha(0.0f));
+    myLookAndFeel.setColour(juce::ToggleButton::textColourId, juce::Colours::black);
+    myLookAndFeel.setColour(juce::ToggleButton::tickColourId, juce::Colours::black);
+    myLookAndFeel.setColour(juce::ToggleButton::tickDisabledColourId, juce::Colours::black);
     myLookAndFeel.setDefaultSansSerifTypeface(StyleSheet::boldFont);
 
     // sliders
@@ -34,11 +37,19 @@ MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltF
             return juce::String(freqRangeSlider.getMinValue()) + "Hz - " + juce::String(freqRangeSlider.getMaxValue()) + "Hz";
         };
     freqRangeSlider.updateText();
+    prevRangeMin = freqRangeSlider.getMinValue();
+    prevRangeMax = freqRangeSlider.getMaxValue();
 
     
 
     gainSlider.setValue(1.0, juce::dontSendNotification);
     gainSlider.setName("gain");
+
+    // buttons
+
+    freezeRangeButton.sendLookAndFeelChange();
+    freezeRangeButton.onClick = [this] { toggleRangeFrozen(); };
+    addAndMakeVisible(freezeRangeButton);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -79,6 +90,8 @@ void MuiltFaderDroneAudioProcessorEditor::resized()
 
     freqRangeSlider.setBoundsRelative(0.1f, 0.1f, 0.2f, 0.7f);
 
+    freezeRangeButton.setBoundsRelative(0.1f, 0.8f, 0.2f, 0.1f);
+
     lfoRateSlider.setBoundsRelative(0.75f, 0.1f, 0.1f, 0.7f);
 
     stereoSlider.setBoundsRelative(0.1f, 0.9f, 0.8f, 0.1f);
@@ -86,15 +99,47 @@ void MuiltFaderDroneAudioProcessorEditor::resized()
 
 void MuiltFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
 {
-    if (slider == &voicesSlider) {
+    if (slider == &voicesSlider)
+    {
         DBG(voicesSlider.getValue());
         audioProcessor.setOscCount(voicesSlider.getValue());
     }
-    else if (slider == &lfoRateSlider) {
+    else if (slider == &lfoRateSlider)
+    {
         audioProcessor.setLfoRate(lfoRateSlider.getValue());
     }
     else if (slider == &freqRangeSlider)
     {
+        // if range is frozen, move values together
+        if (rangeFrozen)
+        {
+            if (freqRangeSlider.getMinValue() != prevRangeMin)
+            {
+                if (freqRangeSlider.getMinValue() + frozenRangeAmount <= freqRangeSlider.getMaximum())
+                {
+                    freqRangeSlider.setMaxValue(freqRangeSlider.getMinValue() + frozenRangeAmount, juce::dontSendNotification);
+                }
+                else
+                {
+                    freqRangeSlider.setMinValue(prevRangeMin, juce::dontSendNotification);
+                }
+            }
+            else if (freqRangeSlider.getMaxValue() != prevRangeMax)
+            {
+                if (freqRangeSlider.getMaxValue() - frozenRangeAmount >= freqRangeSlider.getMinimum())
+                {
+                    freqRangeSlider.setMinValue(freqRangeSlider.getMaxValue() - frozenRangeAmount, juce::dontSendNotification);
+                }
+                else
+                {
+                    freqRangeSlider.setMaxValue(prevRangeMax, juce::dontSendNotification);
+                }
+            }
+        }
+
+        prevRangeMin = freqRangeSlider.getMinValue();
+        prevRangeMax = freqRangeSlider.getMaxValue();
+
         freqRangeSlider.updateText();
         audioProcessor.setOscFreqRange(freqRangeSlider.getMinValue(), freqRangeSlider.getMaxValue());
     }
@@ -119,4 +164,10 @@ void MuiltFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slide
         prevStereoMin = stereoSlider.getMinValue();
         prevStereoMax = stereoSlider.getMaxValue();
     }
+}
+
+void MuiltFaderDroneAudioProcessorEditor::toggleRangeFrozen()
+{
+    rangeFrozen = !rangeFrozen;
+    frozenRangeAmount = rangeFrozen ? freqRangeSlider.getMaxValue() - freqRangeSlider.getMinValue() : 0.0;
 }
