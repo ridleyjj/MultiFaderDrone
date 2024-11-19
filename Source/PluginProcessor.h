@@ -92,7 +92,7 @@ public:
 private:
     size_t oscCount{ 2 };          // total number of oscillators
     juce::Random random;            // random value generator
-    float maxGain = 0.1;
+    float maxGain = 0.3;
     juce::SmoothedValue<float> gain{ maxGain };               // master output level
     FaderPairs faders;              // pair of connected faders
     size_t maxOscCount{ 30 };
