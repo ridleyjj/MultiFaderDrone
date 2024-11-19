@@ -10,7 +10,15 @@ class FaderPair
 public:
 	FaderPair();
 
+	/*
+	* Initialises oscillators and LFOs with sample rate. Call before playing.
+	*/
 	void init(float _sampleRate, float _maxLevel = 1.0f, bool _silenced = false);
+
+	/*
+	* Sets the sample rate
+	*/
+	void updateSampleRate(float _sampleRate);
 
 	/*
 	* Sets min and max frequencies for Oscs and LFOs for all FaderPair instances. Required to call before creating
@@ -44,6 +52,11 @@ public:
 	* Triggers instance to recalculate LFO frequency. Use after static LFO Rate or LFO Spread values have changed.
 	*/
 	void updateLfoFreq();
+
+	/*
+	* Returns True if initialisation is finished for instance
+	*/
+	bool getIsInitialised();
 
 	/*
 	* Sets Stereo Width for all instances. 0.0f = mono, 1.0f = full stereo spread.
@@ -100,6 +113,7 @@ private:
 	float lfoBaseFreq{};
 	std::pair<float, float> out{ 0.5f, 0.5f };
 	std::vector<float> pan{ 0.5f, 0.5f };					// array of pan values for oscs, 0=L 1=R 0.5=C
+	bool isInitialised{ false };							// false if initialisation is still in progress
 	
 	// shared static variables and methods
 
@@ -166,5 +180,6 @@ private:
 	float gainOffset;							// offset to manage gain difference between few voices and many voices
 	juce::SmoothedValue<float> gain{ 0.0f };
 	std::pair<float, float> out{};
+	bool isInitialised{ false };				// false if initialisation is still in progress
 };
 

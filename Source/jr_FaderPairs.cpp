@@ -31,6 +31,22 @@ void FaderPair::init(float _sampleRate, float _maxLevel, bool _silenced)
 	resetPan(1);
 
 	initOscs(_sampleRate);
+
+	isInitialised = true;
+}
+
+void FaderPair::updateSampleRate(float _sampleRate)
+{
+	masterGain.reset(_sampleRate, rampTime);
+	avgLevel.reset(_sampleRate, rampTime);
+	maxLevel.reset(_sampleRate, rampTime);
+
+	lfo.setSampleRate(_sampleRate);
+
+	for (auto& osc : oscs)
+	{
+		osc.setSampleRate(_sampleRate);
+	}
 }
 
 void FaderPair::initFreqs(float _minOscFreq, float _maxOscFreq, float _minLfoFreq, float _maxLfoFreq)
@@ -127,6 +143,11 @@ void FaderPair::setLfoRate(float _rate)
 	FaderPair::lfoRate = jr::Utils::constrainFloat(_rate);
 }
 
+bool FaderPair::getIsInitialised()
+{
+	return isInitialised;
+}
+
 void FaderPair::initOscs(float _sampleRate)
 {
 	if (oscs.size() != 2)
@@ -203,26 +224,66 @@ float FaderPair::getRandomOscFrequency()
 
 void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs, float minOscFreq, float maxOscFreq)
 {
-	sampleRate = _sampleRate;
-	gain.reset(sampleRate, 0.1f);
-
-	FaderPair::initFreqs(minOscFreq, maxOscFreq);
-
-	const float maxLevel = 0.5f / (float)numPairs;
-	for (int i{}; i < maxNumPairs; i++)
+	if (_sampleRate <= 0.0f)
 	{
-		pairs.push_back(FaderPair());
-		pairs.at(i).init(sampleRate, maxLevel, i >= numPairs);
+		return;
 	}
-	numActivePairs = numPairs;
 
-	setGainOffset();
+	sampleRate = _sampleRate;
+
+	if (pairs.size() == 0)
+	{
+		// first time only
+
+		FaderPair::initFreqs(minOscFreq, maxOscFreq);
+
+		const float maxLevel = 0.5f / (float)numPairs;
+
+		for (int i{}; i < maxNumPairs; i++)
+		{
+			pairs.push_back(FaderPair());
+			pairs.at(i).init(sampleRate, maxLevel, i >= numPairs);
+		}
+
+		numActivePairs = numPairs;
+
+		setGainOffset();
+	}
+	else
+	{
+		// every time sampleRate changes
+
+		gain.reset(sampleRate, 0.1f);
+
+		for (auto& pair : pairs)
+		{
+			pair.updateSampleRate(sampleRate);
+		}
+	}
 }
 
 std::pair<float, float> FaderPairs::process()
 {
 	out.first = 0.0f;
 	out.second = 0.0f;
+
+	if (!isInitialised)
+	{
+		bool allFinished = true;
+		for (auto pair : pairs)
+		{
+			if (!pair.getIsInitialised())
+			{
+				allFinished = false;
+				break;
+			}
+		}
+		isInitialised = allFinished;
+		if (!isInitialised)
+		{
+			return out;
+		}
+	}
 
 	float sampleOut{};
 	for (auto& pair : pairs)
