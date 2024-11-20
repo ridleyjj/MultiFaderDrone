@@ -40,7 +40,7 @@ MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltF
     prevRangeMin = freqRangeSlider.getMinValue();
     prevRangeMax = freqRangeSlider.getMaxValue();
 
-    
+    freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(rangeFrozen));
 
     gainSlider.setValue(1.0, juce::dontSendNotification);
     gainSlider.setName("gain");
@@ -57,6 +57,8 @@ MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltF
 }
 
 void MuiltFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxVal, double step) {
+    slider->setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(false));
+    
     slider->setTextBoxIsEditable(false);
     slider->setRange(minVal, maxVal, step);
     slider->addListener(this);
@@ -170,4 +172,5 @@ void MuiltFaderDroneAudioProcessorEditor::toggleRangeFrozen()
 {
     rangeFrozen = !rangeFrozen;
     frozenRangeAmount = rangeFrozen ? freqRangeSlider.getMaxValue() - freqRangeSlider.getMinValue() : 0.0;
+    freqRangeSlider.setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(rangeFrozen));
 }

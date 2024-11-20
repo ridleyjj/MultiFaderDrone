@@ -10,10 +10,15 @@
 
 #include "StyleSheet.h"
 
+juce::Colour CustomLookAndFeel::getValueTrackColour(bool isFrozen)
+{
+    return isFrozen ? verdigris : roseQuartz;
+}
+
 void CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& slider)
 {
     auto outline = slider.findColour(juce::Slider::rotarySliderOutlineColourId);
-    auto fill = slider.getName() == "gain" ? verdigris : roseQuartz;
+    auto fill = roseQuartz;
     auto thumbColour = juce::Colours::lightgrey;
     auto backgroundColour = slider.findColour(juce::Slider::rotarySliderFillColourId);
 
@@ -80,7 +85,7 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
     auto isTwoVal = (style == juce::Slider::SliderStyle::TwoValueVertical || style == juce::Slider::SliderStyle::TwoValueHorizontal);
 
     auto backgroundTrackColour = slider.findColour(juce::Slider::backgroundColourId);
-    auto valueTrackColour = roseQuartz;
+    auto valueTrackColour = slider.findColour(juce::Slider::trackColourId);
     auto zeroMarkColour = juce::Colours::lightgrey;
 
     auto trackWidth = juce::jmin(6.0f, slider.isHorizontal() ? (float)height * 0.25f : (float)width * 0.25f);
