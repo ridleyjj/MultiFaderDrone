@@ -27,6 +27,10 @@ public:
 
     void sliderValueChanged(juce::Slider* slider) override;
 
+    void freqRangeSliderUpdate();
+
+    void stereoSliderUpdate();
+
     void toggleRangeFrozen();
 
 private:
@@ -53,6 +57,8 @@ private:
     // buttons
 
     juce::ToggleButton freezeRangeButton{ "Freeze" };
+
+    // range "freezing" variables
 
     bool rangeFrozen{ false };
     double frozenRangeAmount{ 0.0f };

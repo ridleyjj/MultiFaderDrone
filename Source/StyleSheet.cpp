@@ -10,9 +10,15 @@
 
 #include "StyleSheet.h"
 
-juce::Colour CustomLookAndFeel::getValueTrackColour(bool isFrozen)
+CustomLookAndFeel::CustomLookAndFeel()
 {
-    return isFrozen ? verdigris : roseQuartz;
+    setColour(juce::Label::textColourId, juce::Colours::black);
+    setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
+    setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::black.withAlpha(0.0f));
+    setColour(juce::ToggleButton::textColourId, juce::Colours::black);
+    setColour(juce::ToggleButton::tickColourId, juce::Colours::black);
+    setColour(juce::ToggleButton::tickDisabledColourId, juce::Colours::black);
+    setDefaultSansSerifTypeface(StyleSheet::boldFont);
 }
 
 void CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& slider)
