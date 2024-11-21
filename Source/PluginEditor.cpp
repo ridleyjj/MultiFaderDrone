@@ -11,7 +11,7 @@
 #include "StyleSheet.h"
 
 //==============================================================================
-MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltFaderDroneAudioProcessor& p)
+MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiFaderDroneAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
     juce::LookAndFeel::setDefaultLookAndFeel(&myLookAndFeel);
@@ -56,7 +56,7 @@ MuiltFaderDroneAudioProcessorEditor::MuiltFaderDroneAudioProcessorEditor (MuiltF
     setSize (400, 450);
 }
 
-void MuiltFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxVal, double step) {
+void MultiFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxVal, double step) {
     slider->setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(false));
     
     slider->setTextBoxIsEditable(false);
@@ -70,13 +70,13 @@ void MuiltFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider,
     label->attachToComponent(slider, false);
 }
 
-MuiltFaderDroneAudioProcessorEditor::~MuiltFaderDroneAudioProcessorEditor()
+MultiFaderDroneAudioProcessorEditor::~MultiFaderDroneAudioProcessorEditor()
 {
     juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
 }
 
 //==============================================================================
-void MuiltFaderDroneAudioProcessorEditor::paint (juce::Graphics& g)
+void MultiFaderDroneAudioProcessorEditor::paint (juce::Graphics& g)
 {
     juce::Colour beige{ juce::Colour(240, 227, 214) };
 
@@ -84,7 +84,7 @@ void MuiltFaderDroneAudioProcessorEditor::paint (juce::Graphics& g)
     g.fillAll(beige);
 }
 
-void MuiltFaderDroneAudioProcessorEditor::resized()
+void MultiFaderDroneAudioProcessorEditor::resized()
 {
     voicesSlider.setBoundsRelative(0.35f, 0.5f, 0.3f, 0.3f);
 
@@ -99,7 +99,7 @@ void MuiltFaderDroneAudioProcessorEditor::resized()
     stereoSlider.setBoundsRelative(0.1f, 0.9f, 0.8f, 0.1f);
 }
 
-void MuiltFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
+void MultiFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &voicesSlider)
     {
@@ -168,7 +168,7 @@ void MuiltFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slide
     }
 }
 
-void MuiltFaderDroneAudioProcessorEditor::toggleRangeFrozen()
+void MultiFaderDroneAudioProcessorEditor::toggleRangeFrozen()
 {
     rangeFrozen = !rangeFrozen;
     frozenRangeAmount = rangeFrozen ? freqRangeSlider.getMaxValue() - freqRangeSlider.getMinValue() : 0.0;

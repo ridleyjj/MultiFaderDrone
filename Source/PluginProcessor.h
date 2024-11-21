@@ -16,12 +16,12 @@
 //==============================================================================
 /**
 */
-class MuiltFaderDroneAudioProcessor  : public juce::AudioProcessor
+class MultiFaderDroneAudioProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    MuiltFaderDroneAudioProcessor();
-    ~MuiltFaderDroneAudioProcessor() override;
+    MultiFaderDroneAudioProcessor();
+    ~MultiFaderDroneAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -102,5 +102,5 @@ private:
     float defaultMaxFreq{ 1200.0f };
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MuiltFaderDroneAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiFaderDroneAudioProcessor)
 };

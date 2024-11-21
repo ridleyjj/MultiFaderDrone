@@ -15,11 +15,11 @@
 //==============================================================================
 /**
 */
-class MuiltFaderDroneAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Slider::Listener
+class MultiFaderDroneAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Slider::Listener
 {
 public:
-    MuiltFaderDroneAudioProcessorEditor (MuiltFaderDroneAudioProcessor&);
-    ~MuiltFaderDroneAudioProcessorEditor() override;
+    MultiFaderDroneAudioProcessorEditor (MultiFaderDroneAudioProcessor&);
+    ~MultiFaderDroneAudioProcessorEditor() override;
 
     //==============================================================================
     void paint (juce::Graphics&) override;
@@ -61,7 +61,7 @@ private:
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    MuiltFaderDroneAudioProcessor& audioProcessor;
+    MultiFaderDroneAudioProcessor& audioProcessor;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MuiltFaderDroneAudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiFaderDroneAudioProcessorEditor)
 };

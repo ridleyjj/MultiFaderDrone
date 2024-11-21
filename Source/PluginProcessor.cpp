@@ -10,7 +10,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-MuiltFaderDroneAudioProcessor::MuiltFaderDroneAudioProcessor()
+MultiFaderDroneAudioProcessor::MultiFaderDroneAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -24,17 +24,17 @@ MuiltFaderDroneAudioProcessor::MuiltFaderDroneAudioProcessor()
 {
 }
 
-MuiltFaderDroneAudioProcessor::~MuiltFaderDroneAudioProcessor()
+MultiFaderDroneAudioProcessor::~MultiFaderDroneAudioProcessor()
 {
 }
 
 //==============================================================================
-const juce::String MuiltFaderDroneAudioProcessor::getName() const
+const juce::String MultiFaderDroneAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool MuiltFaderDroneAudioProcessor::acceptsMidi() const
+bool MultiFaderDroneAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -43,7 +43,7 @@ bool MuiltFaderDroneAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool MuiltFaderDroneAudioProcessor::producesMidi() const
+bool MultiFaderDroneAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -52,7 +52,7 @@ bool MuiltFaderDroneAudioProcessor::producesMidi() const
    #endif
 }
 
-bool MuiltFaderDroneAudioProcessor::isMidiEffect() const
+bool MultiFaderDroneAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -61,50 +61,50 @@ bool MuiltFaderDroneAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double MuiltFaderDroneAudioProcessor::getTailLengthSeconds() const
+double MultiFaderDroneAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int MuiltFaderDroneAudioProcessor::getNumPrograms()
+int MultiFaderDroneAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int MuiltFaderDroneAudioProcessor::getCurrentProgram()
+int MultiFaderDroneAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void MuiltFaderDroneAudioProcessor::setCurrentProgram (int index)
+void MultiFaderDroneAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String MuiltFaderDroneAudioProcessor::getProgramName (int index)
+const juce::String MultiFaderDroneAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void MuiltFaderDroneAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void MultiFaderDroneAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void MuiltFaderDroneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void MultiFaderDroneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     faders.init(oscCount / 2, sampleRate, maxOscCount / 2);
     gain.reset(sampleRate, 0.1f);
 }
 
-void MuiltFaderDroneAudioProcessor::releaseResources()
+void MultiFaderDroneAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool MuiltFaderDroneAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool MultiFaderDroneAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -129,7 +129,7 @@ bool MuiltFaderDroneAudioProcessor::isBusesLayoutSupported (const BusesLayout& l
 }
 #endif
 
-void MuiltFaderDroneAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void MultiFaderDroneAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
@@ -169,25 +169,25 @@ void MuiltFaderDroneAudioProcessor::processBlock(juce::AudioBuffer<float>& buffe
 }
 
 //==============================================================================
-bool MuiltFaderDroneAudioProcessor::hasEditor() const
+bool MultiFaderDroneAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* MuiltFaderDroneAudioProcessor::createEditor()
+juce::AudioProcessorEditor* MultiFaderDroneAudioProcessor::createEditor()
 {
-    return new MuiltFaderDroneAudioProcessorEditor (*this);
+    return new MultiFaderDroneAudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void MuiltFaderDroneAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void MultiFaderDroneAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void MuiltFaderDroneAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void MultiFaderDroneAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -197,13 +197,13 @@ void MuiltFaderDroneAudioProcessor::setStateInformation (const void* data, int s
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new MuiltFaderDroneAudioProcessor();
+    return new MultiFaderDroneAudioProcessor();
 }
 
 //==============================================================================
 // update method calls from Editor
 
-void MuiltFaderDroneAudioProcessor::setOscCount(size_t _oscCount)
+void MultiFaderDroneAudioProcessor::setOscCount(size_t _oscCount)
 {
     if (_oscCount != oscCount)
     {
@@ -212,22 +212,22 @@ void MuiltFaderDroneAudioProcessor::setOscCount(size_t _oscCount)
     }
 }
 
-void MuiltFaderDroneAudioProcessor::setLfoRate(float _rate)
+void MultiFaderDroneAudioProcessor::setLfoRate(float _rate)
 {
     faders.setLfoRate(_rate);
 }
 
-void MuiltFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz)
+void MultiFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz)
 {
     faders.setOscFreqRange(minHz, maxHz);
 }
 
-void MuiltFaderDroneAudioProcessor::setGain(double _gain)
+void MultiFaderDroneAudioProcessor::setGain(double _gain)
 {
     gain.setTargetValue(jr::Utils::constrainFloat(_gain) * maxGain);
 }
 
-void MuiltFaderDroneAudioProcessor::setStereoWidth(float width)
+void MultiFaderDroneAudioProcessor::setStereoWidth(float width)
 {
     faders.setStereoWidth(width);
 }
