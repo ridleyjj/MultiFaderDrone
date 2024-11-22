@@ -208,18 +208,22 @@ void MultiFaderDroneAudioProcessor::setOscCount(size_t _oscCount)
     if (_oscCount != oscCount)
     {
         oscCount = _oscCount;
-        faders.setNumPairs(oscCount / 2);
+        numPairs = oscCount / 2;
+        faders.setNumPairs(numPairs);
     }
 }
 
 void MultiFaderDroneAudioProcessor::setLfoRate(float _rate)
 {
-    faders.setLfoRate(_rate);
+    rate = jr::Utils::constrainFloat(_rate);
+    faders.setLfoRate(rate);
 }
 
 void MultiFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz)
 {
-    faders.setOscFreqRange(minHz, maxHz);
+    currentFreqRangeMin = jr::Utils::constrainFloat(minHz, minFreq, maxFreq);
+    currentFreqRangeMax = jr::Utils::constrainFloat(maxHz, minFreq, maxFreq);
+    faders.setOscFreqRange(currentFreqRangeMin, currentFreqRangeMax);
 }
 
 void MultiFaderDroneAudioProcessor::setGain(double _gain)
@@ -229,5 +233,6 @@ void MultiFaderDroneAudioProcessor::setGain(double _gain)
 
 void MultiFaderDroneAudioProcessor::setStereoWidth(float width)
 {
-    faders.setStereoWidth(width);
+    stereoWidth = jr::Utils::constrainFloat(width);
+    faders.setStereoWidth(stereoWidth);
 }

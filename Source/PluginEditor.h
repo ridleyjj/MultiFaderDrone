@@ -36,7 +36,7 @@ public:
 private:
     // helpers
 
-    void initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxValue, double step);
+    void initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxValue, double step, double initValue = 0.0);
 
     CustomLookAndFeel myLookAndFeel;
 

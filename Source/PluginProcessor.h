@@ -69,37 +69,52 @@ public:
 
     void setGain(double _gain);
 
+    void setRangeFrozen(bool isFrozen) { rangeFrozen = isFrozen; }
+
     size_t getMaxOscCount() {
         return maxOscCount;
     }
 
-    float getMaxFreq() {
-        return maxFreq;
-    }
+    float getMaxFreq() { return maxFreq; }
 
-    float getMinFreq() {
-        return minFreq;
-    }
+    float getMinFreq() { return minFreq; }
     
-    float getDefaultMinFreq() {
-        return defaultMinFreq;
-    }
+    float getDefaultMinFreq() { return defaultMinFreq; }
     
-    float getDefaultMaxFreq() {
-        return defaultMaxFreq;
-    }
+    float getDefaultMaxFreq() { return defaultMaxFreq; }
+
+    int getNumPairs() { return numPairs; }
+
+    float getCurrentFreqRangeMin() { return currentFreqRangeMin; }
+
+    float getCurrentFreqRangeMax() { return currentFreqRangeMax; }
+
+    float getRate() { return rate; }
+
+    float getStereoWidth() { return stereoWidth; }
+
+    float getGain() { return gain.getCurrentValue() * (1.0f / maxGain); }
+
+    bool getRangeFrozen() { return rangeFrozen; }
 
 private:
     size_t oscCount{ 2 };          // total number of oscillators
-    juce::Random random;            // random value generator
     float maxGain = 0.3;
-    juce::SmoothedValue<float> gain{ maxGain };               // master output level
     FaderPairs faders;              // pair of connected faders
     size_t maxOscCount{ 30 };
     float maxFreq{ 2400.0f };       // max freq in Hz that Osc Freq slider can be set
     float minFreq{ 80.0f };         // min freq in Hz that Osc Freq slider can be set
     float defaultMinFreq{ 120.0f };
     float defaultMaxFreq{ 1200.0f };
+
+    // GUI Params
+    juce::SmoothedValue<float> gain{ maxGain };               // master output level
+    int numPairs{ 1 };
+    float currentFreqRangeMin{ 120.0f };
+    float currentFreqRangeMax{ 1200.0f };
+    float rate{ 0.0f };
+    float stereoWidth{ 0.0f };
+    bool rangeFrozen{ false };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiFaderDroneAudioProcessor)

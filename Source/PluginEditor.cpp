@@ -18,13 +18,14 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     // sliders
 
-    initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices", 2, 30, 2);
-    initSimpleSlider(&gainSlider, &gainLabel, "Master Gain", 0.0, 1.0, 0.01);
-    initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate", 0.0, 1.0, 0.01);
+    initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices", 2, 30, 2, audioProcessor.getNumPairs());
+    initSimpleSlider(&gainSlider, &gainLabel, "Master Gain", 0.0, 1.0, 0.01, audioProcessor.getGain());
+    initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate", 0.0, 1.0, 0.01, audioProcessor.getRate());
     initSimpleSlider(&stereoSlider, &stereoLabel, "Width", -1.0, 1.0, 0.01);
-    stereoSlider.setMinAndMaxValues(0.0, 0.0, juce::dontSendNotification);
+    float currentStereoWidth = audioProcessor.getStereoWidth();
+    stereoSlider.setMinAndMaxValues(currentStereoWidth * -1, currentStereoWidth, juce::dontSendNotification);
     initSimpleSlider(&freqRangeSlider, &freqRangeLabel, "Range", 80.0f, 2000.0f, 5.0f);
-    freqRangeSlider.setMinAndMaxValues(120.0f, 1200.0f, juce::dontSendNotification);
+    freqRangeSlider.setMinAndMaxValues(audioProcessor.getCurrentFreqRangeMin(), audioProcessor.getCurrentFreqRangeMax(), juce::dontSendNotification);
     freqRangeSlider.textFromValueFunction = [=](double value)
         {
             return juce::String(freqRangeSlider.getMinValue()) + "Hz - " + juce::String(freqRangeSlider.getMaxValue()) + "Hz";
@@ -35,13 +36,20 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(rangeFrozen));
 
-    gainSlider.setValue(1.0, juce::dontSendNotification);
+    gainSlider.setValue(audioProcessor.getGain(), juce::dontSendNotification);
     gainSlider.setName("gain");
 
     // buttons
 
     freezeRangeButton.sendLookAndFeelChange(); // needed to receive latest look and feel font
     freezeRangeButton.onClick = [this] { toggleRangeFrozen(); };
+    rangeFrozen = audioProcessor.getRangeFrozen();
+    if (rangeFrozen)
+    {
+        frozenRangeAmount = freqRangeSlider.getMaxValue() - freqRangeSlider.getMinValue();
+        freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(rangeFrozen));
+    }
+    freezeRangeButton.setToggleState(rangeFrozen, juce::dontSendNotification);
     addAndMakeVisible(freezeRangeButton);
 
     // Make sure that before the constructor has finished, you've set the
@@ -49,11 +57,12 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     setSize (400, 450);
 }
 
-void MultiFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxVal, double step) {
+void MultiFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxVal, double step, double initValue) {
     // slider init
     slider->setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(false));
     slider->setTextBoxIsEditable(false);
     slider->setRange(minVal, maxVal, step);
+    slider->setValue(initValue, juce::dontSendNotification);
     slider->addListener(this);
     slider->sendLookAndFeelChange(); // needed to receive latest look and feel font
     addAndMakeVisible(slider);
@@ -171,6 +180,7 @@ void MultiFaderDroneAudioProcessorEditor::stereoSliderUpdate()
 void MultiFaderDroneAudioProcessorEditor::toggleRangeFrozen()
 {
     rangeFrozen = !rangeFrozen;
+    audioProcessor.setRangeFrozen(rangeFrozen);
     frozenRangeAmount = rangeFrozen ? freqRangeSlider.getMaxValue() - freqRangeSlider.getMinValue() : 0.0;
     freqRangeSlider.setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(rangeFrozen));
 }
