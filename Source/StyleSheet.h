@@ -43,7 +43,7 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
     private:
         static inline juce::Colour verdigris{ juce::Colour(130, 174, 177) };
         static inline juce::Colour roseQuartz{ juce::Colour(158, 143, 178) };
-        static inline juce::Colour beige{ juce::Colour(217, 197, 178) };
+        static inline juce::Colour beige{ juce::Colour(240, 227, 214) };
         static inline juce::Colour trackColour{ juce::Colour(38, 50, 56) };
         static inline juce::Colour dark{ juce::Colour(24, 31, 34) };
 
