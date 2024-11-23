@@ -150,7 +150,7 @@ public:
 	/*
 	* Sets the number of desired active pairs and silences / starts voices as needed.
 	*/
-	void setNumPairs(size_t numPairs);
+	void setNumPairs(int numPairs);
 
 	/*
 	* Sets LFO Rate which effectively controls the range of LFO frequency values. Rate is between 0 and 1
@@ -175,8 +175,7 @@ private:
 
 	std::vector<FaderPair> pairs;
 	float sampleRate;
-	size_t numActivePairs;
-	size_t maxNumPairs;
+	int numActivePairs;
 	float gainOffset;							// offset to manage gain difference between few voices and many voices
 	juce::SmoothedValue<float> gain{ 0.0f };
 	std::pair<float, float> out{};

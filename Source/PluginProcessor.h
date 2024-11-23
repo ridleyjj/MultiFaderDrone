@@ -12,6 +12,15 @@
 #include <vector>
 #include "jr_Oscillators.h"
 #include "jr_FaderPairs.h"
+#include "ApvtsListener.h"
+
+// parameter IDs
+namespace ID
+{
+    const juce::Identifier GAIN{ "gain" };
+    const juce::Identifier NUM_VOICES{ "numVoices" };
+    const juce::Identifier RATE{ "rate" };
+}
 
 //==============================================================================
 /**
@@ -56,7 +65,9 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    void setOscCount(size_t _oscCount);
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
+    void setNumPairs(int _oscCount);
     
     void setLfoRate(float _rate);
 
@@ -71,10 +82,6 @@ public:
 
     void setRangeFrozen(bool isFrozen) { rangeFrozen = isFrozen; }
 
-    size_t getMaxOscCount() {
-        return maxOscCount;
-    }
-
     float getMaxFreq() { return maxFreq; }
 
     float getMinFreq() { return minFreq; }
@@ -83,13 +90,10 @@ public:
     
     float getDefaultMaxFreq() { return defaultMaxFreq; }
 
-    int getNumPairs() { return numPairs; }
 
     float getCurrentFreqRangeMin() { return currentFreqRangeMin; }
 
     float getCurrentFreqRangeMax() { return currentFreqRangeMax; }
-
-    float getRate() { return rate; }
 
     float getStereoWidth() { return stereoWidth; }
 
@@ -97,11 +101,12 @@ public:
 
     bool getRangeFrozen() { return rangeFrozen; }
 
+    juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
+
 private:
-    size_t oscCount{ 2 };          // total number of oscillators
     float maxGain = 0.3;
     FaderPairs faders;              // pair of connected faders
-    size_t maxOscCount{ 30 };
+    int maxPairCount{ 15 };
     float maxFreq{ 2400.0f };       // max freq in Hz that Osc Freq slider can be set
     float minFreq{ 80.0f };         // min freq in Hz that Osc Freq slider can be set
     float defaultMinFreq{ 120.0f };
@@ -109,12 +114,16 @@ private:
 
     // GUI Params
     juce::SmoothedValue<float> gain{ maxGain };               // master output level
-    int numPairs{ 1 };
     float currentFreqRangeMin{ 120.0f };
     float currentFreqRangeMax{ 1200.0f };
-    float rate{ 0.0f };
     float stereoWidth{ 0.0f };
     bool rangeFrozen{ false };
+
+    juce::AudioProcessorValueTreeState apvts;
+
+    jr::ApvtsListener gainListener{ [&](float newValue) { setGain(newValue); } };
+    jr::ApvtsListener rateListener{ [&](float newValue) { setLfoRate(newValue); } };
+    jr::ApvtsListener voicesListener{ [&](float newValue) { setNumPairs(newValue); } };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiFaderDroneAudioProcessor)

@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "StyleSheet.h"
+#include <memory>
 
 //==============================================================================
 /**
@@ -36,7 +37,9 @@ public:
 private:
     // helpers
 
-    void initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxValue, double step, double initValue = 0.0);
+    void initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name);
+    
+    void initSimpleSliderWithRange(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxValue, double step);
 
     CustomLookAndFeel myLookAndFeel;
 
@@ -48,6 +51,8 @@ private:
     juce::Slider stereoSlider{ juce::Slider::SliderStyle::TwoValueHorizontal, juce::Slider::NoTextBox };
     juce::Slider freqRangeSlider{ juce::Slider::SliderStyle::TwoValueVertical, juce::Slider::TextBoxBelow };
     juce::Label voicesLabel, lfoRateLabel, freqRangeLabel, gainLabel, stereoLabel;
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment, lfoRateAttachment, voicesAttachment;
 
     // stereo width state
 

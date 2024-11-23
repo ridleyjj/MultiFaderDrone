@@ -301,15 +301,19 @@ std::pair<float, float> FaderPairs::process()
 	return out;
 }
 
-void FaderPairs::setNumPairs(size_t numPairs)
+void FaderPairs::setNumPairs(int numPairs)
 {
+	if (numPairs == numActivePairs)
+	{
+		return;
+	}
 	if (numPairs < 0)
 	{
 		numPairs = 0;
 	}
-	else if (numPairs > maxNumPairs)
+	else if (numPairs > pairs.size())
 	{
-		numPairs = maxNumPairs;
+		numPairs = pairs.size();
 	}
 	float maxLevel = 1.0f / (float)numPairs;
 	if (numPairs < pairs.size())
@@ -354,10 +358,8 @@ void FaderPairs::setStereoWidth(float width)
 void FaderPairs::setGainOffset()
 {
 	gainOffset = (numActivePairs - 1) / 7.0f;
-	if (gainOffset > 1.0f)
-	{
-		gainOffset = 1.0f;
-	}
+
+	gainOffset = jr::Utils::constrainFloat(gainOffset);
 
 	// gain offset is now 0.0f if numActiveParis is 2, or 1.0f if numActivePairs is 14 or greater
 	gain.setTargetValue(0.6f + 0.4f * gainOffset);

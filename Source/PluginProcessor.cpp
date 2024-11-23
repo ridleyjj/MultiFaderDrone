@@ -8,6 +8,8 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include <memory>
+#include <functional>
 
 //==============================================================================
 MultiFaderDroneAudioProcessor::MultiFaderDroneAudioProcessor()
@@ -19,13 +21,19 @@ MultiFaderDroneAudioProcessor::MultiFaderDroneAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), apvts(*this, nullptr, "PARAMETERS", createParameterLayout())
 #endif
 {
+    apvts.addParameterListener(ID::GAIN.toString(), &gainListener);
+    apvts.addParameterListener(ID::RATE.toString(), &rateListener);
+    apvts.addParameterListener(ID::NUM_VOICES.toString(), &voicesListener);
 }
 
 MultiFaderDroneAudioProcessor::~MultiFaderDroneAudioProcessor()
 {
+    apvts.removeParameterListener(ID::GAIN.toString(), &gainListener);
+    apvts.removeParameterListener(ID::RATE.toString(), &rateListener);
+    apvts.removeParameterListener(ID::NUM_VOICES.toString(), &voicesListener);
 }
 
 //==============================================================================
@@ -93,7 +101,8 @@ void MultiFaderDroneAudioProcessor::changeProgramName (int index, const juce::St
 //==============================================================================
 void MultiFaderDroneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    faders.init(oscCount / 2, sampleRate, maxOscCount / 2);
+    int currentNumVoices = floor(*apvts.getRawParameterValue(ID::NUM_VOICES.toString()));
+    faders.init(currentNumVoices, sampleRate, maxPairCount);
     gain.reset(sampleRate, 0.1f);
 }
 
@@ -182,15 +191,21 @@ juce::AudioProcessorEditor* MultiFaderDroneAudioProcessor::createEditor()
 //==============================================================================
 void MultiFaderDroneAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    auto state = apvts.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void MultiFaderDroneAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+    if (xmlState.get() != nullptr)
+    {
+        if (xmlState->hasTagName(apvts.state.getType()))
+        {
+            apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+        }
+    }
 }
 
 //==============================================================================
@@ -201,22 +216,28 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 }
 
 //==============================================================================
+
+juce::AudioProcessorValueTreeState::ParameterLayout MultiFaderDroneAudioProcessor::createParameterLayout()
+{
+    juce::AudioProcessorValueTreeState::ParameterLayout layout;
+
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::GAIN.toString(), "Gain", 0.0f, 1.0f, 1.0f));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::RATE.toString(), "Rate", 0.0f, 1.0f, 0.0f));
+    layout.add(std::make_unique<juce::AudioParameterInt>(ID::NUM_VOICES.toString(), "Num Voices", 1, 15, 3, "Num Voices", [](int value, int maximumStringLength) -> juce::String { return juce::String(value * 2); }, nullptr));
+
+    return layout;
+}
+
 // update method calls from Editor
 
-void MultiFaderDroneAudioProcessor::setOscCount(size_t _oscCount)
+void MultiFaderDroneAudioProcessor::setNumPairs(int _numPairs)
 {
-    if (_oscCount != oscCount)
-    {
-        oscCount = _oscCount;
-        numPairs = oscCount / 2;
-        faders.setNumPairs(numPairs);
-    }
+    faders.setNumPairs(_numPairs);
 }
 
 void MultiFaderDroneAudioProcessor::setLfoRate(float _rate)
 {
-    rate = jr::Utils::constrainFloat(_rate);
-    faders.setLfoRate(rate);
+    faders.setLfoRate(jr::Utils::constrainFloat(_rate));
 }
 
 void MultiFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz)

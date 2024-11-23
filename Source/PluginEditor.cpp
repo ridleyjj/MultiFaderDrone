@@ -18,13 +18,17 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     // sliders
 
-    initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices", 2, 30, 2, audioProcessor.getNumPairs());
-    initSimpleSlider(&gainSlider, &gainLabel, "Master Gain", 0.0, 1.0, 0.01, audioProcessor.getGain());
-    initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate", 0.0, 1.0, 0.01, audioProcessor.getRate());
-    initSimpleSlider(&stereoSlider, &stereoLabel, "Width", -1.0, 1.0, 0.01);
+    initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices");
+    initSimpleSlider(&gainSlider, &gainLabel, "Master Gain");
+    initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate");
+    initSimpleSliderWithRange(&stereoSlider, &stereoLabel, "Width", -1.0, 1.0, 0.01);
+    initSimpleSliderWithRange(&freqRangeSlider, &freqRangeLabel, "Range", 80.0f, 2000.0f, 5.0f);
+    
+    // Two-Headed Slider specifics
+
     float currentStereoWidth = audioProcessor.getStereoWidth();
     stereoSlider.setMinAndMaxValues(currentStereoWidth * -1, currentStereoWidth, juce::dontSendNotification);
-    initSimpleSlider(&freqRangeSlider, &freqRangeLabel, "Range", 80.0f, 2000.0f, 5.0f);
+
     freqRangeSlider.setMinAndMaxValues(audioProcessor.getCurrentFreqRangeMin(), audioProcessor.getCurrentFreqRangeMax(), juce::dontSendNotification);
     freqRangeSlider.textFromValueFunction = [=](double value)
         {
@@ -36,8 +40,11 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(rangeFrozen));
 
-    gainSlider.setValue(audioProcessor.getGain(), juce::dontSendNotification);
-    gainSlider.setName("gain");
+    // APVTS Attachments
+
+    gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getAPVTS(), ID::GAIN.toString(), gainSlider);
+    lfoRateAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getAPVTS(), ID::RATE.toString(), lfoRateSlider);
+    voicesAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getAPVTS(), ID::NUM_VOICES.toString(), voicesSlider);
 
     // buttons
 
@@ -57,20 +64,24 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     setSize (400, 450);
 }
 
-void MultiFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxVal, double step, double initValue) {
+void MultiFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name) {
     // slider init
     slider->setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(false));
     slider->setTextBoxIsEditable(false);
-    slider->setRange(minVal, maxVal, step);
-    slider->setValue(initValue, juce::dontSendNotification);
     slider->addListener(this);
     slider->sendLookAndFeelChange(); // needed to receive latest look and feel font
     addAndMakeVisible(slider);
 
-    // text box init
+    // text label init
     label->setText(name, juce::NotificationType::dontSendNotification);
     label->setJustificationType(juce::Justification::centredTop);
     label->attachToComponent(slider, false);
+}
+
+void MultiFaderDroneAudioProcessorEditor::initSimpleSliderWithRange(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxVal, double step) {
+    initSimpleSlider(slider, label, name);
+
+    slider->setRange(minVal, maxVal, step);
 }
 
 MultiFaderDroneAudioProcessorEditor::~MultiFaderDroneAudioProcessorEditor()
@@ -101,21 +112,9 @@ void MultiFaderDroneAudioProcessorEditor::resized()
 
 void MultiFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
 {
-    if (slider == &voicesSlider)
-    {
-        audioProcessor.setOscCount(voicesSlider.getValue());
-    }
-    else if (slider == &lfoRateSlider)
-    {
-        audioProcessor.setLfoRate(lfoRateSlider.getValue());
-    }
-    else if (slider == &freqRangeSlider)
+    if (slider == &freqRangeSlider)
     {
         freqRangeSliderUpdate();
-    }
-    else if (slider == &gainSlider)
-    {
-        audioProcessor.setGain(gainSlider.getValue());
     }
     else if (slider == &stereoSlider)
     {
