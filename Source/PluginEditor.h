@@ -54,6 +54,8 @@ private:
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment, lfoRateAttachment, voicesAttachment;
 
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> freezeAttachment;
+
     // stereo width state
 
     double prevStereoMin = 0.0;
@@ -65,10 +67,10 @@ private:
 
     // range "freezing" variables
 
-    bool rangeFrozen{ false };
-    double frozenRangeAmount{ 0.0f };
-    double prevRangeMin{};
-    double prevRangeMax{};
+    //bool rangeFrozen{ false };
+    //double frozenRangeAmount{ 0.0f };
+    //double prevRangeMin{};
+    //double prevRangeMax{};
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

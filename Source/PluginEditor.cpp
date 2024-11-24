@@ -35,10 +35,10 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
             return juce::String(freqRangeSlider.getMinValue()) + "Hz - " + juce::String(freqRangeSlider.getMaxValue()) + "Hz";
         };
     freqRangeSlider.updateText();
-    prevRangeMin = freqRangeSlider.getMinValue();
-    prevRangeMax = freqRangeSlider.getMaxValue();
+    audioProcessor.setPrevRangeMin(freqRangeSlider.getMinValue());
+    audioProcessor.setPrevRangeMax(freqRangeSlider.getMaxValue());
 
-    freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(rangeFrozen));
+    freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(audioProcessor.getRangeFrozen()));
 
     // APVTS Attachments
 
@@ -50,14 +50,14 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     freezeRangeButton.sendLookAndFeelChange(); // needed to receive latest look and feel font
     freezeRangeButton.onClick = [this] { toggleRangeFrozen(); };
-    rangeFrozen = audioProcessor.getRangeFrozen();
-    if (rangeFrozen)
+    //rangeFrozen = audioProcessor.getRangeFrozen();
+    if (audioProcessor.getRangeFrozen())
     {
-        frozenRangeAmount = freqRangeSlider.getMaxValue() - freqRangeSlider.getMinValue();
-        freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(rangeFrozen));
+        freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(true));
     }
-    freezeRangeButton.setToggleState(rangeFrozen, juce::dontSendNotification);
     addAndMakeVisible(freezeRangeButton);
+
+    freezeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::FREEZE_RANGE.toString(), freezeRangeButton);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -125,34 +125,34 @@ void MultiFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slide
 void MultiFaderDroneAudioProcessorEditor::freqRangeSliderUpdate()
 {
     // if range is frozen, move values together
-    if (rangeFrozen)
+    if (audioProcessor.getRangeFrozen())
     {
-        if (freqRangeSlider.getMinValue() != prevRangeMin)
+        if (freqRangeSlider.getMinValue() != audioProcessor.getPrevMinRange())
         {
-            if (freqRangeSlider.getMinValue() + frozenRangeAmount <= freqRangeSlider.getMaximum())
+            if (freqRangeSlider.getMinValue() + audioProcessor.getFrozenRangeAmount() <= freqRangeSlider.getMaximum())
             {
-                freqRangeSlider.setMaxValue(freqRangeSlider.getMinValue() + frozenRangeAmount, juce::dontSendNotification);
+                freqRangeSlider.setMaxValue(freqRangeSlider.getMinValue() + audioProcessor.getFrozenRangeAmount(), juce::dontSendNotification);
             }
             else
             {
-                freqRangeSlider.setMinValue(prevRangeMin, juce::dontSendNotification);
+                freqRangeSlider.setMinValue(audioProcessor.getPrevMinRange(), juce::dontSendNotification);
             }
         }
-        else if (freqRangeSlider.getMaxValue() != prevRangeMax)
+        else if (freqRangeSlider.getMaxValue() != audioProcessor.getPrevMaxRange())
         {
-            if (freqRangeSlider.getMaxValue() - frozenRangeAmount >= freqRangeSlider.getMinimum())
+            if (freqRangeSlider.getMaxValue() - audioProcessor.getFrozenRangeAmount() >= freqRangeSlider.getMinimum())
             {
-                freqRangeSlider.setMinValue(freqRangeSlider.getMaxValue() - frozenRangeAmount, juce::dontSendNotification);
+                freqRangeSlider.setMinValue(freqRangeSlider.getMaxValue() - audioProcessor.getFrozenRangeAmount(), juce::dontSendNotification);
             }
             else
             {
-                freqRangeSlider.setMaxValue(prevRangeMax, juce::dontSendNotification);
+                freqRangeSlider.setMaxValue(audioProcessor.getPrevMaxRange(), juce::dontSendNotification);
             }
         }
     }
 
-    prevRangeMin = freqRangeSlider.getMinValue();
-    prevRangeMax = freqRangeSlider.getMaxValue();
+    audioProcessor.setPrevRangeMin(freqRangeSlider.getMinValue());
+    audioProcessor.setPrevRangeMax(freqRangeSlider.getMaxValue());
 
     freqRangeSlider.updateText();
     audioProcessor.setOscFreqRange(freqRangeSlider.getMinValue(), freqRangeSlider.getMaxValue());
@@ -178,8 +178,5 @@ void MultiFaderDroneAudioProcessorEditor::stereoSliderUpdate()
 
 void MultiFaderDroneAudioProcessorEditor::toggleRangeFrozen()
 {
-    rangeFrozen = !rangeFrozen;
-    audioProcessor.setRangeFrozen(rangeFrozen);
-    frozenRangeAmount = rangeFrozen ? freqRangeSlider.getMaxValue() - freqRangeSlider.getMinValue() : 0.0;
-    freqRangeSlider.setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(rangeFrozen));
+    freqRangeSlider.setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(audioProcessor.getRangeFrozen()));
 }

@@ -20,6 +20,7 @@ namespace ID
     const juce::Identifier GAIN{ "gain" };
     const juce::Identifier NUM_VOICES{ "numVoices" };
     const juce::Identifier RATE{ "rate" };
+    const juce::Identifier FREEZE_RANGE{ "freeze" };
 }
 
 //==============================================================================
@@ -80,7 +81,11 @@ public:
 
     void setGain(double _gain);
 
-    void setRangeFrozen(bool isFrozen) { rangeFrozen = isFrozen; }
+    void setRangeFrozen(bool isFrozen);
+
+    void setPrevRangeMin(double newValue) { prevMinFreq = newValue; }
+    
+    void setPrevRangeMax(double newValue) { prevMaxFreq = newValue; }
 
     float getMaxFreq() { return maxFreq; }
 
@@ -99,7 +104,15 @@ public:
 
     float getGain() { return gain.getCurrentValue() * (1.0f / maxGain); }
 
-    bool getRangeFrozen() { return rangeFrozen; }
+    bool getRangeFrozen() {
+        return (bool)(*apvts.getRawParameterValue(ID::FREEZE_RANGE.toString()));
+    }
+
+    double getFrozenRangeAmount() { return frozenRangeAmount; }
+
+    double getPrevMinRange() { return prevMinFreq; }
+
+    double getPrevMaxRange() { return prevMaxFreq; }
 
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
 
@@ -114,16 +127,19 @@ private:
 
     // GUI Params
     juce::SmoothedValue<float> gain{ maxGain };               // master output level
-    float currentFreqRangeMin{ 120.0f };
-    float currentFreqRangeMax{ 1200.0f };
+    float currentFreqRangeMin{ defaultMinFreq };
+    float currentFreqRangeMax{ defaultMaxFreq };
     float stereoWidth{ 0.0f };
-    bool rangeFrozen{ false };
+    double frozenRangeAmount{ currentFreqRangeMax - currentFreqRangeMin };      // "Frozen" difference between Max and Min Frequency in Hz
+    double prevMinFreq{};            // prev Min Freq value to determine which frequency slider head has moved
+    double prevMaxFreq{};            // prev Max Freq value to determine which frequency slider head has moved
 
     juce::AudioProcessorValueTreeState apvts;
 
     jr::ApvtsListener gainListener{ [&](float newValue) { setGain(newValue); } };
     jr::ApvtsListener rateListener{ [&](float newValue) { setLfoRate(newValue); } };
     jr::ApvtsListener voicesListener{ [&](float newValue) { setNumPairs(newValue); } };
+    jr::ApvtsListener freezeListener{ [&](bool newValue) { setRangeFrozen(newValue); } };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiFaderDroneAudioProcessor)

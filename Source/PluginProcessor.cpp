@@ -27,6 +27,7 @@ MultiFaderDroneAudioProcessor::MultiFaderDroneAudioProcessor()
     apvts.addParameterListener(ID::GAIN.toString(), &gainListener);
     apvts.addParameterListener(ID::RATE.toString(), &rateListener);
     apvts.addParameterListener(ID::NUM_VOICES.toString(), &voicesListener);
+    apvts.addParameterListener(ID::FREEZE_RANGE.toString(), &freezeListener);
 }
 
 MultiFaderDroneAudioProcessor::~MultiFaderDroneAudioProcessor()
@@ -34,6 +35,7 @@ MultiFaderDroneAudioProcessor::~MultiFaderDroneAudioProcessor()
     apvts.removeParameterListener(ID::GAIN.toString(), &gainListener);
     apvts.removeParameterListener(ID::RATE.toString(), &rateListener);
     apvts.removeParameterListener(ID::NUM_VOICES.toString(), &voicesListener);
+    apvts.removeParameterListener(ID::FREEZE_RANGE.toString(), &freezeListener);
 }
 
 //==============================================================================
@@ -224,6 +226,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MultiFaderDroneAudioProcesso
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::GAIN.toString(), "Gain", 0.0f, 1.0f, 1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::RATE.toString(), "Rate", 0.0f, 1.0f, 0.0f));
     layout.add(std::make_unique<juce::AudioParameterInt>(ID::NUM_VOICES.toString(), "Num Voices", 1, 15, 3, "Num Voices", [](int value, int maximumStringLength) -> juce::String { return juce::String(value * 2); }, nullptr));
+    layout.add(std::make_unique<juce::AudioParameterBool>(ID::FREEZE_RANGE.toString(), "Freeze", true, "Freeze Frequency Range"));
 
     return layout;
 }
@@ -256,4 +259,11 @@ void MultiFaderDroneAudioProcessor::setStereoWidth(float width)
 {
     stereoWidth = jr::Utils::constrainFloat(width);
     faders.setStereoWidth(stereoWidth);
+}
+
+void MultiFaderDroneAudioProcessor::setRangeFrozen(bool newValue)
+{
+    frozenRangeAmount = currentFreqRangeMax - currentFreqRangeMin;
+    prevMinFreq = currentFreqRangeMin;
+    prevMaxFreq = currentFreqRangeMax;
 }
