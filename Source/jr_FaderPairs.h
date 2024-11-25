@@ -13,12 +13,17 @@ public:
 	/*
 	* Initialises oscillators and LFOs with sample rate. Call before playing.
 	*/
-	void init(float _sampleRate, float _maxLevel = 1.0f, bool _silenced = false);
+	void init(float _sampleRate, bool _silenced = false);
 
 	/*
 	* Sets the sample rate
 	*/
 	void updateSampleRate(float _sampleRate);
+
+	/*
+	Updates static variables for FaderPair class with new samplerate
+	*/
+	static void updateStaticSampleRate(float _sampleRate);
 
 	/*
 	* Sets min and max frequencies for Oscs and LFOs for all FaderPair instances. Required to call before creating
@@ -46,7 +51,7 @@ public:
 	/*
 	* Sets the max output level that the Pair is allowed to reach.
 	*/
-	void setMaxLevel(float _maxLevel);
+	static void setMaxLevel(float _maxLevel);
 
 	/*
 	* Triggers instance to recalculate LFO frequency. Use after static LFO Rate or LFO Spread values have changed.
@@ -68,6 +73,11 @@ public:
 	* LFO frequencies, and the higher the max LFO freq is. Min LFO Freq stays constant.
 	*/
 	static void setLfoRate(float _rate);
+
+	/*
+	Processes next sample value for the static MaxLevel and AvgLevel values. Call each sample before calling process() on FaderPair
+	*/
+	static void processStaticLevels();
 
 private:
 	/*
@@ -102,11 +112,8 @@ private:
 	*/
 	float processLevels();
 
-	SineOsc lfo;											// LFO to control mix level of faders
-	juce::SmoothedValue<float> maxLevel;					// the maximum combined level of both faders
-	juce::SmoothedValue<float> avgLevel;						
-	std::vector<SineOsc > oscs;
-	float rampTime{ 0.05f };									// time in seconds for fading in and out
+	SineOsc lfo;											// LFO to control mix level of faders					
+	std::vector<SineOsc > oscs;									// time in seconds for fading in and out
 	juce::SmoothedValue<float> masterGain{ 0.0f };			// master gain for fading in and out
 	bool silenced{ false };
 	bool waitingToRestart{ false };							// true if the voice is waiting to reach 0 master gain before restarting
@@ -117,6 +124,7 @@ private:
 	
 	// shared static variables and methods
 
+	static inline float rampTime{ 0.1f };
 	static inline juce::Random random;						// used for generating random frequency
 	static inline float lfoRate{ 0.0f };					// rate to modify the LFO freq by (0-1)
 	static inline float lfoSpread{ 1.0f };
@@ -125,6 +133,8 @@ private:
 	static inline float minOscFreq;							// minimum lfo frequency when generating random in Hz
 	static inline float maxOscFreq;							// range when picking a random frequency in Hz
 	static inline float stereoWidth{ 0.0f };				// pan range 0 - 1.0
+	static inline juce::SmoothedValue<float> maxLevel{};					// the maximum combined level of both faders
+	static inline juce::SmoothedValue<float> avgLevel{};
 
 	/*
 	* returns a new randomised Osc Freq value in Hz using the current max and min values.
@@ -175,7 +185,7 @@ private:
 
 	std::vector<FaderPair> pairs;
 	float sampleRate;
-	int numActivePairs;
+	int numActivePairs{ 0 };
 	float gainOffset;							// offset to manage gain difference between few voices and many voices
 	juce::SmoothedValue<float> gain{ 0.0f };
 	std::pair<float, float> out{};
