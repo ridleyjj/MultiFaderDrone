@@ -73,7 +73,7 @@ std::pair<float, float> FaderPair::process()
 	}
 
 	// process next sampleOut
-	float delta = processLevels(); // avgLevel gets incremented in here
+	delta = processLevels(); // avgLevel gets incremented in here
 
 	// reset sample out
 	out.first = 0.0f;
@@ -128,6 +128,7 @@ void FaderPair::setMaxLevel(float _maxLevel)
 {
 	maxLevel.setTargetValue(_maxLevel);
 	avgLevel.setTargetValue(_maxLevel / 2.0f);
+	normalRatio = 1.0f / _maxLevel;
 }
 
 void FaderPair::updateLfoFreq()
@@ -240,7 +241,7 @@ void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs, fl
 
 	FaderPair::updateStaticSampleRate(sampleRate);
 
-	if (pairs.size() == 0)
+	if (_pairs.size() == 0)
 	{
 		// first time only
 
@@ -252,8 +253,8 @@ void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs, fl
 
 		for (int i{}; i < maxNumPairs; i++)
 		{
-			pairs.push_back(FaderPair());
-			pairs.at(i).init(sampleRate, i >= numPairs);
+			_pairs.push_back(FaderPair());
+			_pairs.at(i).init(sampleRate, i >= numPairs);
 		}
 
 		numActivePairs = numPairs;
@@ -266,7 +267,7 @@ void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs, fl
 
 		gain.reset(sampleRate, 0.1f);
 
-		for (auto& pair : pairs)
+		for (auto& pair : _pairs)
 		{
 			pair.updateSampleRate(sampleRate);
 		}
@@ -281,7 +282,7 @@ std::pair<float, float> FaderPairs::process()
 	if (!isInitialised)
 	{
 		bool allFinished = true;
-		for (auto pair : pairs)
+		for (auto pair : _pairs)
 		{
 			if (!pair.getIsInitialised())
 			{
@@ -300,7 +301,7 @@ std::pair<float, float> FaderPairs::process()
 
 	FaderPair::processStaticLevels();
 
-	for (auto& pair : pairs)
+	for (auto& pair : _pairs)
 	{
 		auto pairOut = pair.process();
 		out.first += pairOut.first;
@@ -317,7 +318,7 @@ std::pair<float, float> FaderPairs::process()
 
 void FaderPairs::setNumPairs(int numPairs)
 {
-	if (pairs.size() == 0)
+	if (_pairs.size() == 0)
 	{
 		return;
 	}
@@ -330,9 +331,9 @@ void FaderPairs::setNumPairs(int numPairs)
 	{
 		numPairs = 0;
 	}
-	else if (numPairs > pairs.size())
+	else if (numPairs > _pairs.size())
 	{
-		numPairs = pairs.size();
+		numPairs = _pairs.size();
 	}
 	
 	float maxLevel = 1.0f / (float)numPairs;
@@ -342,14 +343,14 @@ void FaderPairs::setNumPairs(int numPairs)
 	{
 		for (int i{ numActivePairs - 1 }; i >= numPairs; i--)
 		{
-			pairs.at(i).silence();
+			_pairs.at(i).silence();
 		}
 	}
 	else if (numPairs > numActivePairs) // starting n pairs
 	{
 		for (int i{ numActivePairs }; i < numPairs; i++)
 		{
-			pairs.at(i).start();
+			_pairs.at(i).start();
 		}
 	}
 
@@ -360,7 +361,7 @@ void FaderPairs::setNumPairs(int numPairs)
 void FaderPairs::setLfoRate(float _rate)
 {
 	FaderPair::setLfoRate(_rate);
-	for (auto& pair : pairs)
+	for (auto& pair : _pairs)
 	{
 		pair.updateLfoFreq();
 	}

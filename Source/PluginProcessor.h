@@ -116,6 +116,8 @@ public:
 
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
 
+    std::shared_ptr<std::vector<FaderPair>> getPairs() { return faders.getPairs(); }
+
 private:
     float maxGain = 0.3;
     FaderPairs faders;              // pair of connected faders

@@ -61,7 +61,12 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 450);
+    setSize (800, 450);
+
+    visualiser.setPairs(audioProcessor.getPairs());
+    addAndMakeVisible(visualiser);
+
+    startTimerHz(24); // FPS
 }
 
 void MultiFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name) {
@@ -87,9 +92,16 @@ void MultiFaderDroneAudioProcessorEditor::initSimpleSliderWithRange(juce::Slider
 MultiFaderDroneAudioProcessorEditor::~MultiFaderDroneAudioProcessorEditor()
 {
     juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
+    stopTimer();
 }
 
 //==============================================================================
+void MultiFaderDroneAudioProcessorEditor::timerCallback()
+{
+    visualiser.setPairs(audioProcessor.getPairs());
+    visualiser.repaint();
+}
+
 void MultiFaderDroneAudioProcessorEditor::paint (juce::Graphics& g)
 {
     g.fillAll(myLookAndFeel.getBackgroundColour());
@@ -97,17 +109,19 @@ void MultiFaderDroneAudioProcessorEditor::paint (juce::Graphics& g)
 
 void MultiFaderDroneAudioProcessorEditor::resized()
 {
-    voicesSlider.setBoundsRelative(0.35f, 0.5f, 0.3f, 0.3f);
+    voicesSlider.setBoundsRelative(0.175f, 0.5f, 0.15f, 0.3f);
 
-    gainSlider.setBoundsRelative(0.35f, 0.1f, 0.3f, 0.3f);
+    gainSlider.setBoundsRelative(0.175f, 0.1f, 0.15f, 0.3f);
 
-    freqRangeSlider.setBoundsRelative(0.1f, 0.1f, 0.2f, 0.7f);
+    freqRangeSlider.setBoundsRelative(0.05f, 0.1f, 0.1f, 0.7f);
 
-    freezeRangeButton.setBoundsRelative(0.1f, 0.8f, 0.2f, 0.1f);
+    freezeRangeButton.setBoundsRelative(0.05f, 0.8f, 0.1f, 0.1f);
 
-    lfoRateSlider.setBoundsRelative(0.75f, 0.1f, 0.1f, 0.7f);
+    lfoRateSlider.setBoundsRelative(0.375f, 0.1f, 0.05f, 0.7f);
 
-    stereoSlider.setBoundsRelative(0.1f, 0.9f, 0.8f, 0.1f);
+    stereoSlider.setBoundsRelative(0.05f, 0.9f, 0.4f, 0.1f);
+
+    visualiser.setBounds(400, 0, 400, 450);
 }
 
 void MultiFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)

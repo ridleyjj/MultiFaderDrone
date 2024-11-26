@@ -63,6 +63,8 @@ public:
 	*/
 	bool getIsInitialised();
 
+	bool getIsSilenced() { return silenced && masterGain.getCurrentValue() == 0.0f; }
+
 	/*
 	* Sets Stereo Width for all instances. 0.0f = mono, 1.0f = full stereo spread.
 	*/
@@ -78,6 +80,10 @@ public:
 	Processes next sample value for the static MaxLevel and AvgLevel values. Call each sample before calling process() on FaderPair
 	*/
 	static void processStaticLevels();
+
+	float getNormalisedOsc1Level() { return (avgLevel.getCurrentValue() + delta) * normalRatio; }
+	
+	float getNormalisedOsc2Level() { return (avgLevel.getCurrentValue() - delta) * normalRatio; }
 
 private:
 	/*
@@ -121,6 +127,7 @@ private:
 	std::pair<float, float> out{ 0.5f, 0.5f };
 	std::vector<float> pan{ 0.5f, 0.5f };					// array of pan values for oscs, 0=L 1=R 0.5=C
 	bool isInitialised{ false };							// false if initialisation is still in progress
+	float delta{};
 	
 	// shared static variables and methods
 
@@ -135,6 +142,7 @@ private:
 	static inline float stereoWidth{ 0.0f };				// pan range 0 - 1.0
 	static inline juce::SmoothedValue<float> maxLevel{};					// the maximum combined level of both faders
 	static inline juce::SmoothedValue<float> avgLevel{};
+	static inline float normalRatio{ 1.0f };						// the factor to multiply current osc level by to get level in range of 0-1. Saving to avoid unecessary calculation repetition
 
 	/*
 	* returns a new randomised Osc Freq value in Hz using the current max and min values.
@@ -177,13 +185,15 @@ public:
 	*/
 	void setStereoWidth(float width);
 
+	std::shared_ptr<std::vector<FaderPair>> getPairs() { return std::make_shared <std::vector<FaderPair>> (_pairs); }
+
 private:
 	/*
 	* Sets gain offset which is used to reduce the apparent loudness difference when increasing the number of voices.
 	*/
 	void setGainOffset();
 
-	std::vector<FaderPair> pairs;
+	std::vector<FaderPair> _pairs{};
 	float sampleRate;
 	int numActivePairs{ 0 };
 	float gainOffset;							// offset to manage gain difference between few voices and many voices

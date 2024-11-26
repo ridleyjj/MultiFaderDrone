@@ -12,11 +12,12 @@
 #include "PluginProcessor.h"
 #include "StyleSheet.h"
 #include <memory>
+#include "OscillatorVisualiser.h"
 
 //==============================================================================
 /**
 */
-class MultiFaderDroneAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Slider::Listener
+class MultiFaderDroneAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Slider::Listener, public juce::Timer
 {
 public:
     MultiFaderDroneAudioProcessorEditor (MultiFaderDroneAudioProcessor&);
@@ -27,6 +28,8 @@ public:
     void resized() override;
 
     void sliderValueChanged(juce::Slider* slider) override;
+
+    void timerCallback() override;
 
     void freqRangeSliderUpdate();
 
@@ -65,12 +68,9 @@ private:
 
     juce::ToggleButton freezeRangeButton{ "Freeze" };
 
-    // range "freezing" variables
+    // Visualiser
 
-    //bool rangeFrozen{ false };
-    //double frozenRangeAmount{ 0.0f };
-    //double prevRangeMin{};
-    //double prevRangeMax{};
+    jr::OscillatorVisualiser visualiser{};
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

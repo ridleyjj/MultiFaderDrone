@@ -39,6 +39,10 @@
       <FILE id="sFfieP" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
       <FILE id="BGGaDp" name="jr_Oscillators.h" compile="0" resource="0"
             file="Source/jr_Oscillators.h"/>
+      <FILE id="r9goKT" name="OscillatorVisualiser.cpp" compile="1" resource="0"
+            file="Source/OscillatorVisualiser.cpp"/>
+      <FILE id="kyXXL7" name="OscillatorVisualiser.h" compile="0" resource="0"
+            file="Source/OscillatorVisualiser.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
