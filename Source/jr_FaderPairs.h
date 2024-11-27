@@ -81,9 +81,44 @@ public:
 	*/
 	static void processStaticLevels();
 
-	float getNormalisedOsc1Level() { return (avgLevel.getCurrentValue() + delta) * normalRatio; }
-	
-	float getNormalisedOsc2Level() { return (avgLevel.getCurrentValue() - delta) * normalRatio; }
+	/*
+	Returns the current level of oscillator at given index, normalised to be between 0 and 1
+	*/
+	float getNormalisedOscLevel(int index) 
+	{
+		if (index == 0)
+		{
+			return (avgLevel.getCurrentValue() + delta) * normalRatio; // osc 1 current level
+		}
+		else
+		{
+			return (avgLevel.getCurrentValue() - delta) * normalRatio; // osc 2 current level
+		}
+	}
+
+	float getOscFrequency(int oscIndex)
+	{
+		if (oscIndex < 0 || oscIndex > 2)
+		{
+			return 0.0f;
+		}
+		else
+		{
+			return oscs.at(oscIndex).getCurrentFrequency();
+		}
+	}
+
+	float getPan(int oscIndex)
+	{
+		if (oscIndex < 0 || oscIndex > 2)
+		{
+			return 0.0f;
+		}
+		else
+		{
+			return pan.at(oscIndex);
+		}
+	}
 
 private:
 	/*

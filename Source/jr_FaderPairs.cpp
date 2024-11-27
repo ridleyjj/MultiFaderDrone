@@ -128,7 +128,6 @@ void FaderPair::setMaxLevel(float _maxLevel)
 {
 	maxLevel.setTargetValue(_maxLevel);
 	avgLevel.setTargetValue(_maxLevel / 2.0f);
-	normalRatio = 1.0f / _maxLevel;
 }
 
 void FaderPair::updateLfoFreq()
@@ -219,6 +218,7 @@ void FaderPair::processStaticLevels()
 {
 	maxLevel.getNextValue();
 	avgLevel.getNextValue();
+	normalRatio = 1.0f / maxLevel.getCurrentValue();
 }
 
 float FaderPair::getRandomOscFrequency()

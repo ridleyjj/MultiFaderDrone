@@ -13,56 +13,84 @@
 
 void jr::OscillatorVisualiser::paint(juce::Graphics& g)
 {
-    g.setColour(CustomLookAndFeel::getBackgroundColour());
-    g.drawRect(juce::Rectangle<float>(0.0f, 0.0f, getBounds().getWidth(), getBounds().getHeight()));
+    // using getBounds().getCentre() returns the centre relative to the whole plugin (600, 225) whereas below returns centre relative to
+    // visualiser start point (400, 225) which results in desired centre when drawing
     juce::Point center = juce::Point(getBounds().getWidth() / 2.0f, getBounds().getHeight() / 2.0f);
 
-    g.setColour(CustomLookAndFeel::getValueTrackColour(false));
-
-    float rectSize = 18.0f;
     for (int i{}; i < pairs.get()->size(); i++)
     {
-        if (pairs.get()->at(i).getIsSilenced())
+        FaderPair& pair = pairs.get()->at(i);
+        if (pair.getIsSilenced())
         {
-            continue;
+            continue; // skip if voice isn't playing
         }
         
-        // wrap index to circlePoints arrayy, and alternate whether using positive co-ordinates or negative
-        auto rem = i % circlePoints.size();
-        auto mod = -1.0f;
-        if (rem < 1.0f || (rem >= 2.0f && rem < 3.0f))
-        {
-            mod = 1.0f;
-        }
-        int index = i;
-        while (index >= circlePoints.size())
-        {
-            index -= circlePoints.size();
-        }
-        auto p = circlePoints.at(index);
+        auto p = getCircumferencePoint(i);
 
-        // create two rings of dots
-        if (i >= halfMaxDots)
-        {
-            p *= 2;
-        }
-        else
-        {
-            p *= 1.2f;
-        }
-        
-        // draw dot for osc 1
-
-        auto size1 = rectSize * pairs.get()->at(i).getNormalisedOsc1Level();
-        size1 = jr::Utils::constrainFloat(size1, 0.0f, rectSize);
-        auto pos1 = center + p;
-        g.fillEllipse(juce::Rectangle<float>(pos1.getX(), pos1.getY(), size1, size1));
-
-        // draw dot for osc 2
-        
-        auto size2 = rectSize * pairs.get()->at(i).getNormalisedOsc2Level();
-        size2 = jr::Utils::constrainFloat(size2, 0.0f, rectSize);
-        auto pos2 = center - p;
-        g.fillEllipse(juce::Rectangle<float>(pos2.getX(), pos2.getY(), size2, size2));
+        drawDotForOsc(g, pair, 0, center, p);
+        drawDotForOsc(g, pair, 1, center, p);
     }
+}
+
+juce::Point<float> jr::OscillatorVisualiser::getCircumferencePoint(int i)
+{
+    auto rem = i % circlePoints.size();
+    auto mod = -1.0f;
+    if (rem < 1.0f || (rem >= 2.0f && rem < 3.0f))
+    {
+        mod = 1.0f;
+    }
+    int index = i;
+    while (index >= circlePoints.size())
+    {
+        index -= circlePoints.size();
+    }
+    return circlePoints.at(index);
+}
+
+juce::Colour jr::OscillatorVisualiser::getColourFromOsc(FaderPair& pair, int index)
+{
+    auto minFreq = 80.0f;
+    auto maxFreq = 1600.0f;
+    auto oscNormalisedFreq = (pair.getOscFrequency(index) - minFreq) / maxFreq;
+    return CustomLookAndFeel::getVisualiserColour(oscNormalisedFreq);
+}
+
+float jr::OscillatorVisualiser::getDotSizeFromOsc(FaderPair& pair, int index)
+{
+    float maxDotSize = 28.0f;
+    auto size = maxDotSize * pair.getNormalisedOscLevel(index);
+    return jr::Utils::constrainFloat(size, 0.0f, maxDotSize);
+}
+
+juce::Point<float> jr::OscillatorVisualiser::getPointFromOsc(FaderPair& pair, int index, juce::Point<float>& c, juce::Point<float>& circumferencePoint)
+{
+    float radius = 0.2f + (abs(pair.getPan(index) - 0.5) * 4.0f);
+    auto mod = index == 0 ? 1.0f : -1.0f; // determines which direction point should be from centre based on index
+    return c + (circumferencePoint * radius) * mod;
+}
+
+void jr::OscillatorVisualiser::drawWobble(juce::Graphics& g, juce::Point<float>& o, float size)
+{
+    float wobbleSize = size * 0.8f;
+    float centreOffset = size * 0.25f;
+
+    auto getRandomCenter = [&]() { return juce::Point<float>(o.getX() + ((random.nextFloat() - 0.5f) * centreOffset), o.getY() + ((random.nextFloat() - 0.5f) * centreOffset)); };
+
+    for (int i{}; i < 3; i++)
+    {
+        auto extra1 = juce::Rectangle<float>(wobbleSize, wobbleSize).withCentre(getRandomCenter());
+        g.fillEllipse(extra1);
+    }
+    auto mainDot = juce::Rectangle<float>(size, size).withCentre(o);
+    g.fillEllipse(mainDot);
+}
+
+void jr::OscillatorVisualiser::drawDotForOsc(juce::Graphics& g, FaderPair& pair, int index, juce::Point<float>& c, juce::Point<float>& circumferencePoint)
+{
+    g.setColour(getColourFromOsc(pair, index));
+    auto size = getDotSizeFromOsc(pair, index);
+    auto pos = getPointFromOsc(pair, index, c, circumferencePoint);
+
+    drawWobble(g, pos, size);
 }

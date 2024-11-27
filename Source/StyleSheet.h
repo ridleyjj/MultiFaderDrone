@@ -40,6 +40,11 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
 
         static juce::Colour getBackgroundColour() { return beige; }
 
+        /*
+        Returns a colour with the brightness adjusted based on the given brightness value. Brightness should be a float between 0.0f and 1.0f
+        */
+        static juce::Colour getVisualiserColour(float brightness);
+
     private:
         static inline juce::Colour verdigris{ juce::Colour(130, 174, 177) };
         static inline juce::Colour roseQuartz{ juce::Colour(158, 143, 178) };
