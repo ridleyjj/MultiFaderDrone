@@ -24,7 +24,16 @@ namespace jr
 
         void paint(juce::Graphics&) override;
 
+        void setNumActivePairs(int _numActivePairs) { numActivePairs = _numActivePairs; }
+
     private:
+
+        void resized() override;
+
+        /*
+        Returns a new Point that takes the given point p and adds random noise to both co-ordinates. Scale is 2.0f by default which results in a noise range of +/- 1.0f
+        */
+        juce::Point<float> addRandomNoiseToPoint(juce::Point<float> p, float scale = 2.0f);
 
         /*
         Uses index to return an evenly spaced point on a zero centred circle's circumference
@@ -44,21 +53,27 @@ namespace jr
 
         /*
         Returns the point to draw the dot at for oscillator at the given index in the FaderPair.
-        c is the centre point of the circle, circumferencePoint is the point on a circle's circumference (with centre 0 and radius 66)
+        circumferencePoint is the point on a circle's circumference (with centre 0 and radius 66)
         marking the angle at which the dot should be drawn.
         */
-        juce::Point<float> getPointFromOsc(FaderPair& pair, int index, juce::Point<float>& c, juce::Point<float>& circumferencePoint);
+        juce::Point<float> getPointFromOsc(FaderPair& pair, int index, juce::Point<float>& circumferencePoint);
 
         /*
-        Draws a dot representation of the oscillator at the given index in the FaderPair, using c as the centre point for the visualiser
-        and circumferencePoint as the point on a 0 centred circle that matches the angle of the desired dot.
+        Draws a dot representation of the oscillator at the given index in the FaderPair, using
+        circumferencePoint as the point on a 0 centred circle that matches the angle of the desired dot.
         */
-        void drawDotForOsc(juce::Graphics& g, FaderPair& pair, int index, juce::Point<float>& c, juce::Point<float>& circumferencePoint);
+        void drawDotForOsc(juce::Graphics& g, FaderPair& pair, int index, juce::Point<float>& circumferencePoint);
 
-        void drawWobble(juce::Graphics& g, juce::Point<float>& o, float size);
+        /*
+        Draws a dot with additional overlayed dots with random noise to cause a dynamic 'buzzing'/'wobbling' effect. Draws a
+        dot with given size at point p.
+        */
+        void drawWobble(juce::Graphics& g, juce::Point<float>& p, float size);
 
-        int maxNumDots{ 16 };
-        int halfMaxDots{ maxNumDots / 2 };
+        float maxDotSize{ 28.0f };
+        float maxRadius{ 4.0f };                                                // scale value that determines how far out the visualiser will spread out.
+        float minRadius{ 0.2f };                                                // scale value that determines how clustered the visualiser will be when mono.
+        int numActivePairs{ 0 };
         std::vector<juce::Point<float>> circlePoints
         {
             juce::Point<float>(66.0f, 0.0f),
@@ -72,6 +87,7 @@ namespace jr
         };
         std::shared_ptr<std::vector<FaderPair>> pairs{ nullptr };
         juce::Random random{};
+        juce::Point<float> relativeCentre{ 0.0f, 0.0f };
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OscillatorVisualiser);
     };

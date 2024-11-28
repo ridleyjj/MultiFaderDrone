@@ -99,6 +99,7 @@ MultiFaderDroneAudioProcessorEditor::~MultiFaderDroneAudioProcessorEditor()
 void MultiFaderDroneAudioProcessorEditor::timerCallback()
 {
     visualiser.setPairs(audioProcessor.getPairs());
+    visualiser.setNumActivePairs(voicesSlider.getValue());
     visualiser.repaint();
 }
 

@@ -155,6 +155,6 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
 
 juce::Colour CustomLookAndFeel::getVisualiserColour(float brightness)
 {
-    auto b = 0.25f + (jr::Utils::constrainFloat(brightness) * 0.38f);
+    auto b = 0.25f + (jr::Utils::constrainFloat(brightness) * 0.48f);
     return juce::Colour::fromHSL(0.74f, 0.19f, b, 1.0f);
 }
