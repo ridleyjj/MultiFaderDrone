@@ -21,6 +21,7 @@ namespace ID
     const juce::Identifier NUM_VOICES{ "numVoices" };
     const juce::Identifier RATE{ "rate" };
     const juce::Identifier FREEZE_RANGE{ "freeze" };
+    const juce::Identifier STEREO_WIDTH{ "stereoWidth" };
 }
 
 //==============================================================================
@@ -68,18 +69,18 @@ public:
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
-    void setNumPairs(int _oscCount);
+    void setNumPairs(int _numPairs) { faders.setNumPairs(_numPairs); }
     
-    void setLfoRate(float _rate);
+    void setLfoRate(float _rate) { faders.setLfoRate(jr::Utils::constrainFloat(_rate)); }
 
     void setOscFreqRange(float minHz, float maxHz);
 
     /*
     * Sets stereo width to a value between 0 - 1.0 where 1.0 is full stereo width and 0 is mono
     */
-    void setStereoWidth(float width);
+    void setStereoWidth(float width) { faders.setStereoWidth(jr::Utils::constrainFloat(width)); }
 
-    void setGain(double _gain);
+    void setGain(double _gain) { gain.setTargetValue(jr::Utils::constrainFloat(_gain) * maxGain); }
 
     void setRangeFrozen(bool isFrozen);
 
@@ -95,12 +96,9 @@ public:
     
     float getDefaultMaxFreq() { return defaultMaxFreq; }
 
-
     float getCurrentFreqRangeMin() { return currentFreqRangeMin; }
 
     float getCurrentFreqRangeMax() { return currentFreqRangeMax; }
-
-    float getStereoWidth() { return stereoWidth; }
 
     float getGain() { return gain.getCurrentValue() * (1.0f / maxGain); }
 
@@ -131,7 +129,6 @@ private:
     juce::SmoothedValue<float> gain{ maxGain };               // master output level
     float currentFreqRangeMin{ defaultMinFreq };
     float currentFreqRangeMax{ defaultMaxFreq };
-    float stereoWidth{ 0.0f };
     double frozenRangeAmount{ currentFreqRangeMax - currentFreqRangeMin };      // "Frozen" difference between Max and Min Frequency in Hz
     double prevMinFreq{};            // prev Min Freq value to determine which frequency slider head has moved
     double prevMaxFreq{};            // prev Max Freq value to determine which frequency slider head has moved
@@ -141,6 +138,7 @@ private:
     jr::ApvtsListener gainListener{ [&](float newValue) { setGain(newValue); } };
     jr::ApvtsListener rateListener{ [&](float newValue) { setLfoRate(newValue); } };
     jr::ApvtsListener voicesListener{ [&](float newValue) { setNumPairs(newValue); } };
+    jr::ApvtsListener stereoWidthListener{ [&](float newValue) { setStereoWidth(newValue); } };
     jr::ApvtsListener freezeListener{ [&](bool newValue) { setRangeFrozen(newValue); } };
 
     //==============================================================================

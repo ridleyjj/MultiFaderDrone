@@ -27,6 +27,7 @@ MultiFaderDroneAudioProcessor::MultiFaderDroneAudioProcessor()
     apvts.addParameterListener(ID::GAIN.toString(), &gainListener);
     apvts.addParameterListener(ID::RATE.toString(), &rateListener);
     apvts.addParameterListener(ID::NUM_VOICES.toString(), &voicesListener);
+    apvts.addParameterListener(ID::STEREO_WIDTH.toString(), &stereoWidthListener);
     apvts.addParameterListener(ID::FREEZE_RANGE.toString(), &freezeListener);
 }
 
@@ -35,6 +36,7 @@ MultiFaderDroneAudioProcessor::~MultiFaderDroneAudioProcessor()
     apvts.removeParameterListener(ID::GAIN.toString(), &gainListener);
     apvts.removeParameterListener(ID::RATE.toString(), &rateListener);
     apvts.removeParameterListener(ID::NUM_VOICES.toString(), &voicesListener);
+    apvts.removeParameterListener(ID::STEREO_WIDTH.toString(), &stereoWidthListener);
     apvts.removeParameterListener(ID::FREEZE_RANGE.toString(), &freezeListener);
 }
 
@@ -227,38 +229,18 @@ juce::AudioProcessorValueTreeState::ParameterLayout MultiFaderDroneAudioProcesso
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::RATE.toString(), "Rate", 0.0f, 1.0f, 0.0f));
     layout.add(std::make_unique<juce::AudioParameterInt>(ID::NUM_VOICES.toString(), "Num Voices", 1, 15, 3, "Num Voices", [](int value, int maximumStringLength) -> juce::String { return juce::String(value * 2); }, nullptr));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::FREEZE_RANGE.toString(), "Freeze", true, "Freeze Frequency Range"));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::STEREO_WIDTH.toString(), "Stereo Width", 0.0f, 1.0f, 0.5f));
 
     return layout;
 }
 
 // update method calls from Editor
 
-void MultiFaderDroneAudioProcessor::setNumPairs(int _numPairs)
-{
-    faders.setNumPairs(_numPairs);
-}
-
-void MultiFaderDroneAudioProcessor::setLfoRate(float _rate)
-{
-    faders.setLfoRate(jr::Utils::constrainFloat(_rate));
-}
-
 void MultiFaderDroneAudioProcessor::setOscFreqRange(float minHz, float maxHz)
 {
     currentFreqRangeMin = jr::Utils::constrainFloat(minHz, minFreq, maxFreq);
     currentFreqRangeMax = jr::Utils::constrainFloat(maxHz, minFreq, maxFreq);
     faders.setOscFreqRange(currentFreqRangeMin, currentFreqRangeMax);
-}
-
-void MultiFaderDroneAudioProcessor::setGain(double _gain)
-{
-    gain.setTargetValue(jr::Utils::constrainFloat(_gain) * maxGain);
-}
-
-void MultiFaderDroneAudioProcessor::setStereoWidth(float width)
-{
-    stereoWidth = jr::Utils::constrainFloat(width);
-    faders.setStereoWidth(stereoWidth);
 }
 
 void MultiFaderDroneAudioProcessor::setRangeFrozen(bool newValue)

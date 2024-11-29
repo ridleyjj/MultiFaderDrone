@@ -15,7 +15,7 @@ void jr::OscillatorVisualiser::resized()
 {
     // update size based on bounds
     float visualiserSize = juce::jmin(getBounds().getHeight(), getBounds().getWidth());
-    maxDotSize = visualiserSize * 0.07f;
+    maxDotSize = visualiserSize * 0.08f;
     maxRadius = visualiserSize * 0.01f;
     minRadius = visualiserSize * 0.0005f;
 

@@ -26,9 +26,6 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     
     // Two-Headed Slider specifics
 
-    float currentStereoWidth = audioProcessor.getStereoWidth();
-    stereoSlider.setMinAndMaxValues(currentStereoWidth * -1, currentStereoWidth, juce::dontSendNotification);
-
     freqRangeSlider.setMinAndMaxValues(audioProcessor.getCurrentFreqRangeMin(), audioProcessor.getCurrentFreqRangeMax(), juce::dontSendNotification);
     freqRangeSlider.textFromValueFunction = [=](double value)
         {
@@ -45,12 +42,12 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     gainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getAPVTS(), ID::GAIN.toString(), gainSlider);
     lfoRateAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getAPVTS(), ID::RATE.toString(), lfoRateSlider);
     voicesAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getAPVTS(), ID::NUM_VOICES.toString(), voicesSlider);
+    stereoWidthAttachment = std::make_unique<jr::MirrorSliderAttachment>(*(audioProcessor.getAPVTS().getParameter(ID::STEREO_WIDTH)), stereoSlider);
 
     // buttons
 
     freezeRangeButton.sendLookAndFeelChange(); // needed to receive latest look and feel font
     freezeRangeButton.onClick = [this] { toggleRangeFrozen(); };
-    //rangeFrozen = audioProcessor.getRangeFrozen();
     if (audioProcessor.getRangeFrozen())
     {
         freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(true));
@@ -131,10 +128,6 @@ void MultiFaderDroneAudioProcessorEditor::sliderValueChanged(juce::Slider* slide
     {
         freqRangeSliderUpdate();
     }
-    else if (slider == &stereoSlider)
-    {
-        stereoSliderUpdate();
-    }
 }
 
 void MultiFaderDroneAudioProcessorEditor::freqRangeSliderUpdate()
@@ -171,24 +164,6 @@ void MultiFaderDroneAudioProcessorEditor::freqRangeSliderUpdate()
 
     freqRangeSlider.updateText();
     audioProcessor.setOscFreqRange(freqRangeSlider.getMinValue(), freqRangeSlider.getMaxValue());
-}
-
-void MultiFaderDroneAudioProcessorEditor::stereoSliderUpdate()
-{
-    float newVal{};
-    if (stereoSlider.getMinValue() != prevStereoMin)
-    {
-        newVal = std::abs(stereoSlider.getMinValue());
-    }
-    else
-    {
-        newVal = std::abs(stereoSlider.getMaxValue());
-    }
-    stereoSlider.setMinAndMaxValues(newVal * -1.0, newVal, juce::dontSendNotification);
-
-    audioProcessor.setStereoWidth(stereoSlider.getMaxValue());
-    prevStereoMin = stereoSlider.getMinValue();
-    prevStereoMax = stereoSlider.getMaxValue();
 }
 
 void MultiFaderDroneAudioProcessorEditor::toggleRangeFrozen()

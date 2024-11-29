@@ -81,6 +81,8 @@ public:
 	*/
 	static void processStaticLevels();
 
+	static float getStereoWidth() { return stereoWidth; }
+
 	/*
 	Returns the current level of oscillator at given index, normalised to be between 0 and 1
 	*/
@@ -166,7 +168,7 @@ private:
 	
 	// shared static variables and methods
 
-	static inline float rampTime{ 0.1f };
+	static inline float rampTime{ 0.2f };
 	static inline juce::Random random;						// used for generating random frequency
 	static inline float lfoRate{ 0.0f };					// rate to modify the LFO freq by (0-1)
 	static inline float lfoSpread{ 1.0f };
@@ -175,9 +177,9 @@ private:
 	static inline float minOscFreq;							// minimum lfo frequency when generating random in Hz
 	static inline float maxOscFreq;							// range when picking a random frequency in Hz
 	static inline float stereoWidth{ 0.0f };				// pan range 0 - 1.0
-	static inline juce::SmoothedValue<float> maxLevel{};					// the maximum combined level of both faders
+	static inline juce::SmoothedValue<float> maxLevel{};	// the maximum combined level of both faders
 	static inline juce::SmoothedValue<float> avgLevel{};
-	static inline float normalRatio{ 1.0f };						// the factor to multiply current osc level by to get level in range of 0-1. Saving to avoid unecessary calculation repetition
+	static inline float normalRatio{ 1.0f };				// the factor to multiply current osc level by to get level in range of 0-1. Saving to avoid unecessary calculation repetition
 
 	/*
 	* returns a new randomised Osc Freq value in Hz using the current max and min values.
@@ -219,6 +221,8 @@ public:
 	* Sets the stereo width of the oscillators. 0.0f = mono, 1.0f = full stereo width.
 	*/
 	void setStereoWidth(float width);
+
+	float getStereoWidth() { return FaderPair::getStereoWidth(); }
 
 	std::shared_ptr<std::vector<FaderPair>> getPairs() { return std::make_shared <std::vector<FaderPair>> (_pairs); }
 

@@ -13,6 +13,7 @@
 #include "StyleSheet.h"
 #include <memory>
 #include "OscillatorVisualiser.h"
+#include "MirrorSliderAttachment.h"
 
 //==============================================================================
 /**
@@ -56,6 +57,8 @@ private:
     juce::Label voicesLabel, lfoRateLabel, freqRangeLabel, gainLabel, stereoLabel;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment, lfoRateAttachment, voicesAttachment;
+
+    std::unique_ptr<jr::MirrorSliderAttachment> stereoWidthAttachment;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> freezeAttachment;
 
