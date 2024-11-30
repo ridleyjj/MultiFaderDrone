@@ -14,11 +14,12 @@
 #include <memory>
 #include "OscillatorVisualiser.h"
 #include "MirrorSliderAttachment.h"
+#include "TwoHeadedSliderAttachment.h"
 
 //==============================================================================
 /**
 */
-class MultiFaderDroneAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Slider::Listener, public juce::Timer
+class MultiFaderDroneAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
     MultiFaderDroneAudioProcessorEditor (MultiFaderDroneAudioProcessor&);
@@ -27,8 +28,6 @@ public:
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
-
-    void sliderValueChanged(juce::Slider* slider) override;
 
     void timerCallback() override;
 
@@ -59,6 +58,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment, lfoRateAttachment, voicesAttachment;
 
     std::unique_ptr<jr::MirrorSliderAttachment> stereoWidthAttachment;
+
+    std::unique_ptr<jr::TwoHeadedSliderAttachment> freqRangeAttachment;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> freezeAttachment;
 

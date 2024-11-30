@@ -122,6 +122,10 @@ public:
 		}
 	}
 
+	static void setMinOscFreq(float _minFreq) { FaderPair::minOscFreq = _minFreq;  }
+
+	static void setMaxOscFreq(float _maxFreq) { FaderPair::maxOscFreq = _maxFreq;  }
+
 private:
 	/*
 	* initialises Oscs if they have not yet been created.
@@ -216,6 +220,10 @@ public:
 	* Sets min and max frequency values in Hz for the oscillators.
 	*/
 	void setOscFreqRange(float _minHz, float _maxHz);
+
+	void setMinFreq(float _minFreq) { FaderPair::setMinOscFreq(_minFreq); }
+
+	void setMaxFreq(float _maxFreq) { FaderPair::setMaxOscFreq(_maxFreq); }
 
 	/*
 	* Sets the stereo width of the oscillators. 0.0f = mono, 1.0f = full stereo width.

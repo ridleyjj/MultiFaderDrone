@@ -22,6 +22,8 @@ namespace ID
     const juce::Identifier RATE{ "rate" };
     const juce::Identifier FREEZE_RANGE{ "freeze" };
     const juce::Identifier STEREO_WIDTH{ "stereoWidth" };
+    const juce::Identifier FREQ_RANGE_MIN{ "freqRangeMin" };
+    const juce::Identifier FREQ_RANGE_MAX{ "freqRangeMax" };
 }
 
 //==============================================================================
@@ -73,7 +75,9 @@ public:
     
     void setLfoRate(float _rate) { faders.setLfoRate(jr::Utils::constrainFloat(_rate)); }
 
-    void setOscFreqRange(float minHz, float maxHz);
+    void setMinOscFreq(float minHz) { faders.setMinFreq(minHz); }
+
+    void setMaxOscFreq(float maxHz) { faders.setMaxFreq(maxHz); }
 
     /*
     * Sets stereo width to a value between 0 - 1.0 where 1.0 is full stereo width and 0 is mono
@@ -81,12 +85,6 @@ public:
     void setStereoWidth(float width) { faders.setStereoWidth(jr::Utils::constrainFloat(width)); }
 
     void setGain(double _gain) { gain.setTargetValue(jr::Utils::constrainFloat(_gain) * maxGain); }
-
-    void setRangeFrozen(bool isFrozen);
-
-    void setPrevRangeMin(double newValue) { prevMinFreq = newValue; }
-    
-    void setPrevRangeMax(double newValue) { prevMaxFreq = newValue; }
 
     float getMaxFreq() { return maxFreq; }
 
@@ -96,21 +94,11 @@ public:
     
     float getDefaultMaxFreq() { return defaultMaxFreq; }
 
-    float getCurrentFreqRangeMin() { return currentFreqRangeMin; }
-
-    float getCurrentFreqRangeMax() { return currentFreqRangeMax; }
-
     float getGain() { return gain.getCurrentValue() * (1.0f / maxGain); }
 
     bool getRangeFrozen() {
         return (bool)(*apvts.getRawParameterValue(ID::FREEZE_RANGE.toString()));
     }
-
-    double getFrozenRangeAmount() { return frozenRangeAmount; }
-
-    double getPrevMinRange() { return prevMinFreq; }
-
-    double getPrevMaxRange() { return prevMaxFreq; }
 
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
 
@@ -120,18 +108,13 @@ private:
     float maxGain = 0.3;
     FaderPairs faders;              // pair of connected faders
     int maxPairCount{ 15 };
-    float maxFreq{ 2400.0f };       // max freq in Hz that Osc Freq slider can be set
+    float maxFreq{ 2000.0f };       // max freq in Hz that Osc Freq slider can be set
     float minFreq{ 80.0f };         // min freq in Hz that Osc Freq slider can be set
     float defaultMinFreq{ 120.0f };
     float defaultMaxFreq{ 1200.0f };
 
     // GUI Params
     juce::SmoothedValue<float> gain{ maxGain };               // master output level
-    float currentFreqRangeMin{ defaultMinFreq };
-    float currentFreqRangeMax{ defaultMaxFreq };
-    double frozenRangeAmount{ currentFreqRangeMax - currentFreqRangeMin };      // "Frozen" difference between Max and Min Frequency in Hz
-    double prevMinFreq{};            // prev Min Freq value to determine which frequency slider head has moved
-    double prevMaxFreq{};            // prev Max Freq value to determine which frequency slider head has moved
 
     juce::AudioProcessorValueTreeState apvts;
 
@@ -139,7 +122,8 @@ private:
     jr::ApvtsListener rateListener{ [&](float newValue) { setLfoRate(newValue); } };
     jr::ApvtsListener voicesListener{ [&](float newValue) { setNumPairs(newValue); } };
     jr::ApvtsListener stereoWidthListener{ [&](float newValue) { setStereoWidth(newValue); } };
-    jr::ApvtsListener freezeListener{ [&](bool newValue) { setRangeFrozen(newValue); } };
+    jr::ApvtsListener minFreqRangeListener{ [&](float newValue) { setMinOscFreq(newValue); } };
+    jr::ApvtsListener maxFreqRangeListener{ [&](float newValue) { setMaxOscFreq(newValue); } };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiFaderDroneAudioProcessor)

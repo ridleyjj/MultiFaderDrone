@@ -47,6 +47,10 @@
             file="Source/OscillatorVisualiser.cpp"/>
       <FILE id="kyXXL7" name="OscillatorVisualiser.h" compile="0" resource="0"
             file="Source/OscillatorVisualiser.h"/>
+      <FILE id="idUVmS" name="TwoHeadedSliderAttachment.cpp" compile="1"
+            resource="0" file="Source/TwoHeadedSliderAttachment.cpp"/>
+      <FILE id="t0ViUG" name="TwoHeadedSliderAttachment.h" compile="0" resource="0"
+            file="Source/TwoHeadedSliderAttachment.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>

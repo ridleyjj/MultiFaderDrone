@@ -37,7 +37,8 @@ namespace jr
     private:
 
         /*
-        Callback that keeps the two Slider heads mirroring each other based on the absolute value of the new parameter value
+        Callback that updates the Slider in the UI based on new parameter value
+        keeps the two Slider heads mirroring each other based on the absolute value of the new value
         */
         std::function<void(float)> updateSlider
         {
