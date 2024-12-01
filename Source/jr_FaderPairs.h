@@ -122,9 +122,9 @@ public:
 		}
 	}
 
-	static void setMinOscFreq(float _minFreq) { FaderPair::minOscFreq = _minFreq;  }
+	static void setMinOscFreq(float _minFreq) { FaderPair::minOscFreq = _minFreq; }
 
-	static void setMaxOscFreq(float _maxFreq) { FaderPair::maxOscFreq = _maxFreq;  }
+	static void setMaxOscFreq(float _maxFreq) { FaderPair::maxOscFreq = _maxFreq; }
 
 private:
 	/*
@@ -176,10 +176,10 @@ private:
 	static inline juce::Random random;						// used for generating random frequency
 	static inline float lfoRate{ 0.0f };					// rate to modify the LFO freq by (0-1)
 	static inline float lfoSpread{ 1.0f };
-	static inline float minLfoFreq;							// minimum lfo frequency when generating random in Hz
-	static inline float maxLfoFreq;							// range when picking a random frequency in Hz
-	static inline float minOscFreq;							// minimum lfo frequency when generating random in Hz
-	static inline float maxOscFreq;							// range when picking a random frequency in Hz
+	static inline float minLfoFreq{ 0.01f };							// minimum lfo frequency when generating random in Hz
+	static inline float maxLfoFreq{ 0.1f };							// range when picking a random frequency in Hz
+	static inline float minOscFreq{ 120.0f };							// minimum lfo frequency when generating random in Hz
+	static inline float maxOscFreq{ 1200.0f };							// range when picking a random frequency in Hz
 	static inline float stereoWidth{ 0.0f };				// pan range 0 - 1.0
 	static inline juce::SmoothedValue<float> maxLevel{};	// the maximum combined level of both faders
 	static inline juce::SmoothedValue<float> avgLevel{};
@@ -194,12 +194,12 @@ private:
 class FaderPairs
 {
 public:
-	FaderPairs() {};
+	FaderPairs() {}
 
 	/*
 	* initialises the pairs, creating an array of the max possible size.
 	*/
-	void init(size_t numPairs, float _sampleRate, size_t maxNumPairs, float minOscFreq = 120.0f, float maxOscFreq = 1200.0f);
+	void init(size_t numPairs, float _sampleRate, size_t maxNumPairs);
 
 	/*
 	* Processes all of the pairs, and returns the L and R sample out values for all oscs combined.
@@ -215,11 +215,6 @@ public:
 	* Sets LFO Rate which effectively controls the range of LFO frequency values. Rate is between 0 and 1
 	*/
 	void setLfoRate(float _rate);
-
-	/*
-	* Sets min and max frequency values in Hz for the oscillators.
-	*/
-	void setOscFreqRange(float _minHz, float _maxHz);
 
 	void setMinFreq(float _minFreq) { FaderPair::setMinOscFreq(_minFreq); }
 

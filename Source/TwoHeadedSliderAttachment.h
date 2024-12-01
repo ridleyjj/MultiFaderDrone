@@ -22,16 +22,16 @@ namespace jr
         */
         TwoHeadedSliderAttachment(juce::RangedAudioParameter& minParameter, juce::RangedAudioParameter& maxParameter, juce::Slider& _slider,
             std::function<bool(void)> _getIsLocked = []() { return false; }, juce::UndoManager* undoManager = nullptr)
-            : minValueParamAttachment(minParameter, updateSliderMinValue, undoManager), maxValueParamAttachment(maxParameter, updateSliderMaxValue, undoManager),
-            slider(_slider), getIsLocked(_getIsLocked)
+            : slider(_slider), minValueParamAttachment(minParameter, updateSliderMinValue, undoManager), maxValueParamAttachment(maxParameter, updateSliderMaxValue, undoManager),
+            getIsLocked(_getIsLocked)
         {
             currentMinValue = minParameter.getNormalisableRange().convertFrom0to1(minParameter.getValue());
             currentMaxValue = maxParameter.getNormalisableRange().convertFrom0to1(maxParameter.getValue());
-            
+
             slider.addListener(this);
 
-            minValueParamAttachment.sendInitialUpdate();
             maxValueParamAttachment.sendInitialUpdate();
+            minValueParamAttachment.sendInitialUpdate();
 
             slider.updateText();
         }

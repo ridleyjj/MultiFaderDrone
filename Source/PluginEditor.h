@@ -31,10 +31,6 @@ public:
 
     void timerCallback() override;
 
-    void freqRangeSliderUpdate();
-
-    void stereoSliderUpdate();
-
     void toggleRangeFrozen();
 
 private:

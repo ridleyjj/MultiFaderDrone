@@ -51,14 +51,6 @@ void FaderPair::updateStaticSampleRate(float _sampleRate)
 	avgLevel.reset(_sampleRate, rampTime);
 }
 
-void FaderPair::initFreqs(float _minOscFreq, float _maxOscFreq, float _minLfoFreq, float _maxLfoFreq)
-{
-	FaderPair::minOscFreq = _minOscFreq;
-	FaderPair::maxOscFreq = _maxOscFreq;
-	FaderPair::minLfoFreq = _minLfoFreq;
-	FaderPair::maxLfoFreq = _maxLfoFreq;
-}
-
 std::pair<float, float> FaderPair::process()
 {
 	if (oscs.size() == 0)
@@ -230,7 +222,7 @@ float FaderPair::getRandomOscFrequency()
 //************ FaderPairs *****************//
 //=========================================//
 
-void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs, float minOscFreq, float maxOscFreq)
+void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs)
 {
 	if (_sampleRate <= 0.0f)
 	{
@@ -244,8 +236,6 @@ void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs, fl
 	if (_pairs.size() == 0)
 	{
 		// first time only
-
-		FaderPair::initFreqs(minOscFreq, maxOscFreq);
 
 		const float maxLevel = 0.5f / (float)numPairs;
 
@@ -365,11 +355,6 @@ void FaderPairs::setLfoRate(float _rate)
 	{
 		pair.updateLfoFreq();
 	}
-}
-
-void FaderPairs::setOscFreqRange(float _minHz, float _maxHz)
-{
-	FaderPair::initFreqs(jr::Utils::constrainFloat(_minHz, 80.0f, 2000.0f), jr::Utils::constrainFloat(_maxHz, 80.0f, 2000.0f));
 }
 
 void FaderPairs::setStereoWidth(float width)
