@@ -31,7 +31,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
             return juce::String(freqRangeSlider.getMinValue()) + "Hz - " + juce::String(freqRangeSlider.getMaxValue()) + "Hz";
         };
 
-    freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(audioProcessor.getRangeFrozen()));
+    freqRangeSlider.setGetIsLockedCallback([&]() { return audioProcessor.getRangeFrozen();  });
 
     // APVTS Attachments
 
@@ -45,11 +45,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     // buttons
 
     freezeRangeButton.sendLookAndFeelChange(); // needed to receive latest look and feel font
-    freezeRangeButton.onClick = [this] { toggleRangeFrozen(); };
-    if (audioProcessor.getRangeFrozen())
-    {
-        freqRangeSlider.setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(true));
-    }
+    freezeRangeButton.onClick = [&]() { freqRangeSlider.repaint(); }; // ensures that slider is refreshed whenever freeze button is toggled
     addAndMakeVisible(freezeRangeButton);
 
     freezeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::FREEZE_RANGE.toString(), freezeRangeButton);
@@ -117,9 +113,4 @@ void MultiFaderDroneAudioProcessorEditor::resized()
     stereoSlider.setBoundsRelative(0.05f, 0.9f, 0.4f, 0.1f);
 
     visualiser.setBounds(400, 0, 400, 450);
-}
-
-void MultiFaderDroneAudioProcessorEditor::toggleRangeFrozen()
-{
-    freqRangeSlider.setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(audioProcessor.getRangeFrozen()));
 }

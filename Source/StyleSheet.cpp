@@ -10,6 +10,7 @@
 
 #include "StyleSheet.h"
 #include "jr_utils.h"
+#include "LockingTwoHeadedSlider.h"
 
 CustomLookAndFeel::CustomLookAndFeel()
 {
@@ -89,10 +90,21 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
     float maxSliderPos,
     const juce::Slider::SliderStyle style, juce::Slider& slider)
 {
+    auto isLocked = false;
+
+    // if slider is a LockingTwoHeadedSlider, check whether it is currently locked 
+    if (dynamic_cast<jr::LockingTwoHeadedSlider*>(&slider) != nullptr)
+    {
+        isLocked = dynamic_cast<jr::LockingTwoHeadedSlider*>(&slider)->isLocked();
+    }
+
     auto isTwoVal = (style == juce::Slider::SliderStyle::TwoValueVertical || style == juce::Slider::SliderStyle::TwoValueHorizontal);
 
     auto backgroundTrackColour = slider.findColour(juce::Slider::backgroundColourId);
-    auto valueTrackColour = slider.findColour(juce::Slider::trackColourId);
+    auto valueTrackColour = getValueTrackColour(isLocked);
+
+    
+
     auto zeroMarkColour = juce::Colours::lightgrey;
 
     auto trackWidth = juce::jmin(6.0f, slider.isHorizontal() ? (float)height * 0.25f : (float)width * 0.25f);

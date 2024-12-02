@@ -15,6 +15,7 @@
 #include "OscillatorVisualiser.h"
 #include "MirrorSliderAttachment.h"
 #include "TwoHeadedSliderAttachment.h"
+#include "LockingTwoHeadedSlider.h"
 
 //==============================================================================
 /**
@@ -31,8 +32,6 @@ public:
 
     void timerCallback() override;
 
-    void toggleRangeFrozen();
-
 private:
     // helpers
 
@@ -48,7 +47,7 @@ private:
     juce::Slider gainSlider{ juce::Slider::SliderStyle::RotaryVerticalDrag, juce::Slider::TextBoxBelow };
     juce::Slider lfoRateSlider{ juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow };
     juce::Slider stereoSlider{ juce::Slider::SliderStyle::TwoValueHorizontal, juce::Slider::NoTextBox };
-    juce::Slider freqRangeSlider{ juce::Slider::SliderStyle::TwoValueVertical, juce::Slider::TextBoxBelow };
+    jr::LockingTwoHeadedSlider freqRangeSlider{ true, juce::Slider::TextBoxBelow };
     juce::Label voicesLabel, lfoRateLabel, freqRangeLabel, gainLabel, stereoLabel;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment, lfoRateAttachment, voicesAttachment;
@@ -58,11 +57,6 @@ private:
     std::unique_ptr<jr::TwoHeadedSliderAttachment> freqRangeAttachment;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> freezeAttachment;
-
-    // stereo width state
-
-    double prevStereoMin = 0.0;
-    double prevStereoMax = 0.0;
 
     // buttons
 

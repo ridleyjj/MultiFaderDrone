@@ -7,6 +7,8 @@
               companyWebsite="www.jjridley.com" bundleIdentifier="com.RidleySound.MultiFaderDrone">
   <MAINGROUP id="n0vA9i" name="MultiFaderDrone">
     <GROUP id="{14812914-56F5-7AF6-83E5-A09F001AB246}" name="Source">
+      <FILE id="TlW1Wi" name="LockingTwoHeadedSlider.h" compile="0" resource="0"
+            file="Source/LockingTwoHeadedSlider.h"/>
       <FILE id="MZ4cVO" name="MirrorSliderAttachment.cpp" compile="1" resource="0"
             file="Source/MirrorSliderAttachment.cpp"/>
       <FILE id="d4VBLZ" name="MirrorSliderAttachment.h" compile="0" resource="0"
