@@ -46,16 +46,9 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
         static juce::Colour getVisualiserColour(float brightness);
 
     private:
-        static inline juce::Colour verdigris{ juce::Colour(130, 174, 177) };
-        static inline juce::Colour roseQuartz{ juce::Colour(158, 143, 178) };
-        static inline juce::Colour beige{ juce::Colour(240, 227, 214) };
-        static inline juce::Colour trackColour{ juce::Colour(38, 50, 56) };
+        static inline juce::Colour verdigris{ juce::Colour(104, 149, 161) };
+        static inline juce::Colour roseQuartz{ juce::Colour(150, 134, 172) };
+        static inline juce::Colour beige{ juce::Colour(249, 245, 241) };
         static inline juce::Colour dark{ juce::Colour(24, 31, 34) };
-
-        // currently unused
-        static inline juce::Colour skyBlue{ juce::Colour(147, 198, 214) };
-        static inline juce::Colour periwinkle{ juce::Colour(167, 172, 217) };
-        static inline juce::Colour darkGreen{ juce::Colour(93, 121, 122) };
-        static inline juce::Colour greenGray{ juce::Colour(112, 148, 150) };
 };
 
