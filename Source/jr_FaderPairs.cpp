@@ -231,6 +231,8 @@ void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs)
 
 	sampleRate = _sampleRate;
 
+	gain.reset(sampleRate, 0.1f);
+
 	FaderPair::updateStaticSampleRate(sampleRate);
 
 	if (_pairs.size() == 0)
@@ -254,8 +256,6 @@ void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs)
 	else
 	{
 		// every time sampleRate changes
-
-		gain.reset(sampleRate, 0.1f);
 
 		for (auto& pair : _pairs)
 		{
