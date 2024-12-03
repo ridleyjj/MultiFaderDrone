@@ -156,28 +156,6 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
         juce::Rectangle<float>(static_cast<float> (thumbWidth * 2.0f), static_cast<float> (thumbWidth)) :
         juce::Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth * 2.0f));
 
-    /*if (isLocked)
-    {
-        juce::Rectangle thumbRectInt = slider.isVertical() ?
-            juce::Rectangle<int>(static_cast<int> (thumbWidth * 2), static_cast<int> (thumbWidth)) :
-            juce::Rectangle<int>(static_cast<int> (thumbWidth), static_cast<int> (thumbWidth * 2));
-        
-        auto shadow = juce::DropShadow();
-        shadow.colour = juce::Colours::lightgrey;
-
-        juce::Point<int> maxPointInt = juce::Point<int>((int)maxPoint.getX(), (int)maxPoint.getY());
-
-        shadow.drawForRectangle(g, thumbRectInt.withCentre(maxPointInt));
-
-        if (isTwoVal)
-        {
-            juce::Point<int> minPointInt = juce::Point<int>((int)minPoint.getX(), (int)minPoint.getY());
-            shadow.drawForRectangle(g, thumbRectInt.withCentre(minPointInt));
-        }
-    }*/
-    
-    //g.setColour(dark);
-
     if (isLocked)
     {
         auto offset = thumbWidth * 0.25f;

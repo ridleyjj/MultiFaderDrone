@@ -21,7 +21,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices");
     initSimpleSlider(&gainSlider, &gainLabel, "Master Gain");
     initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate");
-    initSimpleSliderWithRange(&stereoSlider, &stereoLabel, "Width", -1.0, 1.0, 0.01);
+    initSimpleSliderWithRange(&stereoSlider, &stereoLabel, "Stereo Width", -1.0, 1.0, 0.01);
     initSimpleSliderWithRange(&freqRangeSlider, &freqRangeLabel, "Range", 80.0f, 2000.0f, 5.0f);
     
     // Two-Headed Slider specifics
@@ -50,12 +50,12 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     lockRangeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::LOCK_RANGE.toString(), lockRangeButton);
 
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (800, 450);
-
     visualiser.setPairs(audioProcessor.getPairs());
     addAndMakeVisible(visualiser);
+
+    // Make sure that before the constructor has finished, you've set the
+    // editor's size to whatever you need it to be.
+    setSize(400, 450);
 
     startTimerHz(24); // FPS
 }
@@ -100,17 +100,17 @@ void MultiFaderDroneAudioProcessorEditor::paint (juce::Graphics& g)
 
 void MultiFaderDroneAudioProcessorEditor::resized()
 {
-    voicesSlider.setBoundsRelative(0.175f, 0.5f, 0.15f, 0.3f);
+    voicesSlider.setBoundsRelative(0.55f, 0.1f, 0.25f, 0.25f);
 
-    gainSlider.setBoundsRelative(0.175f, 0.1f, 0.15f, 0.3f);
+    gainSlider.setBoundsRelative(0.2f, 0.1f, 0.25f, 0.25f);
 
-    freqRangeSlider.setBoundsRelative(0.05f, 0.1f, 0.1f, 0.7f);
+    freqRangeSlider.setBoundsRelative(0.02f, 0.1f, 0.2f, 0.65f);
 
-    lockRangeButton.setBoundsRelative(0.05f, 0.8f, 0.2f, 0.1f);
+    lfoRateSlider.setBoundsRelative(0.78f, 0.1f, 0.2f, 0.65f);
 
-    lfoRateSlider.setBoundsRelative(0.375f, 0.1f, 0.05f, 0.7f);
+    lockRangeButton.setBoundsRelative(0.02f, 0.75f, 0.4f, 0.1f);
 
-    stereoSlider.setBoundsRelative(0.05f, 0.9f, 0.4f, 0.1f);
+    stereoSlider.setBoundsRelative(0.02f, 0.9f, 0.96f, 0.1f);
 
-    visualiser.setBounds(400, 0, 400, 450);
+    visualiser.setBoundsRelative(0.25f, 0.33f, 0.5f, 0.5f);
 }

@@ -19,9 +19,7 @@ void jr::OscillatorVisualiser::resized()
     maxRadius = visualiserSize * 0.01f;
     minRadius = visualiserSize * 0.0005f;
 
-    // using getBounds().getCentre() returns the centre relative to the whole plugin (600, 225) whereas below returns centre relative to
-    // visualiser start point (400, 225) which results in desired centre when drawing
-    relativeCentre = juce::Point<float>(getBounds().getWidth() / 2.0f, getBounds().getHeight() / 2.0f);
+    relativeCentre = juce::Point<float>(static_cast<float>(getLocalBounds().getCentre().getX()), static_cast<float>(getLocalBounds().getCentre().getY()));
 }
 
 void jr::OscillatorVisualiser::paint(juce::Graphics& g)
