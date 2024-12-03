@@ -28,7 +28,6 @@ MultiFaderDroneAudioProcessor::MultiFaderDroneAudioProcessor()
     apvts.addParameterListener(ID::RATE.toString(), &rateListener);
     apvts.addParameterListener(ID::NUM_VOICES.toString(), &voicesListener);
     apvts.addParameterListener(ID::STEREO_WIDTH.toString(), &stereoWidthListener);
-    //apvts.addParameterListener(ID::FREEZE_RANGE.toString(), &freezeListener);
     apvts.addParameterListener(ID::FREQ_RANGE_MIN.toString(), &minFreqRangeListener);
     apvts.addParameterListener(ID::FREQ_RANGE_MAX.toString(), &maxFreqRangeListener);
 }
@@ -39,7 +38,6 @@ MultiFaderDroneAudioProcessor::~MultiFaderDroneAudioProcessor()
     apvts.removeParameterListener(ID::RATE.toString(), &rateListener);
     apvts.removeParameterListener(ID::NUM_VOICES.toString(), &voicesListener);
     apvts.removeParameterListener(ID::STEREO_WIDTH.toString(), &stereoWidthListener);
-    //apvts.removeParameterListener(ID::FREEZE_RANGE.toString(), &freezeListener);
     apvts.removeParameterListener(ID::FREQ_RANGE_MIN.toString(), &minFreqRangeListener);
     apvts.removeParameterListener(ID::FREQ_RANGE_MAX.toString(), &maxFreqRangeListener);
 }
@@ -232,7 +230,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MultiFaderDroneAudioProcesso
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::GAIN.toString(), "Gain", 0.0f, 1.0f, 1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::RATE.toString(), "Rate", 0.0f, 1.0f, 0.0f));
     layout.add(std::make_unique<juce::AudioParameterInt>(ID::NUM_VOICES.toString(), "Num Voices", 1, 15, 3, "Num Voices", [](int value, int maximumStringLength) -> juce::String { return juce::String(value * 2); }, nullptr));
-    layout.add(std::make_unique<juce::AudioParameterBool>(ID::FREEZE_RANGE.toString(), "Freeze", true, "Freeze Frequency Range"));
+    layout.add(std::make_unique<juce::AudioParameterBool>(ID::LOCK_RANGE.toString(), "Lock", true, "Lock Frequency Range"));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::STEREO_WIDTH.toString(), "Stereo Width", 0.0f, 1.0f, 0.5f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FREQ_RANGE_MIN.toString(), "Frequency Range Min Value", minFreq, maxFreq, defaultMinFreq));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FREQ_RANGE_MAX.toString(), "Frequency Range Max Value", minFreq, maxFreq, defaultMaxFreq));

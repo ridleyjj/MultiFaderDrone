@@ -36,6 +36,13 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
             float maxSliderPos,
             const juce::Slider::SliderStyle style, juce::Slider& slider) override;
 
+        void drawToggleButton(juce::Graphics& g, juce::ToggleButton& button,
+            bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+
+        void drawSmallButton(juce::Graphics& g, juce::Component& component,
+            float x, float y, float w, float h,
+            const bool ticked);
+
         static juce::Colour getValueTrackColour(bool isFrozen) { return isFrozen ? verdigris : roseQuartz; }
 
         static juce::Colour getBackgroundColour() { return beige; }

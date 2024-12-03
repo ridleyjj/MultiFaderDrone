@@ -56,11 +56,11 @@ private:
 
     std::unique_ptr<jr::TwoHeadedSliderAttachment> freqRangeAttachment;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> freezeAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lockRangeAttachment;
 
     // buttons
-
-    juce::ToggleButton freezeRangeButton{ "Freeze" };
+    
+    juce::ToggleButton lockRangeButton{ "Lock Range" };
 
     // Visualiser
 

@@ -151,19 +151,95 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
     auto thumbWidth = getSliderThumbRadius(slider);
 
     // head marker(s)
-    g.setColour(dark);
+
     juce::Rectangle thumbRect = slider.isVertical() ?
         juce::Rectangle<float>(static_cast<float> (thumbWidth * 2.0f), static_cast<float> (thumbWidth)) :
         juce::Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth * 2.0f));
+
+    /*if (isLocked)
+    {
+        juce::Rectangle thumbRectInt = slider.isVertical() ?
+            juce::Rectangle<int>(static_cast<int> (thumbWidth * 2), static_cast<int> (thumbWidth)) :
+            juce::Rectangle<int>(static_cast<int> (thumbWidth), static_cast<int> (thumbWidth * 2));
+        
+        auto shadow = juce::DropShadow();
+        shadow.colour = juce::Colours::lightgrey;
+
+        juce::Point<int> maxPointInt = juce::Point<int>((int)maxPoint.getX(), (int)maxPoint.getY());
+
+        shadow.drawForRectangle(g, thumbRectInt.withCentre(maxPointInt));
+
+        if (isTwoVal)
+        {
+            juce::Point<int> minPointInt = juce::Point<int>((int)minPoint.getX(), (int)minPoint.getY());
+            shadow.drawForRectangle(g, thumbRectInt.withCentre(minPointInt));
+        }
+    }*/
+    
+    //g.setColour(dark);
+
+    if (isLocked)
+    {
+        auto offset = thumbWidth * 0.25f;
+        g.setColour(juce::Colours::white.withAlpha(0.3f));
+        g.fillRoundedRectangle(thumbRect.withCentre(juce::Point(maxPoint.getX(), maxPoint.getY() + offset)), 1.0f);
+
+        if (isTwoVal)
+        {
+            g.fillRoundedRectangle(thumbRect.withCentre(juce::Point(minPoint.getX(), minPoint.getY() - offset)), 1.0f);
+        }
+    }
+    
+    g.setColour(dark);
+
     g.fillRoundedRectangle(thumbRect.withCentre(maxPoint), 1.0f);
 
     if (isTwoVal)
     {
-        g.setColour(dark);
         g.fillRoundedRectangle(thumbRect.withCentre(minPoint), 1.0f);
     }
-
 }
+
+void CustomLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& button,
+    bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+{
+    auto fontSize = juce::jmin(15.0f, (float)button.getHeight() * 0.75f);
+    auto tickWidth = fontSize * 0.9f;
+
+    drawSmallButton(g, button, 4.0f, ((float)button.getHeight() - tickWidth) * 0.5f,
+        tickWidth, tickWidth,
+        button.getToggleState());
+
+    g.setColour(button.findColour(juce::ToggleButton::textColourId));
+    g.setFont(fontSize);
+
+    if (!button.isEnabled())
+        g.setOpacity(0.5f);
+
+    g.drawFittedText(button.getButtonText(),
+        button.getLocalBounds().withTrimmedLeft(juce::roundToInt(tickWidth) + 10)
+        .withTrimmedRight(2),
+        juce::Justification::centredLeft, 10);
+}
+
+
+void CustomLookAndFeel::drawSmallButton(juce::Graphics& g, juce::Component& component,
+    float x, float y, float w, float h,
+    const bool ticked)
+{
+    juce::Rectangle<float> buttonBounds(x, y, w, h);
+
+    if (ticked)
+    {
+        g.setColour(verdigris);
+        g.fillEllipse(buttonBounds);
+    }
+
+    g.setColour(dark);
+    g.drawEllipse(buttonBounds, 3.0f);
+}
+
+// ============= Extra Methods
 
 juce::Colour CustomLookAndFeel::getVisualiserColour(float brightness)
 {

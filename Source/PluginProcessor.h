@@ -20,7 +20,7 @@ namespace ID
     const juce::Identifier GAIN{ "gain" };
     const juce::Identifier NUM_VOICES{ "numVoices" };
     const juce::Identifier RATE{ "rate" };
-    const juce::Identifier FREEZE_RANGE{ "freeze" };
+    const juce::Identifier LOCK_RANGE{ "lockRange" };
     const juce::Identifier STEREO_WIDTH{ "stereoWidth" };
     const juce::Identifier FREQ_RANGE_MIN{ "freqRangeMin" };
     const juce::Identifier FREQ_RANGE_MAX{ "freqRangeMax" };
@@ -96,8 +96,8 @@ public:
 
     float getGain() { return gain.getCurrentValue() * (1.0f / maxGain); }
 
-    bool getRangeFrozen() {
-        return (bool)(*apvts.getRawParameterValue(ID::FREEZE_RANGE.toString()));
+    bool getRangeLocked() {
+        return (bool)(*apvts.getRawParameterValue(ID::LOCK_RANGE.toString()));
     }
 
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }

@@ -31,7 +31,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
             return juce::String(freqRangeSlider.getMinValue()) + "Hz - " + juce::String(freqRangeSlider.getMaxValue()) + "Hz";
         };
 
-    freqRangeSlider.setGetIsLockedCallback([&]() { return audioProcessor.getRangeFrozen();  });
+    freqRangeSlider.setGetIsLockedCallback([&]() { return audioProcessor.getRangeLocked();  });
 
     // APVTS Attachments
 
@@ -40,15 +40,15 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     voicesAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getAPVTS(), ID::NUM_VOICES.toString(), voicesSlider);
     stereoWidthAttachment = std::make_unique<jr::MirrorSliderAttachment>(*(audioProcessor.getAPVTS().getParameter(ID::STEREO_WIDTH)), stereoSlider);
     freqRangeAttachment = std::make_unique<jr::TwoHeadedSliderAttachment>(*(audioProcessor.getAPVTS().getParameter(ID::FREQ_RANGE_MIN)),
-        *(audioProcessor.getAPVTS().getParameter(ID::FREQ_RANGE_MAX)), freqRangeSlider, [&]() { return audioProcessor.getRangeFrozen(); });
+        *(audioProcessor.getAPVTS().getParameter(ID::FREQ_RANGE_MAX)), freqRangeSlider, [&]() { return audioProcessor.getRangeLocked(); });
 
     // buttons
 
-    freezeRangeButton.sendLookAndFeelChange(); // needed to receive latest look and feel font
-    freezeRangeButton.onClick = [&]() { freqRangeSlider.repaint(); }; // ensures that slider is refreshed whenever freeze button is toggled
-    addAndMakeVisible(freezeRangeButton);
+    lockRangeButton.sendLookAndFeelChange(); // needed to receive latest look and feel font
+    lockRangeButton.onClick = [&]() { freqRangeSlider.repaint(); }; // ensures that slider is refreshed whenever lock button is toggled
+    addAndMakeVisible(lockRangeButton);
 
-    freezeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::FREEZE_RANGE.toString(), freezeRangeButton);
+    lockRangeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::LOCK_RANGE.toString(), lockRangeButton);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -106,7 +106,7 @@ void MultiFaderDroneAudioProcessorEditor::resized()
 
     freqRangeSlider.setBoundsRelative(0.05f, 0.1f, 0.1f, 0.7f);
 
-    freezeRangeButton.setBoundsRelative(0.05f, 0.8f, 0.1f, 0.1f);
+    lockRangeButton.setBoundsRelative(0.05f, 0.8f, 0.2f, 0.1f);
 
     lfoRateSlider.setBoundsRelative(0.375f, 0.1f, 0.05f, 0.7f);
 
