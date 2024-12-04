@@ -155,18 +155,6 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
     juce::Rectangle thumbRect = slider.isVertical() ?
         juce::Rectangle<float>(static_cast<float> (thumbWidth * 2.0f), static_cast<float> (thumbWidth)) :
         juce::Rectangle<float>(static_cast<float> (thumbWidth), static_cast<float> (thumbWidth * 2.0f));
-
-    if (isLocked)
-    {
-        auto offset = thumbWidth * 0.25f;
-        g.setColour(juce::Colours::white.withAlpha(0.3f));
-        g.fillRoundedRectangle(thumbRect.withCentre(juce::Point(maxPoint.getX(), maxPoint.getY() + offset)), 1.0f);
-
-        if (isTwoVal)
-        {
-            g.fillRoundedRectangle(thumbRect.withCentre(juce::Point(minPoint.getX(), minPoint.getY() - offset)), 1.0f);
-        }
-    }
     
     g.setColour(dark);
 
@@ -214,7 +202,7 @@ void CustomLookAndFeel::drawSmallButton(juce::Graphics& g, juce::Component& comp
     }
 
     g.setColour(dark);
-    g.drawEllipse(buttonBounds, 3.0f);
+    g.drawEllipse(buttonBounds, 2.0f);
 }
 
 // ============= Extra Methods

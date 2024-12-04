@@ -55,7 +55,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(400, 450);
+    setSize(600, 500);
 
     startTimerHz(24); // FPS
 }
@@ -108,7 +108,7 @@ void MultiFaderDroneAudioProcessorEditor::resized()
 
     lfoRateSlider.setBoundsRelative(0.78f, 0.1f, 0.2f, 0.65f);
 
-    lockRangeButton.setBoundsRelative(0.02f, 0.75f, 0.4f, 0.1f);
+    lockRangeButton.setBoundsRelative(0.03f, 0.75f, 0.4f, 0.1f);
 
     stereoSlider.setBoundsRelative(0.02f, 0.9f, 0.96f, 0.1f);
 
