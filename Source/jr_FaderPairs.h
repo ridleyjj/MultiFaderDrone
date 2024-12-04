@@ -175,9 +175,8 @@ private:
 	static inline float rampTime{ 0.2f };
 	static inline juce::Random random;						// used for generating random frequency
 	static inline float lfoRate{ 0.0f };					// rate to modify the LFO freq by (0-1)
-	static inline float lfoSpread{ 1.0f };
 	static inline float minLfoFreq{ 0.01f };							// minimum lfo frequency when generating random in Hz
-	static inline float maxLfoFreq{ 0.1f };							// range when picking a random frequency in Hz
+	static inline float maxLfoFreq{ 5.0f };							// range when picking a random frequency in Hz
 	static inline float minOscFreq{ 120.0f };							// minimum lfo frequency when generating random in Hz
 	static inline float maxOscFreq{ 1200.0f };							// range when picking a random frequency in Hz
 	static inline float stereoWidth{ 0.0f };				// pan range 0 - 1.0

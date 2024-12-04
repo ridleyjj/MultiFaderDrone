@@ -229,7 +229,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MultiFaderDroneAudioProcesso
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::GAIN.toString(), "Gain", 0.0f, 1.0f, 1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::RATE.toString(), "Rate", 0.0f, 1.0f, 0.0f));
-    layout.add(std::make_unique<juce::AudioParameterInt>(ID::NUM_VOICES.toString(), "Num Voices", 1, 15, 3, "Num Voices", [](int value, int maximumStringLength) -> juce::String { return juce::String(value * 2); }, nullptr));
+    layout.add(std::make_unique<juce::AudioParameterInt>(ID::NUM_VOICES.toString(), "Num Voices", 1, maxPairCount, 3, "Num Voices", [](int value, int maximumStringLength) -> juce::String { return juce::String(value * 2); }, nullptr));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::LOCK_RANGE.toString(), "Lock", true, "Lock Frequency Range"));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::STEREO_WIDTH.toString(), "Stereo Width", 0.0f, 1.0f, 0.5f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FREQ_RANGE_MIN.toString(), "Frequency Range Min Value", minFreq, maxFreq, defaultMinFreq));

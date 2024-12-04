@@ -187,7 +187,7 @@ void FaderPair::resetPan(int index)
 float FaderPair::getLfoFreqFromScale(float scale)
 {
 	scale = jr::Utils::constrainFloat(scale);
-	return minLfoFreq + ((maxLfoFreq + lfoRate * lfoSpread) - minLfoFreq) * scale;
+	return minLfoFreq + ((maxLfoFreq * lfoRate) - minLfoFreq) * scale;
 }
 
 float FaderPair::processLevels()
@@ -364,10 +364,9 @@ void FaderPairs::setStereoWidth(float width)
 
 void FaderPairs::setGainOffset()
 {
-	gainOffset = (numActivePairs - 1) / 7.0f;
+	auto g1 = 0.3f + 0.2f * jr::Utils::constrainFloat((numActivePairs - 1) / 7.0f); // ramp volume from 0.3 to 0.5 between 1 pair and 7
 
-	gainOffset = jr::Utils::constrainFloat(gainOffset);
+	gainOffset = jr::Utils::constrainFloat((numActivePairs - 10) / 40.0f); // used to ramp volume from 0.5 to 1.0 between 10 and 40 voices
 
-	// gain offset is now 0.0f if numActiveParis is 2, or 1.0f if numActivePairs is 14 or greater
-	gain.setTargetValue(0.6f + 0.4f * gainOffset);
+	gain.setTargetValue(g1 + 0.5f * gainOffset);
 }

@@ -107,7 +107,7 @@ public:
 private:
     float maxGain = 0.3;
     FaderPairs faders;              // pair of connected faders
-    int maxPairCount{ 15 };
+    int maxPairCount{ 50 };
     float maxFreq{ 2000.0f };       // max freq in Hz that Osc Freq slider can be set
     float minFreq{ 80.0f };         // min freq in Hz that Osc Freq slider can be set
     float defaultMinFreq{ 120.0f };
