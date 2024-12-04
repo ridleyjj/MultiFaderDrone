@@ -19,10 +19,10 @@ namespace jr
     {
     public:
         OscillatorVisualiser() {}
-        
-        void setPairs(std::shared_ptr<std::vector<FaderPair>> _pairs) { pairs = _pairs; }
 
         void paint(juce::Graphics&) override;
+        
+        void setPairs(std::shared_ptr<std::vector<FaderPair>> _pairs) { pairs = _pairs; }
 
         void setNumActivePairs(int _numActivePairs) { numActivePairs = _numActivePairs; }
 
@@ -73,8 +73,10 @@ namespace jr
         float maxDotSize{ 28.0f };
         float maxRadius{ 4.0f };                                                // scale value that determines how far out the visualiser will spread out.
         float minRadius{ 0.2f };                                                // scale value that determines how clustered the visualiser will be when mono.
-        int numActivePairs{ 0 };
-        std::vector<juce::Point<float>> circlePoints
+        int numActivePairs{ 0 };                                                // number of pairs currently playing - saved to avoid unnecessary calculation or loops
+        float minFreq = 80.0f;                                                  // min Frequency (in Hz) used for colour grading
+        float maxFreq = 1700.0f;                                                // max Frequency (in Hz) used for colour grading
+        std::vector<juce::Point<float>> circlePoints                            // approximate points on a semi-circle with centre point 0,0 and radius of 66. Used to save calc costs
         {
             juce::Point<float>(66.0f, 0.0f),
             juce::Point<float>(0.0f, 66.0f),
@@ -85,9 +87,9 @@ namespace jr
             juce::Point<float>(27.0f, -60.2f),
             juce::Point<float>(60.2f, 27.0f),
         };
-        std::shared_ptr<std::vector<FaderPair>> pairs{ nullptr };
+        std::shared_ptr<std::vector<FaderPair>> pairs{ nullptr };               // pointer to the array of FaderPair objects that will be visualised
         juce::Random random{};
-        juce::Point<float> relativeCentre{ 0.0f, 0.0f };
+        juce::Point<float> relativeCentre{ 0.0f, 0.0f };                        // centre of visualiser relative to its own top left corner, saved on resize to avoid unnecessary repeated conversions
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OscillatorVisualiser);
     };

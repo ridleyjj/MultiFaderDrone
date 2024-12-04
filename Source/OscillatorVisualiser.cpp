@@ -19,7 +19,7 @@ void jr::OscillatorVisualiser::resized()
     maxRadius = visualiserSize * 0.01f;
     minRadius = visualiserSize * 0.0005f;
 
-    relativeCentre = juce::Point<float>(static_cast<float>(getLocalBounds().getCentre().getX()), static_cast<float>(getLocalBounds().getCentre().getY()));
+    relativeCentre = getLocalBounds().getCentre().toFloat();;
 }
 
 void jr::OscillatorVisualiser::paint(juce::Graphics& g)
@@ -41,13 +41,17 @@ void jr::OscillatorVisualiser::paint(juce::Graphics& g)
 
 juce::Point<float> jr::OscillatorVisualiser::getCircumferencePoint(int i)
 {
+    // circle array is only half points on a circle to save space, so each time the index exceeds a multiple of the array size,
+    // flip between multiplying by 1 and -1 in order to cover a whole circle
     auto rem = i % circlePoints.size();
     auto mod = -1.0f;
     if (rem < 1.0f || (rem >= 2.0f && rem < 3.0f))
     {
         mod = 1.0f;
     }
+
     int index = i;
+    // wrap index into circlePoints array
     while (index >= circlePoints.size())
     {
         index -= circlePoints.size();
@@ -57,8 +61,6 @@ juce::Point<float> jr::OscillatorVisualiser::getCircumferencePoint(int i)
 
 juce::Colour jr::OscillatorVisualiser::getColourFromOsc(FaderPair& pair, int index)
 {
-    auto minFreq = 80.0f;
-    auto maxFreq = 1700.0f;
     auto oscNormalisedFreq = (pair.getOscFrequency(index) - minFreq) / maxFreq;
     return CustomLookAndFeel::getVisualiserColour(oscNormalisedFreq);
 }
@@ -83,12 +85,13 @@ juce::Point<float> jr::OscillatorVisualiser::addRandomNoiseToPoint(juce::Point<f
 
 void jr::OscillatorVisualiser::drawWobble(juce::Graphics& g, juce::Point<float>& p, float size)
 {
-    // only draw wobbles if more than 2 oscs
+    // only draw wobbles if more than 2 oscs to give effect like it is caused by interference
     if (numActivePairs > 1)
     {
         float wobbleSize = size * 0.8f;
         float centreOffset = size * 0.25f;
 
+        // draw 3 extra random circles with noise from centre to create effect like the dot is shaking
         for (int i{}; i < 3; i++)
         {
             g.fillEllipse(juce::Rectangle<float>(wobbleSize, wobbleSize).withCentre(addRandomNoiseToPoint(p, centreOffset)));
@@ -101,8 +104,5 @@ void jr::OscillatorVisualiser::drawWobble(juce::Graphics& g, juce::Point<float>&
 void jr::OscillatorVisualiser::drawDotForOsc(juce::Graphics& g, FaderPair& pair, int index, juce::Point<float>& circumferencePoint)
 {
     g.setColour(getColourFromOsc(pair, index));
-    auto size = getDotSizeFromOsc(pair, index);
-    auto pos = getPointFromOsc(pair, index, circumferencePoint);
-
-    drawWobble(g, pos, size);
+    drawWobble(g, getPointFromOsc(pair, index, circumferencePoint), getDotSizeFromOsc(pair, index));
 }
