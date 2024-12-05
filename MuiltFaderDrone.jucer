@@ -2,20 +2,42 @@
 
 <JUCERPROJECT id="qsusKF" name="MultiFaderDrone" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              pluginFormats="buildAUv3,buildStandalone,buildVST3" version="0.1.0"
+              pluginFormats="buildAU,buildAUv3,buildStandalone,buildVST3" version="0.1.0"
               pluginManufacturer="RidleySound" pluginManufacturerCode="RIDS"
-              companyWebsite="www.jjridley.com" bundleIdentifier="com.RidleySound.MultiFaderDrone">
+              companyWebsite="www.jjridley.com" bundleIdentifier="com.RidleySound.MultiFaderDrone"
+              companyName="RidleySound" pluginVST3Category="Instrument">
   <MAINGROUP id="n0vA9i" name="MultiFaderDrone">
     <GROUP id="{14812914-56F5-7AF6-83E5-A09F001AB246}" name="Source">
-      <FILE id="TlW1Wi" name="LockingTwoHeadedSlider.h" compile="0" resource="0"
-            file="Source/LockingTwoHeadedSlider.h"/>
-      <FILE id="MZ4cVO" name="MirrorSliderAttachment.cpp" compile="1" resource="0"
-            file="Source/MirrorSliderAttachment.cpp"/>
-      <FILE id="d4VBLZ" name="MirrorSliderAttachment.h" compile="0" resource="0"
-            file="Source/MirrorSliderAttachment.h"/>
-      <FILE id="kyyFD6" name="ApvtsListener.h" compile="0" resource="0" file="Source/ApvtsListener.h"/>
-      <FILE id="hyi4Ab" name="jr_utils.cpp" compile="1" resource="0" file="Source/jr_utils.cpp"/>
-      <FILE id="eHpQyy" name="jr_utils.h" compile="0" resource="0" file="Source/jr_utils.h"/>
+      <GROUP id="{F6021A7C-1B13-A4E4-206E-28CAF2F01235}" name="Utils">
+        <FILE id="hyi4Ab" name="jr_utils.cpp" compile="1" resource="0" file="Source/jr_utils.cpp"/>
+        <FILE id="eHpQyy" name="jr_utils.h" compile="0" resource="0" file="Source/jr_utils.h"/>
+      </GROUP>
+      <GROUP id="{3333E445-F628-52AB-9959-AD9DB4C2DBED}" name="Components">
+        <GROUP id="{D2318D51-C436-51AA-0D75-C2F8BCCBE42D}" name="Audio">
+          <FILE id="kyyFD6" name="ApvtsListener.h" compile="0" resource="0" file="Source/ApvtsListener.h"/>
+          <FILE id="M6SNm5" name="jr_FaderPairs.h" compile="0" resource="0" file="Source/jr_FaderPairs.h"/>
+          <FILE id="nBKpRu" name="jr_FaderPairs.cpp" compile="1" resource="0"
+                file="Source/jr_FaderPairs.cpp"/>
+          <FILE id="BGGaDp" name="jr_Oscillators.h" compile="0" resource="0"
+                file="Source/jr_Oscillators.h"/>
+        </GROUP>
+        <GROUP id="{7C9B2770-8BF1-5E78-FBD3-334663E2721D}" name="GUI">
+          <FILE id="TlW1Wi" name="LockingTwoHeadedSlider.h" compile="0" resource="0"
+                file="Source/LockingTwoHeadedSlider.h"/>
+          <FILE id="MZ4cVO" name="MirrorSliderAttachment.cpp" compile="1" resource="0"
+                file="Source/MirrorSliderAttachment.cpp"/>
+          <FILE id="d4VBLZ" name="MirrorSliderAttachment.h" compile="0" resource="0"
+                file="Source/MirrorSliderAttachment.h"/>
+          <FILE id="r9goKT" name="OscillatorVisualiser.cpp" compile="1" resource="0"
+                file="Source/OscillatorVisualiser.cpp"/>
+          <FILE id="kyXXL7" name="OscillatorVisualiser.h" compile="0" resource="0"
+                file="Source/OscillatorVisualiser.h"/>
+          <FILE id="idUVmS" name="TwoHeadedSliderAttachment.cpp" compile="1"
+                resource="0" file="Source/TwoHeadedSliderAttachment.cpp"/>
+          <FILE id="t0ViUG" name="TwoHeadedSliderAttachment.h" compile="0" resource="0"
+                file="Source/TwoHeadedSliderAttachment.h"/>
+        </GROUP>
+      </GROUP>
       <GROUP id="{BC387E24-C95D-9341-76CB-399380B476BC}" name="LookAndFeel">
         <GROUP id="{83DF4031-8BA6-182E-BC55-808B2A70CBD2}" name="Resources">
           <FILE id="UH8u2r" name="FontResources.cpp" compile="1" resource="0"
@@ -33,9 +55,6 @@
         <FILE id="JGqgag" name="StyleSheet.cpp" compile="1" resource="0" file="Source/StyleSheet.cpp"/>
         <FILE id="PPbHHg" name="StyleSheet.h" compile="0" resource="0" file="Source/StyleSheet.h"/>
       </GROUP>
-      <FILE id="M6SNm5" name="jr_FaderPairs.h" compile="0" resource="0" file="Source/jr_FaderPairs.h"/>
-      <FILE id="nBKpRu" name="jr_FaderPairs.cpp" compile="1" resource="0"
-            file="Source/jr_FaderPairs.cpp"/>
       <FILE id="UrZDOZ" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="z3TJJt" name="PluginProcessor.h" compile="0" resource="0"
@@ -43,16 +62,6 @@
       <FILE id="yepTqY" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="sFfieP" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="BGGaDp" name="jr_Oscillators.h" compile="0" resource="0"
-            file="Source/jr_Oscillators.h"/>
-      <FILE id="r9goKT" name="OscillatorVisualiser.cpp" compile="1" resource="0"
-            file="Source/OscillatorVisualiser.cpp"/>
-      <FILE id="kyXXL7" name="OscillatorVisualiser.h" compile="0" resource="0"
-            file="Source/OscillatorVisualiser.h"/>
-      <FILE id="idUVmS" name="TwoHeadedSliderAttachment.cpp" compile="1"
-            resource="0" file="Source/TwoHeadedSliderAttachment.cpp"/>
-      <FILE id="t0ViUG" name="TwoHeadedSliderAttachment.h" compile="0" resource="0"
-            file="Source/TwoHeadedSliderAttachment.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
