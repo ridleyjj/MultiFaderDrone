@@ -11,7 +11,7 @@
 #pragma once
 #include <JuceHeader.h>
 #include <vector>
-#include "jr_FaderPairs.h"
+#include "../Audio/jr_FaderPairs.h"
 
 namespace jr
 {

@@ -9,7 +9,7 @@
 */
 
 #include "OscillatorVisualiser.h"
-#include "StyleSheet.h"
+#include "../../LookAndFeel/StyleSheet.h"
 
 void jr::OscillatorVisualiser::resized()
 {

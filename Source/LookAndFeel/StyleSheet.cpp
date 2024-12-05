@@ -9,8 +9,8 @@
 */
 
 #include "StyleSheet.h"
-#include "jr_utils.h"
-#include "LockingTwoHeadedSlider.h"
+#include "../Utils/jr_utils.h"
+#include "../Components/GUI/LockingTwoHeadedSlider.h"
 
 CustomLookAndFeel::CustomLookAndFeel()
 {

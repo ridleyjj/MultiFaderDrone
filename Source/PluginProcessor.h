@@ -10,9 +10,9 @@
 
 #include <JuceHeader.h>
 #include <vector>
-#include "jr_Oscillators.h"
-#include "jr_FaderPairs.h"
-#include "ApvtsListener.h"
+#include "Components/Audio/jr_Oscillators.h"
+#include "Components/Audio/jr_FaderPairs.h"
+#include "Components/Audio/ApvtsListener.h"
 
 // parameter IDs
 namespace ID

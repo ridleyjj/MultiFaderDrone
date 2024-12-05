@@ -11,7 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "FontResources.h"
+#include "Resources/FontResources.h"
 
 // fonts
 namespace StyleSheet

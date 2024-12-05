@@ -3,7 +3,7 @@
 #include <JuceHeader.h>
 #include <vector>
 #include "jr_Oscillators.h"
-#include "jr_utils.h"
+#include "../../Utils/jr_Utils.h"
 
 class FaderPair
 {

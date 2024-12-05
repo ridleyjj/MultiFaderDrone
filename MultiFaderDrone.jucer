@@ -9,51 +9,49 @@
   <MAINGROUP id="n0vA9i" name="MultiFaderDrone">
     <GROUP id="{14812914-56F5-7AF6-83E5-A09F001AB246}" name="Source">
       <GROUP id="{F6021A7C-1B13-A4E4-206E-28CAF2F01235}" name="Utils">
-        <FILE id="hyi4Ab" name="jr_utils.cpp" compile="1" resource="0" file="Source/jr_utils.cpp"/>
-        <FILE id="eHpQyy" name="jr_utils.h" compile="0" resource="0" file="Source/jr_utils.h"/>
+        <FILE id="hyi4Ab" name="jr_utils.cpp" compile="1" resource="0" file="Source/Utils/jr_utils.cpp"/>
+        <FILE id="eHpQyy" name="jr_utils.h" compile="0" resource="0" file="Source/Utils/jr_utils.h"/>
       </GROUP>
       <GROUP id="{3333E445-F628-52AB-9959-AD9DB4C2DBED}" name="Components">
         <GROUP id="{D2318D51-C436-51AA-0D75-C2F8BCCBE42D}" name="Audio">
-          <FILE id="kyyFD6" name="ApvtsListener.h" compile="0" resource="0" file="Source/ApvtsListener.h"/>
-          <FILE id="M6SNm5" name="jr_FaderPairs.h" compile="0" resource="0" file="Source/jr_FaderPairs.h"/>
+          <FILE id="kyyFD6" name="ApvtsListener.h" compile="0" resource="0" file="Source/Components/Audio/ApvtsListener.h"/>
+          <FILE id="M6SNm5" name="jr_FaderPairs.h" compile="0" resource="0" file="Source/Components/Audio/jr_FaderPairs.h"/>
           <FILE id="nBKpRu" name="jr_FaderPairs.cpp" compile="1" resource="0"
-                file="Source/jr_FaderPairs.cpp"/>
+                file="Source/Components/Audio/jr_FaderPairs.cpp"/>
           <FILE id="BGGaDp" name="jr_Oscillators.h" compile="0" resource="0"
-                file="Source/jr_Oscillators.h"/>
+                file="Source/Components/Audio/jr_Oscillators.h"/>
         </GROUP>
         <GROUP id="{7C9B2770-8BF1-5E78-FBD3-334663E2721D}" name="GUI">
           <FILE id="TlW1Wi" name="LockingTwoHeadedSlider.h" compile="0" resource="0"
-                file="Source/LockingTwoHeadedSlider.h"/>
+                file="Source/Components/GUI/LockingTwoHeadedSlider.h"/>
           <FILE id="MZ4cVO" name="MirrorSliderAttachment.cpp" compile="1" resource="0"
-                file="Source/MirrorSliderAttachment.cpp"/>
+                file="Source/Components/GUI/MirrorSliderAttachment.cpp"/>
           <FILE id="d4VBLZ" name="MirrorSliderAttachment.h" compile="0" resource="0"
-                file="Source/MirrorSliderAttachment.h"/>
+                file="Source/Components/GUI/MirrorSliderAttachment.h"/>
           <FILE id="r9goKT" name="OscillatorVisualiser.cpp" compile="1" resource="0"
-                file="Source/OscillatorVisualiser.cpp"/>
+                file="Source/Components/GUI/OscillatorVisualiser.cpp"/>
           <FILE id="kyXXL7" name="OscillatorVisualiser.h" compile="0" resource="0"
-                file="Source/OscillatorVisualiser.h"/>
+                file="Source/Components/GUI/OscillatorVisualiser.h"/>
           <FILE id="idUVmS" name="TwoHeadedSliderAttachment.cpp" compile="1"
-                resource="0" file="Source/TwoHeadedSliderAttachment.cpp"/>
+                resource="0" file="Source/Components/GUI/TwoHeadedSliderAttachment.cpp"/>
           <FILE id="t0ViUG" name="TwoHeadedSliderAttachment.h" compile="0" resource="0"
-                file="Source/TwoHeadedSliderAttachment.h"/>
+                file="Source/Components/GUI/TwoHeadedSliderAttachment.h"/>
         </GROUP>
       </GROUP>
       <GROUP id="{BC387E24-C95D-9341-76CB-399380B476BC}" name="LookAndFeel">
         <GROUP id="{83DF4031-8BA6-182E-BC55-808B2A70CBD2}" name="Resources">
           <FILE id="UH8u2r" name="FontResources.cpp" compile="1" resource="0"
-                file="Source/FontResources.cpp"/>
-          <FILE id="XxbrS5" name="FontResources.h" compile="0" resource="0" file="Source/FontResources.h"/>
+                file="Source/LookAndFeel/Resources/FontResources.cpp"/>
+          <FILE id="XxbrS5" name="FontResources.h" compile="0" resource="0" file="Source/LookAndFeel/Resources/FontResources.h"/>
           <GROUP id="{52BAC379-BE5E-468F-ED07-B80A6D1E0CC8}" name="Assets">
             <FILE id="O2Dro1" name="WorkSans-Regular.ttf" compile="0" resource="1"
-                  file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Assets/WorkSans-Regular.ttf"/>
+                  file="Source/LookAndFeel/Resources/Assets/WorkSans-Regular.ttf"/>
             <FILE id="pIkQi3" name="WorkSans-SemiBold.ttf" compile="0" resource="1"
-                  file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Assets/WorkSans-SemiBold.ttf"/>
+                  file="Source/LookAndFeel/Resources/Assets/WorkSans-SemiBold.ttf"/>
           </GROUP>
-          <FILE id="upb3Ou" name="Resources.cpp" compile="1" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Resources.cpp"/>
-          <FILE id="f3Duos" name="Resources.h" compile="0" resource="0" file="C:/Users/ridle/Downloads/juceDjApp-main/juceDjApp-main/Source/Resources/Resources.h"/>
         </GROUP>
-        <FILE id="JGqgag" name="StyleSheet.cpp" compile="1" resource="0" file="Source/StyleSheet.cpp"/>
-        <FILE id="PPbHHg" name="StyleSheet.h" compile="0" resource="0" file="Source/StyleSheet.h"/>
+        <FILE id="JGqgag" name="StyleSheet.cpp" compile="1" resource="0" file="Source/LookAndFeel/StyleSheet.cpp"/>
+        <FILE id="PPbHHg" name="StyleSheet.h" compile="0" resource="0" file="Source/LookAndFeel/StyleSheet.h"/>
       </GROUP>
       <FILE id="UrZDOZ" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

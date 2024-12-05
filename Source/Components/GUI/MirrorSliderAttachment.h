@@ -10,7 +10,7 @@
 
 #pragma once
 #include <JuceHeader.h>
-#include "jr_utils.h"
+#include "../../Utils/jr_utils.h"
 
 namespace jr
 {

@@ -10,12 +10,12 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
-#include "StyleSheet.h"
+#include "LookAndFeel/StyleSheet.h"
 #include <memory>
-#include "OscillatorVisualiser.h"
-#include "MirrorSliderAttachment.h"
-#include "TwoHeadedSliderAttachment.h"
-#include "LockingTwoHeadedSlider.h"
+#include "Components/GUI/OscillatorVisualiser.h"
+#include "Components/GUI/MirrorSliderAttachment.h"
+#include "Components/GUI/TwoHeadedSliderAttachment.h"
+#include "Components/GUI/LockingTwoHeadedSlider.h"
 
 //==============================================================================
 /**
