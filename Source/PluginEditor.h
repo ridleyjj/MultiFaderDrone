@@ -20,7 +20,7 @@
 //==============================================================================
 /**
 */
-class MultiFaderDroneAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer
+class MultiFaderDroneAudioProcessorEditor  : public juce::AudioProcessorEditor, public juce::Timer, public juce::Button::Listener
 {
 public:
     MultiFaderDroneAudioProcessorEditor (MultiFaderDroneAudioProcessor&);
@@ -30,6 +30,8 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    void buttonClicked(juce::Button* button) override;
+
     void timerCallback() override;
 
 private:
@@ -38,6 +40,16 @@ private:
     void initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name);
     
     void initSimpleSliderWithRange(juce::Slider* slider, juce::Label* label, const juce::String& name, double minVal, double maxValue, double step);
+
+    /*
+    Sends updates to certain GUI objects when the look and feel is updated
+    */
+    void sendNewLookAndFeel();
+
+    /*
+    Method to call when dark mode has been toggled in order to refresh the new styling in the GUI
+    */
+    void refreshStyles();
 
     CustomLookAndFeel myLookAndFeel;
 
@@ -57,10 +69,12 @@ private:
     std::unique_ptr<jr::TwoHeadedSliderAttachment> freqRangeAttachment;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lockRangeAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> darkModeAttachment;
 
     // buttons
     
     juce::ToggleButton lockRangeButton{ "Lock Range" };
+    juce::ToggleButton darkModeButton{};
 
     // Visualiser
 

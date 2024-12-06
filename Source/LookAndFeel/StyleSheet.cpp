@@ -14,13 +14,24 @@
 
 CustomLookAndFeel::CustomLookAndFeel()
 {
-    setColour(juce::Label::textColourId, juce::Colours::black);
-    setColour(juce::Slider::textBoxTextColourId, juce::Colours::black);
-    setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::black.withAlpha(0.0f));
-    setColour(juce::ToggleButton::textColourId, juce::Colours::black);
-    setColour(juce::ToggleButton::tickColourId, juce::Colours::black);
-    setColour(juce::ToggleButton::tickDisabledColourId, juce::Colours::black);
+    updateTextColour();
     setDefaultSansSerifTypeface(StyleSheet::boldFont);
+}
+
+void CustomLookAndFeel::updateTextColour()
+{
+    setColour(juce::Label::textColourId, getTextColour());
+    setColour(juce::Slider::textBoxTextColourId, getTextColour());
+    setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::black.withAlpha(0.0f));
+    setColour(juce::ToggleButton::textColourId, getTextColour());
+    setColour(juce::ToggleButton::tickColourId, getTextColour());
+    setColour(juce::ToggleButton::tickDisabledColourId, getTextColour());
+}
+
+void CustomLookAndFeel::setIsDarkMode(bool isDarkMode)
+{
+    CustomLookAndFeel::darkMode = isDarkMode;
+    updateTextColour();
 }
 
 void CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& slider)
@@ -102,10 +113,6 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
 
     auto backgroundTrackColour = slider.findColour(juce::Slider::backgroundColourId);
     auto valueTrackColour = getValueTrackColour(isLocked);
-
-    
-
-    auto zeroMarkColour = juce::Colours::lightgrey;
 
     auto trackWidth = juce::jmin(6.0f, slider.isHorizontal() ? (float)height * 0.25f : (float)width * 0.25f);
 
@@ -197,7 +204,7 @@ void CustomLookAndFeel::drawSmallButton(juce::Graphics& g, juce::Component& comp
 
     if (ticked)
     {
-        g.setColour(verdigris);
+        g.setColour(getValueTrackColour(true));
         g.fillEllipse(buttonBounds);
     }
 
@@ -210,5 +217,9 @@ void CustomLookAndFeel::drawSmallButton(juce::Graphics& g, juce::Component& comp
 juce::Colour CustomLookAndFeel::getVisualiserColour(float brightness)
 {
     auto b = 0.25f + (jr::Utils::constrainFloat(brightness) * 0.48f);
+    if (darkMode)
+    {
+        b = jr::Utils::constrainFloat(b + 0.2f);
+    }
     return juce::Colour::fromHSL(0.74f, 0.19f, b, 1.0f);
 }

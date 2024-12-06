@@ -45,17 +45,36 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
 
         static juce::Colour getValueTrackColour(bool isFrozen) { return isFrozen ? verdigris : roseQuartz; }
 
-        static juce::Colour getBackgroundColour() { return beige; }
+        static juce::Colour getBackgroundColour() { return darkMode ? jet : beige; }
 
         /*
         Returns a colour with the brightness adjusted based on the given brightness value. Brightness should be a float between 0.0f and 1.0f
         */
         static juce::Colour getVisualiserColour(float brightness);
 
+        void setIsDarkMode(bool isDarkMode);
+
+        static juce::Colour getTextColour() { return darkMode ? juce::Colours::white : juce::Colours::black; }
+        
+        static juce::Colour getDialHeadColour() { return juce::Colours::lightgrey; }
+        
+        static juce::Colour getSliderBackgroundColour() { return dark; }
+
+        static juce::Colour getSliderHeadColour() { return dark; }
+
     private:
+        static void _setIsDarkMode(bool isDarkMode) { CustomLookAndFeel::darkMode = isDarkMode; }
+
+        void updateTextColour();
+
+        static inline bool darkMode{ false };
+
         static inline juce::Colour verdigris{ juce::Colour(104, 149, 161) };
         static inline juce::Colour roseQuartz{ juce::Colour(150, 134, 172) };
         static inline juce::Colour beige{ juce::Colour(249, 245, 241) };
         static inline juce::Colour dark{ juce::Colour(24, 31, 34) };
+        
+        // dark mode
+        static inline juce::Colour jet{ juce::Colour(71, 77, 91) };
 };
 

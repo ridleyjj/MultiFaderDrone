@@ -48,7 +48,11 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     lockRangeButton.onClick = [&]() { freqRangeSlider.repaint(); }; // ensures that slider is refreshed whenever lock button is toggled
     addAndMakeVisible(lockRangeButton);
 
+    darkModeButton.addListener(this);
+    addAndMakeVisible(darkModeButton);
+
     lockRangeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::LOCK_RANGE.toString(), lockRangeButton);
+    darkModeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::DARK_MODE.toString(), darkModeButton);
 
     visualiser.setPairs(audioProcessor.getPairs());
     addAndMakeVisible(visualiser);
@@ -113,4 +117,36 @@ void MultiFaderDroneAudioProcessorEditor::resized()
     stereoSlider.setBoundsRelative(0.02f, 0.9f, 0.96f, 0.1f);
 
     visualiser.setBoundsRelative(0.25f, 0.33f, 0.5f, 0.5f);
+
+    darkModeButton.setBoundsRelative(0.95f, 0.0f, 0.05f, 0.1f);
+}
+
+void MultiFaderDroneAudioProcessorEditor::buttonClicked(juce::Button* button)
+{
+    if (button == &darkModeButton)
+    {
+        myLookAndFeel.setIsDarkMode(darkModeButton.getToggleStateValue().getValue());
+        refreshStyles();
+    }
+}
+
+void MultiFaderDroneAudioProcessorEditor::refreshStyles()
+{
+    sendNewLookAndFeel();
+    repaint();
+}
+
+void MultiFaderDroneAudioProcessorEditor::sendNewLookAndFeel()
+{
+    lockRangeButton.sendLookAndFeelChange();
+    freqRangeSlider.sendLookAndFeelChange();
+    lfoRateSlider.sendLookAndFeelChange();
+    voicesSlider.sendLookAndFeelChange();
+    gainSlider.sendLookAndFeelChange();
+    stereoSlider.sendLookAndFeelChange();
+    voicesLabel.sendLookAndFeelChange();
+    lfoRateLabel.sendLookAndFeelChange();
+    freqRangeLabel.sendLookAndFeelChange();
+    gainLabel.sendLookAndFeelChange();
+    stereoLabel.sendLookAndFeelChange();
 }

@@ -24,6 +24,7 @@ namespace ID
     const juce::Identifier STEREO_WIDTH{ "stereoWidth" };
     const juce::Identifier FREQ_RANGE_MIN{ "freqRangeMin" };
     const juce::Identifier FREQ_RANGE_MAX{ "freqRangeMax" };
+    const juce::Identifier DARK_MODE{ "darkMode" };
 }
 
 //==============================================================================
