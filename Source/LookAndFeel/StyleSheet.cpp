@@ -37,8 +37,8 @@ void CustomLookAndFeel::setIsDarkMode(bool isDarkMode)
 void CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& slider)
 {
     auto outline = slider.findColour(juce::Slider::rotarySliderOutlineColourId);
-    auto fill = roseQuartz;
-    auto thumbColour = juce::Colours::lightgrey;
+    auto fill = getValueTrackColour(false);
+    auto thumbColour = getDialHeadColour();
     auto backgroundColour = slider.findColour(juce::Slider::rotarySliderFillColourId);
 
     auto bounds = juce::Rectangle<int>(x, y, width, height).toFloat().reduced(10);
@@ -181,7 +181,7 @@ void CustomLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& 
 
     drawSmallButton(g, button, 4.0f, ((float)button.getHeight() - tickWidth) * 0.5f,
         tickWidth, tickWidth,
-        button.getToggleState());
+        button.getToggleState(), button.findColour(juce::ToggleButton::textColourId));
 
     g.setColour(button.findColour(juce::ToggleButton::textColourId));
     g.setFont(fontSize);
@@ -198,7 +198,7 @@ void CustomLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& 
 
 void CustomLookAndFeel::drawSmallButton(juce::Graphics& g, juce::Component& component,
     float x, float y, float w, float h,
-    const bool ticked)
+    const bool ticked, juce::Colour colour)
 {
     juce::Rectangle<float> buttonBounds(x, y, w, h);
 
@@ -208,7 +208,7 @@ void CustomLookAndFeel::drawSmallButton(juce::Graphics& g, juce::Component& comp
         g.fillEllipse(buttonBounds);
     }
 
-    g.setColour(dark);
+    g.setColour(colour);
     g.drawEllipse(buttonBounds, 2.0f);
 }
 

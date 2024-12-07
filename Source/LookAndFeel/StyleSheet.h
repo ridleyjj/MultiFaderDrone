@@ -41,9 +41,9 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
 
         void drawSmallButton(juce::Graphics& g, juce::Component& component,
             float x, float y, float w, float h,
-            const bool ticked);
+            const bool ticked, juce::Colour colour);
 
-        static juce::Colour getValueTrackColour(bool isFrozen) { return isFrozen ? verdigris : roseQuartz; }
+        static juce::Colour getValueTrackColour(bool isFrozen) { return isFrozen ? getFrozenColour() : getAccentColour(); }
 
         static juce::Colour getBackgroundColour() { return darkMode ? jet : beige; }
 
@@ -56,7 +56,7 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
 
         static juce::Colour getTextColour() { return darkMode ? juce::Colours::white : juce::Colours::black; }
         
-        static juce::Colour getDialHeadColour() { return juce::Colours::lightgrey; }
+        static juce::Colour getDialHeadColour() { return darkMode ? juce::Colours::white : juce::Colours::lightgrey; }
         
         static juce::Colour getSliderBackgroundColour() { return dark; }
 
@@ -67,6 +67,9 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
 
         void updateTextColour();
 
+        static juce::Colour getAccentColour() { return darkMode ? lightRose : roseQuartz; }
+        static juce::Colour getFrozenColour() { return darkMode ? lightBlue : verdigris; }
+
         static inline bool darkMode{ false };
 
         static inline juce::Colour verdigris{ juce::Colour(104, 149, 161) };
@@ -76,5 +79,7 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
         
         // dark mode
         static inline juce::Colour jet{ juce::Colour(71, 77, 91) };
+        static inline juce::Colour lightRose{ juce::Colour(188, 175, 212) };
+        static inline juce::Colour lightBlue{ juce::Colour(141, 185, 212) };
 };
 
