@@ -11,6 +11,7 @@
 #include "StyleSheet.h"
 #include "../Utils/jr_utils.h"
 #include "../Components/GUI/LockingTwoHeadedSlider.h"
+#include "../Components/GUI/DarkModeButton.h"
 
 CustomLookAndFeel::CustomLookAndFeel()
 {
@@ -176,12 +177,23 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
 void CustomLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& button,
     bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
-    auto fontSize = juce::jmin(15.0f, (float)button.getHeight() * 0.75f);
-    auto tickWidth = fontSize * 0.9f;
+    if (dynamic_cast<jr::DarkModeButton*>(&button) != nullptr)
+    {
+        drawDarkModeButton(g, button, button.getToggleState(), button.findColour(juce::ToggleButton::textColourId));
+        return;
+    }
 
-    drawSmallButton(g, button, 4.0f, ((float)button.getHeight() - tickWidth) * 0.5f,
+    // standard JUCE LookAndFeel_V4 drawToggleButton method
+
+    auto fontSize = juce::jmin(15.0f, (float)button.getHeight() * 0.75f);
+    auto tickWidth = fontSize * 1.1f;
+
+    drawTickBox(g, button, 4.0f, ((float)button.getHeight() - tickWidth) * 0.5f,
         tickWidth, tickWidth,
-        button.getToggleState(), button.findColour(juce::ToggleButton::textColourId));
+        button.getToggleState(),
+        button.isEnabled(),
+        shouldDrawButtonAsHighlighted,
+        shouldDrawButtonAsDown);
 
     g.setColour(button.findColour(juce::ToggleButton::textColourId));
     g.setFont(fontSize);
@@ -196,27 +208,80 @@ void CustomLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& 
 }
 
 
-void CustomLookAndFeel::drawSmallButton(juce::Graphics& g, juce::Component& component,
-    float x, float y, float w, float h,
-    const bool ticked, juce::Colour colour)
+void CustomLookAndFeel::drawDarkModeButton(juce::Graphics& g, juce::Component& component, const bool ticked, juce::Colour colour)
 {
-    juce::Rectangle<float> buttonBounds(x, y, w, h);
+    auto size = juce::jmin(component.getBounds().getWidth(), component.getBounds().getHeight()) * 0.5f;
+    auto centre = component.getLocalBounds().getCentre().toFloat();
 
-    if (ticked)
-    {
-        g.setColour(getValueTrackColour(true));
-        g.fillEllipse(buttonBounds);
-    }
+    ticked ? drawSun(g, size, centre, colour) : drawCrescent(g, size, centre, colour);
+}
+
+void CustomLookAndFeel::drawCrescent(juce::Graphics& g, float size, juce::Point<float> c, juce::Colour colour)
+{
+    juce::Path crescent;
+    
+    auto r = size * 0.5f;
+
+    // large outside arc
+    crescent.addCentredArc(c.getX(),
+        c.getY(),
+        r,
+        r,
+        0.0f,
+        4.08407f,
+        0.0f,
+        true);
+
+    // small inside arc
+    float innerR = r * 0.9f;
+    crescent.addCentredArc(c.getX() - r / 2,
+        c.getY() - r / 5,
+        innerR,
+        innerR,
+        0.0f,
+        3.45575f,
+        0.62831f,
+        true);
 
     g.setColour(colour);
-    g.drawEllipse(buttonBounds, 2.0f);
+    g.strokePath(crescent, juce::PathStrokeType(1.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+}
+
+void CustomLookAndFeel::drawSun(juce::Graphics& g, float size, juce::Point<float> c, juce::Colour colour)
+{
+    g.setColour(colour);
+
+    // draw centre circle
+    auto circleSize = size * 0.5f;
+    g.drawEllipse(juce::Rectangle<float>(circleSize, circleSize).withCentre(c), 1.0f);
+
+    // draw sun rays
+    auto angle = 0.0f;
+    juce::Path rays;
+    int numRays = 9;
+    float rayStart = size * 0.4f;
+    float rayEnd = size * 0.5f;
+    for (int i{}; i < numRays; i++)
+    {
+        rays.addLineSegment(juce::Line<float>(getPointOnCircle(rayStart, angle, c), getPointOnCircle(rayEnd, angle, c)), 1.0f);
+        angle += juce::MathConstants<float>::twoPi / numRays;
+    }
+    g.strokePath(rays, juce::PathStrokeType(1.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+}
+
+juce::Point<float> CustomLookAndFeel::getPointOnCircle(float r, float theta, juce::Point<float> c)
+{
+    return juce::Point<float>(
+        c.getX() + r * juce::dsp::FastMathApproximations::cos(theta),
+        c.getY() + r * juce::dsp::FastMathApproximations::sin(theta)
+    );
 }
 
 // ============= Extra Methods
 
 juce::Colour CustomLookAndFeel::getVisualiserColour(float brightness)
 {
-    auto b = 0.25f + (jr::Utils::constrainFloat(brightness) * 0.48f);
+    auto b = 0.35f + (jr::Utils::constrainFloat(brightness) * 0.38f);
     if (darkMode)
     {
         b = jr::Utils::constrainFloat(b + 0.2f);

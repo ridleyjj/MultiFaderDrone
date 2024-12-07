@@ -39,10 +39,6 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
         void drawToggleButton(juce::Graphics& g, juce::ToggleButton& button,
             bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
 
-        void drawSmallButton(juce::Graphics& g, juce::Component& component,
-            float x, float y, float w, float h,
-            const bool ticked, juce::Colour colour);
-
         static juce::Colour getValueTrackColour(bool isFrozen) { return isFrozen ? getFrozenColour() : getAccentColour(); }
 
         static juce::Colour getBackgroundColour() { return darkMode ? jet : beige; }
@@ -66,6 +62,25 @@ class CustomLookAndFeel : public juce::LookAndFeel_V4
         static void _setIsDarkMode(bool isDarkMode) { CustomLookAndFeel::darkMode = isDarkMode; }
 
         void updateTextColour();
+
+        void drawDarkModeButton(juce::Graphics& g, juce::Component& component, const bool ticked, juce::Colour colour);
+
+        /*
+        Draws a cresent, where size is the diameter of the circle that the crescent would fill, and c is the centre
+        */
+        void drawCrescent(juce::Graphics& g, float size, juce::Point<float> c, juce::Colour colour);
+        
+        /*
+        Draws a graphical representation of the sun, where the size is the width and height of the sun including its rays
+        and c is the centre of the sun
+        */
+        void drawSun(juce::Graphics& g, float size, juce::Point<float> c, juce::Colour colour);
+
+        /*
+        returns the point on the circumference of a 0,0 centred circle with radius r, at the angle theta.
+        Centre point of circle can be optionally passed
+        */
+        juce::Point<float> getPointOnCircle(float r, float theta, juce::Point<float> c = juce::Point<float>(0.0f, 0.0f));
 
         static juce::Colour getAccentColour() { return darkMode ? lightRose : roseQuartz; }
         static juce::Colour getFrozenColour() { return darkMode ? lightBlue : verdigris; }

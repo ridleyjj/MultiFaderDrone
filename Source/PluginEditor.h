@@ -16,6 +16,7 @@
 #include "Components/GUI/MirrorSliderAttachment.h"
 #include "Components/GUI/TwoHeadedSliderAttachment.h"
 #include "Components/GUI/LockingTwoHeadedSlider.h"
+#include "Components/GUI/DarkModeButton.h"
 
 //==============================================================================
 /**
@@ -74,7 +75,7 @@ private:
     // buttons
     
     juce::ToggleButton lockRangeButton{ "Lock Range" };
-    juce::ToggleButton darkModeButton{};
+    jr::DarkModeButton darkModeButton{};
 
     // Visualiser
 

@@ -118,7 +118,7 @@ void MultiFaderDroneAudioProcessorEditor::resized()
 
     visualiser.setBoundsRelative(0.25f, 0.33f, 0.5f, 0.5f);
 
-    darkModeButton.setBoundsRelative(0.95f, 0.0f, 0.05f, 0.1f);
+    darkModeButton.setBoundsRelative(0.92f, 0.0f, 0.08f, 0.08f);
 }
 
 void MultiFaderDroneAudioProcessorEditor::buttonClicked(juce::Button* button)

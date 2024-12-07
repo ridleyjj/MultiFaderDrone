@@ -22,6 +22,8 @@
                 file="Source/Components/Audio/jr_Oscillators.h"/>
         </GROUP>
         <GROUP id="{7C9B2770-8BF1-5E78-FBD3-334663E2721D}" name="GUI">
+          <FILE id="t3QgAS" name="DarkModeButton.h" compile="0" resource="0"
+                file="Source/Components/GUI/DarkModeButton.h"/>
           <FILE id="TlW1Wi" name="LockingTwoHeadedSlider.h" compile="0" resource="0"
                 file="Source/Components/GUI/LockingTwoHeadedSlider.h"/>
           <FILE id="MZ4cVO" name="MirrorSliderAttachment.cpp" compile="1" resource="0"
@@ -82,6 +84,7 @@
         <MODULEPATH id="juce_graphics" path="../../modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../modules"/>
+        <MODULEPATH id="juce_dsp" path="C:/JUCE/modules"/>
       </MODULEPATHS>
     </VS2022>
   </EXPORTFORMATS>
@@ -95,6 +98,7 @@
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
