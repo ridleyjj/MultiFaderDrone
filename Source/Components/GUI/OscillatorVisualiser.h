@@ -23,7 +23,7 @@ namespace jr
 
         void paint(juce::Graphics&) override;
         
-        void setPairs(std::shared_ptr<std::vector<FaderPair>> _pairs) { pairs = _pairs; }
+        void setPairs(std::shared_ptr<std::vector<FaderPairs::FaderPair>> _pairs) { pairs = _pairs; }
 
         void setNumActivePairs(int _numActivePairs) { numActivePairs = _numActivePairs; }
 
@@ -44,26 +44,26 @@ namespace jr
         /*
         Returns a colour based on the frequency of the oscillator at the given index in the given FaderPair
         */
-        juce::Colour getColourFromOsc(FaderPair& pair, int index);
+        juce::Colour getColourFromOsc(FaderPairs::FaderPair& pair, int index);
 
         /*
         Returns the size of dot to draw based on the current level of the given oscillator at the given index in the FaderPair.
         Size will be constrained between the max Dot size and 0
         */
-        float getDotSizeFromOsc(FaderPair& pair, int index);
+        float getDotSizeFromOsc(FaderPairs::FaderPair& pair, int index);
 
         /*
         Returns the point to draw the dot at for oscillator at the given index in the FaderPair.
         circumferencePoint is the point on a circle's circumference (with centre 0 and radius 66)
         marking the angle at which the dot should be drawn.
         */
-        juce::Point<float> getPointFromOsc(FaderPair& pair, int index, juce::Point<float>& circumferencePoint);
+        juce::Point<float> getPointFromOsc(FaderPairs::FaderPair& pair, int index, juce::Point<float>& circumferencePoint);
 
         /*
         Draws a dot representation of the oscillator at the given index in the FaderPair, using
         circumferencePoint as the point on a 0 centred circle that matches the angle of the desired dot.
         */
-        void drawDotForOsc(juce::Graphics& g, FaderPair& pair, int index, juce::Point<float>& circumferencePoint);
+        void drawDotForOsc(juce::Graphics& g, FaderPairs::FaderPair& pair, int index, juce::Point<float>& circumferencePoint);
 
         /*
         Draws a dot with additional overlayed dots with random noise to cause a dynamic 'buzzing'/'wobbling' effect. Draws a
@@ -89,7 +89,7 @@ namespace jr
             juce::Point<float>(27.0f, -60.2f),
             juce::Point<float>(60.2f, 27.0f),
         };
-        std::shared_ptr<std::vector<FaderPair>> pairs{ nullptr };               // pointer to the array of FaderPair objects that will be visualised
+        std::shared_ptr<std::vector<FaderPairs::FaderPair>> pairs{ nullptr };               // pointer to the array of FaderPair objects that will be visualised
         juce::Random random{};
         juce::Point<float> relativeCentre{ 0.0f, 0.0f };                        // centre of visualiser relative to its own top left corner, saved on resize to avoid unnecessary repeated conversions
 

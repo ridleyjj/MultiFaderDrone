@@ -25,7 +25,7 @@ void jr::OscillatorVisualiser::paint(juce::Graphics& g)
 {
     for (int i{}; i < pairs.get()->size(); i++)
     {
-        FaderPair& pair = pairs.get()->at(i);
+        FaderPairs::FaderPair& pair = pairs.get()->at(i);
         if (pair.getIsSilenced())
         {
             continue; // skip if voice isn't playing
@@ -58,19 +58,19 @@ juce::Point<float> jr::OscillatorVisualiser::getCircumferencePoint(int i)
     return circlePoints.at(index);
 }
 
-juce::Colour jr::OscillatorVisualiser::getColourFromOsc(FaderPair& pair, int index)
+juce::Colour jr::OscillatorVisualiser::getColourFromOsc(FaderPairs::FaderPair& pair, int index)
 {
     auto oscNormalisedFreq = (pair.getOscFrequency(index) - minFreq) / maxFreq;
     return lookAndFeel.getVisualiserColour(oscNormalisedFreq);
 }
 
-float jr::OscillatorVisualiser::getDotSizeFromOsc(FaderPair& pair, int index)
+float jr::OscillatorVisualiser::getDotSizeFromOsc(FaderPairs::FaderPair& pair, int index)
 {
     auto size = maxDotSize * pair.getNormalisedOscLevel(index);
     return jr::Utils::constrainFloat(size, 0.0f, maxDotSize);
 }
 
-juce::Point<float> jr::OscillatorVisualiser::getPointFromOsc(FaderPair& pair, int index, juce::Point<float>& circumferencePoint)
+juce::Point<float> jr::OscillatorVisualiser::getPointFromOsc(FaderPairs::FaderPair& pair, int index, juce::Point<float>& circumferencePoint)
 {
     float radius = minRadius + (abs(pair.getPan(index) - 0.5) * maxRadius);
     auto mod = index == 0 ? 1.0f : -1.0f; // determines which direction point should be from centre based on index
@@ -100,7 +100,7 @@ void jr::OscillatorVisualiser::drawWobble(juce::Graphics& g, juce::Point<float>&
     g.fillEllipse(juce::Rectangle<float>(size, size).withCentre(p));
 }
 
-void jr::OscillatorVisualiser::drawDotForOsc(juce::Graphics& g, FaderPair& pair, int index, juce::Point<float>& circumferencePoint)
+void jr::OscillatorVisualiser::drawDotForOsc(juce::Graphics& g, FaderPairs::FaderPair& pair, int index, juce::Point<float>& circumferencePoint)
 {
     g.setColour(getColourFromOsc(pair, index));
     drawWobble(g, getPointFromOsc(pair, index, circumferencePoint), getDotSizeFromOsc(pair, index));

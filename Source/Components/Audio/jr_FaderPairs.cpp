@@ -8,21 +8,17 @@
 //************ FaderPair ******************//
 //=========================================//
 
-FaderPair::FaderPair() {};
-
-void FaderPair::init(float _sampleRate, bool _silenced)
+void FaderPairs::FaderPair::init(float _sampleRate, bool _silenced)
 {
 	silenced = _silenced;
 
-	masterGain.reset(_sampleRate, rampTime);
+	masterGain.reset(_sampleRate, parent.rampTime);
 	masterGain.setCurrentAndTargetValue(0.0f);
 	masterGain.setTargetValue(silenced ? 0.0f : 1.0f);
-	avgLevel.reset(_sampleRate, rampTime);
-	maxLevel.reset(_sampleRate, rampTime);
 
 	lfo.setSampleRate(_sampleRate);
 
-	lfoBaseFreq = random.nextFloat();
+	lfoBaseFreq = parent.random.nextFloat();
 	lfo.setFrequency(getLfoFreqFromScale(lfoBaseFreq));
 
 	resetPan(0);
@@ -33,9 +29,9 @@ void FaderPair::init(float _sampleRate, bool _silenced)
 	isInitialised = true;
 }
 
-void FaderPair::updateSampleRate(float _sampleRate)
+void FaderPairs::FaderPair::updateSampleRate(float _sampleRate)
 {
-	masterGain.reset(_sampleRate, rampTime);
+	masterGain.reset(_sampleRate, parent.rampTime);
 
 	lfo.setSampleRate(_sampleRate);
 
@@ -45,13 +41,7 @@ void FaderPair::updateSampleRate(float _sampleRate)
 	}
 }
 
-void FaderPair::updateStaticSampleRate(float _sampleRate)
-{
-	maxLevel.reset(_sampleRate, rampTime);
-	avgLevel.reset(_sampleRate, rampTime);
-}
-
-std::pair<float, float> FaderPair::process()
+std::pair<float, float> FaderPairs::FaderPair::process()
 {
 	if (oscs.size() == 0)
 	{
@@ -72,8 +62,8 @@ std::pair<float, float> FaderPair::process()
 	out.second = 0.0f;
 
 	// raw values before panning
-	float osc1RawOut = oscs.at(0).process() * (avgLevel.getCurrentValue() + delta);
-	float osc2RawOut = oscs.at(1).process() * (avgLevel.getCurrentValue() - delta);
+	float osc1RawOut = oscs.at(0).process() * (parent.avgLevel.getCurrentValue() + delta);
+	float osc2RawOut = oscs.at(1).process() * (parent.avgLevel.getCurrentValue() - delta);
 
 	// add panned signals to out pair
 	out.first += osc1RawOut * (1.0f - pan.at(0));
@@ -89,7 +79,7 @@ std::pair<float, float> FaderPair::process()
 	return out;
 }
 
-void FaderPair::silence()
+void FaderPairs::FaderPair::silence()
 {
 	if (!silenced)
 	{
@@ -99,7 +89,7 @@ void FaderPair::silence()
 	waitingToRestart = false;
 }
 
-void FaderPair::start()
+void FaderPairs::FaderPair::start()
 {
 	if (masterGain.getCurrentValue() != 0.0f && silenced)
 	{
@@ -116,33 +106,17 @@ void FaderPair::start()
 	// if voice is not currently silenced do nothing
 }
 
-void FaderPair::setMaxLevel(float _maxLevel)
-{
-	maxLevel.setTargetValue(_maxLevel);
-	avgLevel.setTargetValue(_maxLevel / 2.0f);
-}
-
-void FaderPair::updateLfoFreq()
+void FaderPairs::FaderPair::updateLfoFreq()
 {
 	lfo.setFrequency(getLfoFreqFromScale(lfoBaseFreq));
 }
 
-void FaderPair::setStereoWidth(float width)
-{
-	FaderPair::stereoWidth = width;
-}
-
-void FaderPair::setLfoRate(float _rate)
-{
-	FaderPair::lfoRate = jr::Utils::constrainFloat(_rate);
-}
-
-bool FaderPair::getIsInitialised()
+bool FaderPairs::FaderPair::getIsInitialised()
 {
 	return isInitialised;
 }
 
-void FaderPair::initOscs(float _sampleRate)
+void FaderPairs::FaderPair::initOscs(float _sampleRate)
 {
 	if (oscs.size() != 2)
 	{
@@ -150,47 +124,47 @@ void FaderPair::initOscs(float _sampleRate)
 		{
 			SineOsc osc = SineOsc();
 			osc.setSampleRate(_sampleRate);
-			osc.setFrequency(FaderPair::getRandomOscFrequency());
+			osc.setFrequency(parent.getRandomOscFrequency());
 			oscs.push_back(osc);
 		}
 	}
 }
 
-void FaderPair::resetFrequencies()
+void FaderPairs::FaderPair::resetFrequencies()
 {
 	for (auto& osc : oscs)
 	{
-		osc.setFrequency(FaderPair::getRandomOscFrequency());
+		osc.setFrequency(parent.getRandomOscFrequency());
 	}
-	lfoBaseFreq = random.nextFloat();
+	lfoBaseFreq = parent.random.nextFloat();
 	lfo.setFrequency(getLfoFreqFromScale(lfoBaseFreq));
 }
 
-void FaderPair::resetOsc(int index)
+void FaderPairs::FaderPair::resetOsc(int index)
 {
 	if (index < 0 || index >= oscs.size())
 	{
 		return;
 	}
-	oscs.at(index).setFrequency(FaderPair::getRandomOscFrequency());
+	oscs.at(index).setFrequency(parent.getRandomOscFrequency());
 }
 
-void FaderPair::resetPan(int index)
+void FaderPairs::FaderPair::resetPan(int index)
 {
 	if (index < 0 || index >= oscs.size())
 	{
 		return;
 	}
-	pan.at(index) = 0.5f + (random.nextFloat() - 0.5f) * FaderPair::stereoWidth; // set to 0.5f +/- 0.5f at max or 0.0f at min
+	pan.at(index) = 0.5f + (parent.random.nextFloat() - 0.5f) * parent.stereoWidth; // set to 0.5f +/- 0.5f at max or 0.0f at min
 }
 
-float FaderPair::getLfoFreqFromScale(float scale)
+float FaderPairs::FaderPair::getLfoFreqFromScale(float scale)
 {
 	scale = jr::Utils::constrainFloat(scale);
-	return minLfoFreq + ((maxLfoFreq * lfoRate) - minLfoFreq) * scale;
+	return parent.minLfoFreq + ((parent.maxLfoFreq * parent.lfoRate) - parent.minLfoFreq) * scale;
 }
 
-float FaderPair::processLevels()
+float FaderPairs::FaderPair::processLevels()
 {
 	float lfoVal = lfo.process();
 	if (lfoVal >= 1.0f)
@@ -203,19 +177,7 @@ float FaderPair::processLevels()
 		resetOsc(0);
 		resetPan(0);
 	}
-	return lfoVal * avgLevel.getCurrentValue();
-}
-
-void FaderPair::processStaticLevels()
-{
-	maxLevel.getNextValue();
-	avgLevel.getNextValue();
-	normalRatio = 1.0f / maxLevel.getCurrentValue();
-}
-
-float FaderPair::getRandomOscFrequency()
-{
-	return (FaderPair::random.nextFloat() * (FaderPair::maxOscFreq - FaderPair::minOscFreq)) + FaderPair::minOscFreq;
+	return lfoVal * parent.avgLevel.getCurrentValue();
 }
 
 //=========================================//
@@ -232,20 +194,18 @@ void FaderPairs::init(size_t numPairs, float _sampleRate, size_t maxNumPairs)
 	sampleRate = _sampleRate;
 
 	gain.reset(sampleRate, 0.1f);
-
-	FaderPair::updateStaticSampleRate(sampleRate);
+	maxLevel.reset(_sampleRate, rampTime);
+	avgLevel.reset(_sampleRate, rampTime);
 
 	if (_pairs.size() == 0)
 	{
 		// first time only
 
-		const float maxLevel = 0.5f / (float)numPairs;
-
-		FaderPair::setMaxLevel(maxLevel);
+		setMaxLevel(0.5f / (float)numPairs);
 
 		for (int i{}; i < maxNumPairs; i++)
 		{
-			_pairs.push_back(FaderPair());
+			_pairs.push_back(FaderPair(*this));
 			_pairs.at(i).init(sampleRate, i >= numPairs);
 		}
 
@@ -289,7 +249,7 @@ std::pair<float, float> FaderPairs::process()
 
 	float sampleOut{};
 
-	FaderPair::processStaticLevels();
+	processSharedLevels();
 
 	for (auto& pair : _pairs)
 	{
@@ -304,6 +264,19 @@ std::pair<float, float> FaderPairs::process()
 	out.second *= gain.getCurrentValue();
 
 	return out;
+}
+
+void FaderPairs::setMaxLevel(float _maxLevel)
+{
+	maxLevel.setTargetValue(_maxLevel);
+	avgLevel.setTargetValue(_maxLevel / 2.0f);
+}
+
+void FaderPairs::processSharedLevels()
+{
+	maxLevel.getNextValue();
+	avgLevel.getNextValue();
+	normalRatio = 1.0f / maxLevel.getCurrentValue();
 }
 
 void FaderPairs::setNumPairs(int numPairs)
@@ -326,8 +299,7 @@ void FaderPairs::setNumPairs(int numPairs)
 		numPairs = _pairs.size();
 	}
 	
-	float maxLevel = 1.0f / (float)numPairs;
-	FaderPair::setMaxLevel(maxLevel);
+	setMaxLevel(1.0f / (float)numPairs);
 
 	if (numPairs < numActivePairs) // silencing n pairs
 	{
@@ -350,7 +322,7 @@ void FaderPairs::setNumPairs(int numPairs)
 
 void FaderPairs::setLfoRate(float _rate)
 {
-	FaderPair::setLfoRate(_rate);
+	lfoRate = jr::Utils::constrainFloat(_rate);
 	for (auto& pair : _pairs)
 	{
 		pair.updateLfoFreq();
@@ -359,7 +331,7 @@ void FaderPairs::setLfoRate(float _rate)
 
 void FaderPairs::setStereoWidth(float width)
 {
-	FaderPair::setStereoWidth(jr::Utils::constrainFloat(width));
+	stereoWidth = jr::Utils::constrainFloat(width);
 }
 
 void FaderPairs::setGainOffset()
