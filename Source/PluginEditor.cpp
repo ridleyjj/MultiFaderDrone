@@ -66,7 +66,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
 void MultiFaderDroneAudioProcessorEditor::initSimpleSlider(juce::Slider* slider, juce::Label* label, const juce::String& name) {
     // slider init
-    slider->setColour(juce::Slider::trackColourId, CustomLookAndFeel::getValueTrackColour(false));
+    slider->setColour(juce::Slider::trackColourId, myLookAndFeel.getValueTrackColour(false));
     slider->setTextBoxIsEditable(false);
     slider->sendLookAndFeelChange(); // needed to receive latest look and feel font
     addAndMakeVisible(slider);

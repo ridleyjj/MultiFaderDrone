@@ -9,7 +9,6 @@
 */
 
 #include "OscillatorVisualiser.h"
-#include "../../LookAndFeel/StyleSheet.h"
 
 void jr::OscillatorVisualiser::resized()
 {
@@ -62,7 +61,7 @@ juce::Point<float> jr::OscillatorVisualiser::getCircumferencePoint(int i)
 juce::Colour jr::OscillatorVisualiser::getColourFromOsc(FaderPair& pair, int index)
 {
     auto oscNormalisedFreq = (pair.getOscFrequency(index) - minFreq) / maxFreq;
-    return CustomLookAndFeel::getVisualiserColour(oscNormalisedFreq);
+    return lookAndFeel.getVisualiserColour(oscNormalisedFreq);
 }
 
 float jr::OscillatorVisualiser::getDotSizeFromOsc(FaderPair& pair, int index)

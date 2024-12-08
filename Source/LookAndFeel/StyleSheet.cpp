@@ -13,13 +13,13 @@
 #include "../Components/GUI/LockingTwoHeadedSlider.h"
 #include "../Components/GUI/DarkModeButton.h"
 
-CustomLookAndFeel::CustomLookAndFeel()
+jr::CustomLookAndFeel::CustomLookAndFeel()
 {
     updateTextColour();
     setDefaultSansSerifTypeface(StyleSheet::boldFont);
 }
 
-void CustomLookAndFeel::updateTextColour()
+void jr::CustomLookAndFeel::updateTextColour()
 {
     setColour(juce::Label::textColourId, getTextColour());
     setColour(juce::Slider::textBoxTextColourId, getTextColour());
@@ -29,13 +29,13 @@ void CustomLookAndFeel::updateTextColour()
     setColour(juce::ToggleButton::tickDisabledColourId, getTextColour());
 }
 
-void CustomLookAndFeel::setIsDarkMode(bool isDarkMode)
+void jr::CustomLookAndFeel::setIsDarkMode(bool isDarkMode)
 {
-    CustomLookAndFeel::darkMode = isDarkMode;
+    darkMode = isDarkMode;
     updateTextColour();
 }
 
-void CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& slider)
+void jr::CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, float rotaryStartAngle, float rotaryEndAngle, juce::Slider& slider)
 {
     auto outline = slider.findColour(juce::Slider::rotarySliderOutlineColourId);
     auto fill = getValueTrackColour(false);
@@ -96,7 +96,7 @@ void CustomLookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int wi
     g.strokePath(dialHead, juce::PathStrokeType(lineW, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 }
 
-void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int width, int height,
+void jr::CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int width, int height,
     float sliderPos,
     float minSliderPos,
     float maxSliderPos,
@@ -174,7 +174,7 @@ void CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, int wi
     }
 }
 
-void CustomLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& button,
+void jr::CustomLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& button,
     bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
     if (dynamic_cast<jr::DarkModeButton*>(&button) != nullptr)
@@ -208,7 +208,7 @@ void CustomLookAndFeel::drawToggleButton(juce::Graphics& g, juce::ToggleButton& 
 }
 
 
-void CustomLookAndFeel::drawDarkModeButton(juce::Graphics& g, juce::Component& component, const bool ticked, juce::Colour colour)
+void jr::CustomLookAndFeel::drawDarkModeButton(juce::Graphics& g, juce::Component& component, const bool ticked, juce::Colour colour)
 {
     auto size = juce::jmin(component.getBounds().getWidth(), component.getBounds().getHeight()) * 0.5f;
     auto centre = component.getLocalBounds().getCentre().toFloat();
@@ -216,7 +216,7 @@ void CustomLookAndFeel::drawDarkModeButton(juce::Graphics& g, juce::Component& c
     ticked ? drawSun(g, size, centre, colour) : drawCrescent(g, size, centre, colour);
 }
 
-void CustomLookAndFeel::drawCrescent(juce::Graphics& g, float size, juce::Point<float> c, juce::Colour colour)
+void jr::CustomLookAndFeel::drawCrescent(juce::Graphics& g, float size, juce::Point<float> c, juce::Colour colour)
 {
     juce::Path crescent;
     
@@ -247,7 +247,7 @@ void CustomLookAndFeel::drawCrescent(juce::Graphics& g, float size, juce::Point<
     g.strokePath(crescent, juce::PathStrokeType(1.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 }
 
-void CustomLookAndFeel::drawSun(juce::Graphics& g, float size, juce::Point<float> c, juce::Colour colour)
+void jr::CustomLookAndFeel::drawSun(juce::Graphics& g, float size, juce::Point<float> c, juce::Colour colour)
 {
     g.setColour(colour);
 
@@ -269,7 +269,7 @@ void CustomLookAndFeel::drawSun(juce::Graphics& g, float size, juce::Point<float
     g.strokePath(rays, juce::PathStrokeType(1.0f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 }
 
-juce::Point<float> CustomLookAndFeel::getPointOnCircle(float r, float theta, juce::Point<float> c)
+juce::Point<float> jr::CustomLookAndFeel::getPointOnCircle(float r, float theta, juce::Point<float> c)
 {
     return juce::Point<float>(
         c.getX() + r * juce::dsp::FastMathApproximations::cos(theta),
@@ -279,7 +279,7 @@ juce::Point<float> CustomLookAndFeel::getPointOnCircle(float r, float theta, juc
 
 // ============= Extra Methods
 
-juce::Colour CustomLookAndFeel::getVisualiserColour(float brightness)
+juce::Colour jr::CustomLookAndFeel::getVisualiserColour(float brightness)
 {
     auto b = 0.35f + (jr::Utils::constrainFloat(brightness) * 0.38f);
     if (darkMode)

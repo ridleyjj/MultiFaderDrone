@@ -52,7 +52,7 @@ private:
     */
     void refreshStyles();
 
-    CustomLookAndFeel myLookAndFeel;
+    jr::CustomLookAndFeel myLookAndFeel;
 
     // sliders and labels
 
@@ -79,7 +79,7 @@ private:
 
     // Visualiser
 
-    jr::OscillatorVisualiser visualiser{};
+    jr::OscillatorVisualiser visualiser{ myLookAndFeel };
 
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

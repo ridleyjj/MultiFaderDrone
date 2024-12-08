@@ -12,13 +12,14 @@
 #include <JuceHeader.h>
 #include <vector>
 #include "../Audio/jr_FaderPairs.h"
+#include "../../LookAndFeel/StyleSheet.h"
 
 namespace jr
 {
     class OscillatorVisualiser : public juce::Component
     {
     public:
-        OscillatorVisualiser() {}
+        OscillatorVisualiser(jr::CustomLookAndFeel& _lookAndFeel) : lookAndFeel(_lookAndFeel) {}
 
         void paint(juce::Graphics&) override;
         
@@ -70,6 +71,7 @@ namespace jr
         */
         void drawWobble(juce::Graphics& g, juce::Point<float>& p, float size);
 
+        jr::CustomLookAndFeel& lookAndFeel;
         float maxDotSize{ 28.0f };
         float maxRadius{ 4.0f };                                                // scale value that determines how far out the visualiser will spread out.
         float minRadius{ 0.2f };                                                // scale value that determines how clustered the visualiser will be when mono.
