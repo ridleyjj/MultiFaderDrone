@@ -15,6 +15,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     : AudioProcessorEditor (&p), audioProcessor (p)
 {
     juce::LookAndFeel::setDefaultLookAndFeel(&myLookAndFeel);
+    setLookAndFeel(&myLookAndFeel);
 
     // sliders
 
@@ -85,6 +86,7 @@ void MultiFaderDroneAudioProcessorEditor::initSimpleSliderWithRange(juce::Slider
 
 MultiFaderDroneAudioProcessorEditor::~MultiFaderDroneAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
     juce::LookAndFeel::setDefaultLookAndFeel(nullptr);
     stopTimer();
 }

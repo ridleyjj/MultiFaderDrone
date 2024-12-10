@@ -69,13 +69,13 @@ private:
 
     std::unique_ptr<jr::TwoHeadedSliderAttachment> freqRangeAttachment;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lockRangeAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> darkModeAttachment;
-
     // buttons
     
     juce::ToggleButton lockRangeButton{ "Lock Range" };
     jr::DarkModeButton darkModeButton{};
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> lockRangeAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> darkModeAttachment;
 
     // Visualiser
 
