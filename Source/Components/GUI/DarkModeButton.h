@@ -13,6 +13,10 @@
 
 namespace jr
 {
+    /*
+    A simple wrapper class so that I can use casting to determine if a ToggleButton is the DarkModeButton
+    in the look and feel class, and apply special styling
+    */
     class DarkModeButton : public juce::ToggleButton
     {
     public:

@@ -16,6 +16,9 @@
 
 namespace jr
 {
+    /*
+    The visualiser component that will use an array of FaderPair objects to draw circles which represent each oscillator
+    */
     class OscillatorVisualiser : public juce::Component
     {
     public:
@@ -23,8 +26,15 @@ namespace jr
 
         void paint(juce::Graphics&) override;
         
+        /*
+        Sets the FaderPairs that will be referenced whilst painting the visualiser
+        */
         void setPairs(std::shared_ptr<std::vector<FaderPairs::FaderPair>> _pairs) { pairs = _pairs; }
 
+        /*
+        Sets how many oscillators are currently active in order to limit the loops in paint. Saved as a variable in order to save
+        time from calculation every paint call
+        */
         void setNumActivePairs(int _numActivePairs) { numActivePairs = _numActivePairs; }
 
     private:
@@ -72,7 +82,7 @@ namespace jr
         void drawWobble(juce::Graphics& g, juce::Point<float>& p, float size);
 
         jr::CustomLookAndFeel& lookAndFeel;
-        float maxDotSize{ 28.0f };
+        float maxDotSize{ 28.0f };                                              // maximum size for a dot in the visualiser (the size the dot will be at max volume)
         float maxRadius{ 4.0f };                                                // scale value that determines how far out the visualiser will spread out.
         float minRadius{ 0.2f };                                                // scale value that determines how clustered the visualiser will be when mono.
         int numActivePairs{ 0 };                                                // number of pairs currently playing - saved to avoid unnecessary calculation or loops
@@ -89,7 +99,7 @@ namespace jr
             juce::Point<float>(27.0f, -60.2f),
             juce::Point<float>(60.2f, 27.0f),
         };
-        std::shared_ptr<std::vector<FaderPairs::FaderPair>> pairs{ nullptr };               // pointer to the array of FaderPair objects that will be visualised
+        std::shared_ptr<std::vector<FaderPairs::FaderPair>> pairs{ nullptr };   // pointer to the array of FaderPair objects that will be visualised
         juce::Random random{};
         juce::Point<float> relativeCentre{ 0.0f, 0.0f };                        // centre of visualiser relative to its own top left corner, saved on resize to avoid unnecessary repeated conversions
 

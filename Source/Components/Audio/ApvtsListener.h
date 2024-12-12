@@ -14,6 +14,9 @@
 
 namespace jr
 {
+    /*
+    A simple class that inherits from juce::APVTS::Listener, with a callback that will be called on parameter changed
+    */
     class ApvtsListener : public juce::AudioProcessorValueTreeState::Listener
     {
     public:

@@ -13,6 +13,10 @@
 
 namespace jr
 {
+    /*
+    A class that allows for a two-headed JUCE slider to be attached to two distinct Audio Parameters in the processor.
+    Includes functionality for 'locking' the two heads so that they move together and remain at a constant range
+    */
     class TwoHeadedSliderAttachment : public juce::Slider::Listener
     {
     public:
@@ -30,6 +34,8 @@ namespace jr
 
             slider.addListener(this);
 
+            /* important to sendInitialUpdate for maxValue first, as they both start initially at 0 and therefore if we try to set the min value to anything
+            above 0 before setting the max value, the slider will limit the min value to 0 as the min head cannot surpass the max head */
             maxValueParamAttachment.sendInitialUpdate();
             minValueParamAttachment.sendInitialUpdate();
 
@@ -59,18 +65,27 @@ namespace jr
 
     private:
         juce::Slider& slider;
+
+        /*
+        Updates slider from AudioParameter change
+        */
         std::function<void(float)> updateSliderMinValue { [&](float newValue)
             { 
                 slider.setMinValue(newValue, juce::dontSendNotification);
                 currentMinValue = slider.getMinValue();
             }
         };
+
+        /*
+        Updates slider from AudioParameter change
+        */
         std::function<void(float)> updateSliderMaxValue{ [&](float newValue)
             {
                 slider.setMaxValue(newValue, juce::dontSendNotification);
                 currentMaxValue = slider.getMaxValue();
             }
         };
+
         juce::ParameterAttachment minValueParamAttachment;
         juce::ParameterAttachment maxValueParamAttachment;
         std::function<bool(void)> getIsLocked;
