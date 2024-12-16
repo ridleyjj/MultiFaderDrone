@@ -72,7 +72,7 @@ public:
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
-    void setNumPairs(int _numPairs) { faders.setNumPairs(_numPairs); }
+    void setNumOscs(int _numOscs) { faders.setNumOscs(_numOscs); }
     
     void setLfoRate(float _rate) { faders.setLfoRate(jr::Utils::constrainFloat(_rate)); }
 
@@ -103,12 +103,12 @@ public:
 
     juce::AudioProcessorValueTreeState& getAPVTS() { return apvts; }
 
-    std::shared_ptr<std::vector<FaderPairs::FaderPair>> getPairs() { return faders.getPairs(); }
+    std::shared_ptr<std::vector<FaderPairs::RandomOsc>> getOscs() { return faders.getOscs(); }
 
 private:
     float maxGain = 0.3;
-    FaderPairs faders;              // pair of connected faders
-    int maxPairCount{ 50 };
+    FaderPairs faders;              // class containing all RandomOscs controlled by their own random faders
+    int maxOscCount{ 100 };
     float maxFreq{ 2000.0f };       // max freq in Hz that Osc Freq slider can be set
     float minFreq{ 80.0f };         // min freq in Hz that Osc Freq slider can be set
     float defaultMinFreq{ 120.0f };
@@ -121,7 +121,7 @@ private:
 
     jr::ApvtsListener gainListener{ [&](float newValue) { setGain(newValue); } };
     jr::ApvtsListener rateListener{ [&](float newValue) { setLfoRate(newValue); } };
-    jr::ApvtsListener voicesListener{ [&](float newValue) { setNumPairs(newValue); } };
+    jr::ApvtsListener voicesListener{ [&](float newValue) { setNumOscs(newValue); } };
     jr::ApvtsListener stereoWidthListener{ [&](float newValue) { setStereoWidth(newValue); } };
     jr::ApvtsListener minFreqRangeListener{ [&](float newValue) { setMinOscFreq(newValue); } };
     jr::ApvtsListener maxFreqRangeListener{ [&](float newValue) { setMaxOscFreq(newValue); } };

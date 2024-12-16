@@ -94,7 +94,7 @@ MultiFaderDroneAudioProcessorEditor::~MultiFaderDroneAudioProcessorEditor()
 //==============================================================================
 void MultiFaderDroneAudioProcessorEditor::timerCallback()
 {
-    visualiser.setPairs(audioProcessor.getPairs());
+    visualiser.setPairs(audioProcessor.getOscs());
     visualiser.setNumActivePairs(voicesSlider.getValue());
     visualiser.repaint();
 }

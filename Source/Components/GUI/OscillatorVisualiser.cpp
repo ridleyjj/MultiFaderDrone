@@ -24,6 +24,7 @@ void jr::OscillatorVisualiser::resized()
 void jr::OscillatorVisualiser::paint(juce::Graphics& g)
 {
     bool direction = true;
+    int pointIndex = 0;
     for (int i{}; i < oscs.get()->size(); i++)
     {
         FaderPairs::RandomOsc& osc = oscs.get()->at(i);
@@ -32,11 +33,16 @@ void jr::OscillatorVisualiser::paint(juce::Graphics& g)
             continue; // skip if voice isn't playing
         }
         
-        auto p = getCircumferencePoint(i);
+        auto p = getCircumferencePoint(pointIndex);
 
         drawDotForOsc(g, osc, direction, p);
 
         direction = !direction; // alternate direction
+        
+        if (i % 2 > 0)
+        {
+            pointIndex++;
+        }
     }
 }
 

@@ -203,7 +203,6 @@ protected:
 	float maxOscFreq{ 1200.0f };				// maximum osc frequency when picking a random frequency in Hz
 	float stereoWidth{ 0.0f };					// pan range 0 - 1.0
 	juce::SmoothedValue<float> maxLevel{};		// the maximum combined level of each osc fader - will be referenced by all oscillators
-	juce::SmoothedValue<float> avgLevel{};		// the max level for each oscillator within a pair so that their combined level does not exceed 1
 	float normalRatio{ 1.0f };					// the factor to multiply current osc level by to get level in range of 0-1. Saving to avoid unecessary calculation repetition
 
 };

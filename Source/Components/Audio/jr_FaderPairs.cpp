@@ -141,7 +141,7 @@ float FaderPairs::RandomOsc::processLevel()
 	{
 		resetOsc();
 	}
-	return lfoVal * parent.avgLevel.getCurrentValue();
+	return lfoVal * parent.maxLevel.getCurrentValue();
 }
 
 //=========================================//
@@ -159,7 +159,6 @@ void FaderPairs::init(size_t numOscs, float _sampleRate, size_t maxNumOscs)
 
 	gain.reset(sampleRate, 0.1f);
 	maxLevel.reset(_sampleRate, rampTime);
-	avgLevel.reset(_sampleRate, rampTime);
 
 	if (_oscs.size() == 0)
 	{
