@@ -23,18 +23,20 @@ void jr::OscillatorVisualiser::resized()
 
 void jr::OscillatorVisualiser::paint(juce::Graphics& g)
 {
-    for (int i{}; i < pairs.get()->size(); i++)
+    bool direction = true;
+    for (int i{}; i < oscs.get()->size(); i++)
     {
-        FaderPairs::FaderPair& pair = pairs.get()->at(i);
-        if (pair.getIsSilenced())
+        FaderPairs::RandomOsc& osc = oscs.get()->at(i);
+        if (osc.getIsSilenced())
         {
             continue; // skip if voice isn't playing
         }
         
         auto p = getCircumferencePoint(i);
 
-        drawDotForOsc(g, pair, 0, p);
-        drawDotForOsc(g, pair, 1, p);
+        drawDotForOsc(g, osc, direction, p);
+
+        direction = !direction; // alternate direction
     }
 }
 
@@ -58,22 +60,22 @@ juce::Point<float> jr::OscillatorVisualiser::getCircumferencePoint(int i)
     return circlePoints.at(index);
 }
 
-juce::Colour jr::OscillatorVisualiser::getColourFromOsc(FaderPairs::FaderPair& pair, int index)
+juce::Colour jr::OscillatorVisualiser::getColourFromOsc(FaderPairs::RandomOsc& osc)
 {
-    auto oscNormalisedFreq = (pair.getOscFrequency(index) - minFreq) / maxFreq;
+    auto oscNormalisedFreq = (osc.getOscFrequency() - minFreq) / maxFreq;
     return lookAndFeel.getVisualiserColour(oscNormalisedFreq);
 }
 
-float jr::OscillatorVisualiser::getDotSizeFromOsc(FaderPairs::FaderPair& pair, int index)
+float jr::OscillatorVisualiser::getDotSizeFromOsc(FaderPairs::RandomOsc& osc)
 {
-    auto size = maxDotSize * pair.getNormalisedOscLevel(index);
+    auto size = maxDotSize * osc.getNormalisedOscLevel();
     return jr::Utils::constrainFloat(size, 0.0f, maxDotSize);
 }
 
-juce::Point<float> jr::OscillatorVisualiser::getPointFromOsc(FaderPairs::FaderPair& pair, int index, juce::Point<float>& circumferencePoint)
+juce::Point<float> jr::OscillatorVisualiser::getPointFromOsc(FaderPairs::RandomOsc& osc, bool direction, juce::Point<float>& circumferencePoint)
 {
-    float radius = minRadius + (abs(pair.getPan(index) - 0.5) * maxRadius);
-    auto mod = index == 0 ? 1.0f : -1.0f; // determines which direction point should be from centre based on index
+    float radius = minRadius + (abs(osc.getPan() - 0.5) * maxRadius);
+    auto mod = direction ? 1.0f : -1.0f; // determines which direction point should be from centre based on index
     return relativeCentre + (circumferencePoint * radius) * mod;
 }
 
@@ -100,8 +102,8 @@ void jr::OscillatorVisualiser::drawWobble(juce::Graphics& g, juce::Point<float>&
     g.fillEllipse(juce::Rectangle<float>(size, size).withCentre(p));
 }
 
-void jr::OscillatorVisualiser::drawDotForOsc(juce::Graphics& g, FaderPairs::FaderPair& pair, int index, juce::Point<float>& circumferencePoint)
+void jr::OscillatorVisualiser::drawDotForOsc(juce::Graphics& g, FaderPairs::RandomOsc& pair, bool direction, juce::Point<float>& circumferencePoint)
 {
-    g.setColour(getColourFromOsc(pair, index));
-    drawWobble(g, getPointFromOsc(pair, index, circumferencePoint), getDotSizeFromOsc(pair, index));
+    g.setColour(getColourFromOsc(pair));
+    drawWobble(g, getPointFromOsc(pair, direction, circumferencePoint), getDotSizeFromOsc(pair));
 }

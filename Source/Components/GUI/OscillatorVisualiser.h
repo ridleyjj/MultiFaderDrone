@@ -29,7 +29,7 @@ namespace jr
         /*
         Sets the FaderPairs that will be referenced whilst painting the visualiser
         */
-        void setPairs(std::shared_ptr<std::vector<FaderPairs::FaderPair>> _pairs) { pairs = _pairs; }
+        void setPairs(std::shared_ptr<std::vector<FaderPairs::RandomOsc>> _pairs) { oscs = _pairs; }
 
         /*
         Sets how many oscillators are currently active in order to limit the loops in paint. Saved as a variable in order to save
@@ -54,26 +54,26 @@ namespace jr
         /*
         Returns a colour based on the frequency of the oscillator at the given index in the given FaderPair
         */
-        juce::Colour getColourFromOsc(FaderPairs::FaderPair& pair, int index);
+        juce::Colour getColourFromOsc(FaderPairs::RandomOsc& osc);
 
         /*
         Returns the size of dot to draw based on the current level of the given oscillator at the given index in the FaderPair.
         Size will be constrained between the max Dot size and 0
         */
-        float getDotSizeFromOsc(FaderPairs::FaderPair& pair, int index);
+        float getDotSizeFromOsc(FaderPairs::RandomOsc& osc);
 
         /*
         Returns the point to draw the dot at for oscillator at the given index in the FaderPair.
         circumferencePoint is the point on a circle's circumference (with centre 0 and radius 66)
         marking the angle at which the dot should be drawn.
         */
-        juce::Point<float> getPointFromOsc(FaderPairs::FaderPair& pair, int index, juce::Point<float>& circumferencePoint);
+        juce::Point<float> getPointFromOsc(FaderPairs::RandomOsc& osc, bool direction, juce::Point<float>& circumferencePoint);
 
         /*
         Draws a dot representation of the oscillator at the given index in the FaderPair, using
         circumferencePoint as the point on a 0 centred circle that matches the angle of the desired dot.
         */
-        void drawDotForOsc(juce::Graphics& g, FaderPairs::FaderPair& pair, int index, juce::Point<float>& circumferencePoint);
+        void drawDotForOsc(juce::Graphics& g, FaderPairs::RandomOsc& osc, bool direction, juce::Point<float>& circumferencePoint);
 
         /*
         Draws a dot with additional overlayed dots with random noise to cause a dynamic 'buzzing'/'wobbling' effect. Draws a
@@ -85,7 +85,7 @@ namespace jr
         float maxDotSize{ 28.0f };                                              // maximum size for a dot in the visualiser (the size the dot will be at max volume)
         float maxRadius{ 4.0f };                                                // scale value that determines how far out the visualiser will spread out.
         float minRadius{ 0.2f };                                                // scale value that determines how clustered the visualiser will be when mono.
-        int numActivePairs{ 0 };                                                // number of pairs currently playing - saved to avoid unnecessary calculation or loops
+        int numActivePairs{ 0 };                                                // number of oscs currently playing - saved to avoid unnecessary calculation or loops
         float minFreq = 80.0f;                                                  // min Frequency (in Hz) used for colour grading
         float maxFreq = 1700.0f;                                                // max Frequency (in Hz) used for colour grading
         std::vector<juce::Point<float>> circlePoints                            // approximate points on a semi-circle with centre point 0,0 and radius of 66. Used to save calc costs
@@ -99,7 +99,7 @@ namespace jr
             juce::Point<float>(27.0f, -60.2f),
             juce::Point<float>(60.2f, 27.0f),
         };
-        std::shared_ptr<std::vector<FaderPairs::FaderPair>> pairs{ nullptr };   // pointer to the array of FaderPair objects that will be visualised
+        std::shared_ptr<std::vector<FaderPairs::RandomOsc>> oscs{ nullptr };   // pointer to the array of FaderPair objects that will be visualised
         juce::Random random{};
         juce::Point<float> relativeCentre{ 0.0f, 0.0f };                        // centre of visualiser relative to its own top left corner, saved on resize to avoid unnecessary repeated conversions
 

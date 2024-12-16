@@ -55,7 +55,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     lockRangeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::LOCK_RANGE.toString(), lockRangeButton);
     darkModeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::DARK_MODE.toString(), darkModeButton);
 
-    visualiser.setPairs(audioProcessor.getPairs());
+    visualiser.setPairs(audioProcessor.getOscs());
     addAndMakeVisible(visualiser);
 
     // Make sure that before the constructor has finished, you've set the
