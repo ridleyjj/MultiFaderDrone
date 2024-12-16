@@ -21,9 +21,9 @@ public:
 	std::pair<float, float> process();
 
 	/*
-	Sets the number of desired active pairs and silences / starts voices as needed.
+	Sets the number of desired active oscs and silences / starts voices as needed.
 	*/
-	void setNumPairs(int numPairs);
+	void setNumOscs(int numOscs);
 
 	/*
 	Sets LFO Rate which effectively controls the range of LFO frequency values. Rate is between 0 and 1
@@ -45,14 +45,14 @@ public:
 	*/
 	void setStereoWidth(float width);
 
-	// =========================== Nested FaderPair class start ===========================
+	// =========================== Nested RandomOsc class start ===========================
 	// This class is nested so that it can access protected members of the FadersPairs class,
 	// allowing these to be shared to avoid unnecessary repetition or memory use
 
-	class FaderPair
+	class RandomOsc
 	{
 	public:
-		FaderPair(FaderPairs& _parent) : parent(_parent) {};
+		RandomOsc(FaderPairs& _parent) : parent(_parent) {};
 
 		/*
 		Initialises oscillators and LFOs with sample rate. Call before playing.
@@ -65,7 +65,7 @@ public:
 		void updateSampleRate(float _sampleRate);
 
 		/*
-		Processes the pair of oscillators and returns their next sample out values.
+		Processes the oscillator and returns the next sample out values.
 		Call each sample.
 		*/
 		std::pair<float, float> process();
@@ -93,55 +93,34 @@ public:
 		bool getIsSilenced() { return silenced && masterGain.getCurrentValue() == 0.0f; }
 
 		/*
-		Returns the current level of oscillator at given index, normalised to be between 0 and 1
+		Returns the current level of oscillator, normalised to be between 0 and 1
 		*/
-		float getNormalisedOscLevel(int index)
+		float getNormalisedOscLevel()
 		{
-			if (index == 0)
-			{
-				return (parent.avgLevel.getCurrentValue() + delta) * parent.normalRatio; // osc 1 current level
-			}
-			else
-			{
-				return (parent.avgLevel.getCurrentValue() - delta) * parent.normalRatio; // osc 2 current level
-			}
+			return currentLevel * parent.normalRatio;
 		}
 
 		/*
-		Returns the current frequency of the oscillator at the given index. Returns 0.0f if an invalid index is given
+		Returns the current frequency of the oscillator at the given index
 		*/
-		float getOscFrequency(int oscIndex)
+		float getOscFrequency()
 		{
-			if (oscIndex < 0 || oscIndex > 2)
-			{
-				return 0.0f;
-			}
-			else
-			{
-				return oscs.at(oscIndex).getCurrentFrequency();
-			}
+			return osc.getCurrentFrequency();
 		}
 
 		/*
-		Returns the current pan value of the oscillator at the given index. Returns 0.0f if an invalid index is given
+		Returns the current pan value of the oscillator
 		*/
-		float getPan(int oscIndex)
+		float getPan()
 		{
-			if (oscIndex < 0 || oscIndex > 2)
-			{
-				return 0.0f;
-			}
-			else
-			{
-				return pan.at(oscIndex);
-			}
+			return pan;
 		}
 
 	private:
 		/*
-		initialises Oscs if they have not yet been created.
+		initialises Osc if it has not yet been created.
 		*/
-		void initOscs(float _sampleRate);
+		void initOsc(float _sampleRate);
 
 		/*
 		Resets the frequencies of the oscillators and the LFO to new randomised values.
@@ -149,14 +128,14 @@ public:
 		void resetFrequencies();
 
 		/*
-		Resets the frequency of the oscillator of the given index to a new randomised value.
+		Resets the frequency of the oscillator to a new randomised value.
 		*/
-		void resetOsc(int index);
+		void resetOsc();
 
 		/*
-		Resets the panning of the oscillator of the given index to a new randomised value.
+		Resets the panning of the oscillator to a new randomised value.
 		*/
-		void resetPan(int index);
+		void resetPan();
 
 		/*
 		Sets the LFO frequency to its new value, using the scale value (between 0 and 1) to set the freq within the lfoSpread and lfoRate
@@ -164,30 +143,30 @@ public:
 		float getLfoFreqFromScale(float scale);
 
 		/*
-		Processes the level values of both oscillators and returns the current LFO level value to be used to calculate
-		the level of each osc output.
-		Also checks whether either oscillator is currently silenced and resets it's frequencies and panning if so.
+		Processes the level values of the oscillator and returns the current LFO level value to be used to calculate
+		the level of output.
+		Also checks whether oscillator is currently silenced and resets it's frequencies and panning if so.
 		*/
-		float processLevels();
+		float processLevel();
 
 		FaderPairs& parent;										// contains shared values such as Frequency Range and Pan Range
-		SineOsc lfo;											// LFO to control mix level of faders					
-		std::vector<SineOsc > oscs;								// pair of oscillators
+		SineOsc lfo;											// LFO to control level of fader					
+		SineOsc osc;											// Sine oscillator
 		juce::SmoothedValue<float> masterGain{ 0.0f };			// master gain for fading in and out
 		bool silenced{ false };
 		bool waitingToRestart{ false };							// true if the voice is waiting to reach 0 master gain before restarting
 		float lfoBaseFreq{};									// scale value between 0-1 that will be used to set the current LFO rate based on the GUI parameter range set
 		std::pair<float, float> out{ 0.5f, 0.5f };				// signal out values left and right
-		std::vector<float> pan{ 0.5f, 0.5f };					// array of pan values for oscs, 0=L 1=R 0.5=C
+		float pan{ 0.5f };										// pan value for osc, 0=L 1=R 0.5=C
 		bool isInitialised{ false };							// false if initialisation is still in progress
-		float delta{};											// saved so that levels can be calculated and sent to the GUI
+		float currentLevel{};									// saved so that level can be sent easily to the GUI
 	};
-	// =========================== Nested FaderPair class end ===========================
+	// =========================== Nested RandomOsc class end ===========================
 
 	/*
-	Returns a pointer to the vector of oscillator pairs, used so that these can be referenced in the GUI for drawing the sound visualiser 
+	Returns a pointer to the vector of oscillators, used so that these can be referenced in the GUI for drawing the sound visualiser 
 	*/
-	std::shared_ptr<std::vector<FaderPairs::FaderPair>> getPairs() { return std::make_shared <std::vector<FaderPairs::FaderPair>>(_pairs); }
+	std::shared_ptr<std::vector<FaderPairs::RandomOsc>> getOscs() { return std::make_shared <std::vector<FaderPairs::RandomOsc>>(_oscs); }
 
 private:
 	/*
@@ -195,9 +174,9 @@ private:
 	*/
 	void setGainOffset();
 
-	std::vector<FaderPair> _pairs{};
+	std::vector<RandomOsc> _oscs{};
 	float sampleRate{};
-	int numActivePairs{ 0 };					// how many pairs are currently active i.e. not silenced
+	int numActiveOscs{ 0 };						// how many oscs are currently active i.e. not silenced
 	float gainOffset{};							// offset to manage gain difference between few voices and many voices
 	juce::SmoothedValue<float> gain{ 0.0f };
 	std::pair<float, float> out{};				// signal out values left and right
@@ -214,7 +193,7 @@ protected:
 
 	void setMaxLevel(float _maxLevel);
 
-	// variables that are referenced by the list of FaderPair objects
+	// variables that are referenced by the list of RandomOsc objects
 	float rampTime{ 0.2f };
 	juce::Random random;						// used for generating random frequency
 	float lfoRate{ 0.0f };						// rate to modify the LFO freq by (0-1)
@@ -223,8 +202,8 @@ protected:
 	float minOscFreq{ 120.0f };					// minimum osc frequency when generating random in Hz
 	float maxOscFreq{ 1200.0f };				// maximum osc frequency when picking a random frequency in Hz
 	float stereoWidth{ 0.0f };					// pan range 0 - 1.0
-	juce::SmoothedValue<float> maxLevel{};		// the maximum combined level of both faders - will be referenced by all oscillator pairs
-	juce::SmoothedValue<float> avgLevel{};		// the average level that will serve as a max for each oscillator within a pair so that their combined level does not exceed the max
+	juce::SmoothedValue<float> maxLevel{};		// the maximum combined level of each osc fader - will be referenced by all oscillators
+	juce::SmoothedValue<float> avgLevel{};		// the max level for each oscillator within a pair so that their combined level does not exceed 1
 	float normalRatio{ 1.0f };					// the factor to multiply current osc level by to get level in range of 0-1. Saving to avoid unecessary calculation repetition
 
 };
