@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include <vector>
 #include "jr_Oscillators.h"
+#include "jr_NormalisedOscs.h"
 #include "../../Utils/jr_Utils.h"
 
 class FaderPairs
@@ -138,6 +139,11 @@ public:
 		void resetPan();
 
 		/*
+		Resets the waveshape of the oscillator to a new randomised value.
+		*/
+		void resetShape();
+
+		/*
 		Sets the LFO frequency to its new value, using the scale value (between 0 and 1) to set the freq within the lfoSpread and lfoRate
 		*/
 		float getLfoFreqFromScale(float scale);
@@ -151,7 +157,7 @@ public:
 
 		FaderPairs& parent;										// contains shared values such as Frequency Range and Pan Range
 		SineOsc lfo;											// LFO to control level of fader					
-		SineOsc osc;											// Sine oscillator
+		MultiWaveOsc osc;										// Audible oscillator
 		juce::SmoothedValue<float> masterGain{ 0.0f };			// master gain for fading in and out
 		bool silenced{ false };
 		bool waitingToRestart{ false };							// true if the voice is waiting to reach 0 master gain before restarting
@@ -194,7 +200,7 @@ protected:
 	void setMaxLevel(float _maxLevel);
 
 	// variables that are referenced by the list of RandomOsc objects
-	float rampTime{ 0.2f };
+	float rampTime{ 0.05f };
 	juce::Random random;						// used for generating random frequency
 	float lfoRate{ 0.0f };						// rate to modify the LFO freq by (0-1)
 	float minLfoFreq{ 0.01f };					// minimum lfo frequency when generating random in Hz

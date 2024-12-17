@@ -106,7 +106,7 @@ public:
     std::shared_ptr<std::vector<FaderPairs::RandomOsc>> getOscs() { return faders.getOscs(); }
 
 private:
-    float maxGain = 0.3;
+    float maxGain = 0.6;
     FaderPairs faders;              // class containing all RandomOscs controlled by their own random faders
     int maxOscCount{ 100 };
     float maxFreq{ 2000.0f };       // max freq in Hz that Osc Freq slider can be set

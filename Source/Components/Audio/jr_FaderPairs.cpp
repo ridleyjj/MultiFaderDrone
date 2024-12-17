@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include <vector>
 #include "jr_Oscillators.h"
+#include "jr_NormalisedOscs.h"
 
 //=========================================//
 //************ FaderPair ******************//
@@ -103,7 +104,10 @@ void FaderPairs::RandomOsc::initOsc(float _sampleRate)
 {
 	if (!isInitialised)
 	{
-		osc = SineOsc();
+		osc = MultiWaveOsc();
+		
+		resetShape();
+		
 		osc.setSampleRate(_sampleRate);
 		osc.setFrequency(parent.getRandomOscFrequency());
 	}
@@ -126,6 +130,11 @@ void FaderPairs::RandomOsc::resetPan()
 	pan = 0.5f + (parent.random.nextFloat() - 0.5f) * parent.stereoWidth; // set to 0.5f +/- 0.5f at max or 0.0f at min
 }
 
+void FaderPairs::RandomOsc::resetShape()
+{
+	osc.setWaveShape(parent.random.nextFloat());
+}
+
 float FaderPairs::RandomOsc::getLfoFreqFromScale(float scale)
 {
 	scale = jr::Utils::constrainFloat(scale);
@@ -140,6 +149,8 @@ float FaderPairs::RandomOsc::processLevel()
 	if (lfoVal <= 0.001f)
 	{
 		resetOsc();
+		resetPan();
+		resetShape();
 	}
 	return lfoVal * parent.maxLevel.getCurrentValue();
 }

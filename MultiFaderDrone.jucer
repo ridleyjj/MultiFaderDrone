@@ -14,6 +14,8 @@
       </GROUP>
       <GROUP id="{3333E445-F628-52AB-9959-AD9DB4C2DBED}" name="Components">
         <GROUP id="{D2318D51-C436-51AA-0D75-C2F8BCCBE42D}" name="Audio">
+          <FILE id="cPHtOf" name="jr_NormalisedOscs.h" compile="0" resource="0"
+                file="Source/Components/Audio/jr_NormalisedOscs.h"/>
           <FILE id="kyyFD6" name="ApvtsListener.h" compile="0" resource="0" file="Source/Components/Audio/ApvtsListener.h"/>
           <FILE id="M6SNm5" name="jr_FaderPairs.h" compile="0" resource="0" file="Source/Components/Audio/jr_FaderPairs.h"/>
           <FILE id="nBKpRu" name="jr_FaderPairs.cpp" compile="1" resource="0"
