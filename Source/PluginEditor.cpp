@@ -23,7 +23,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     initSimpleSlider(&gainSlider, &gainLabel, "Master Gain");
     initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate");
     initSimpleSliderWithRange(&stereoSlider, &stereoLabel, "Stereo Width", -1.0, 1.0, 0.01);
-    initSimpleSliderWithRange(&freqRangeSlider, &freqRangeLabel, "Range", 80.0f, 2000.0f, 5.0f);
+    initSimpleSliderWithRange(&freqRangeSlider, &freqRangeLabel, "Range", audioProcessor.getMinFreq(), audioProcessor.getMaxFreq(), 5.0f);
     
     // Two-Headed Slider specifics
 

@@ -110,7 +110,7 @@ private:
     FaderPairs faders;              // class containing all RandomOscs controlled by their own random faders
     int maxOscCount{ 100 };
     float maxFreq{ 2000.0f };       // max freq in Hz that Osc Freq slider can be set
-    float minFreq{ 80.0f };         // min freq in Hz that Osc Freq slider can be set
+    float minFreq{ 60.0f };         // min freq in Hz that Osc Freq slider can be set
     float defaultMinFreq{ 120.0f };
     float defaultMaxFreq{ 1200.0f };
 
