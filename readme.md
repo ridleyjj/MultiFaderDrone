@@ -14,4 +14,4 @@ Currently the project is set up for VST3 and standalone .exe formats, but you ca
 
 ###### More Information
 
-For more information on this project and a demo video, check out its page on my <a href="https://jjridley.com/drone_projectpage">website</a>.
+For more information on this project and a demo video, check out its page on my <a href="https://jjridley.com/multifaderdrone">website</a>.
