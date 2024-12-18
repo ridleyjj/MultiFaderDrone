@@ -25,6 +25,7 @@ namespace ID
     const juce::Identifier FREQ_RANGE_MIN{ "freqRangeMin" };
     const juce::Identifier FREQ_RANGE_MAX{ "freqRangeMax" };
     const juce::Identifier DARK_MODE{ "darkMode" };
+    const juce::Identifier WAVE_SHAPE{ "waveShape" };
 }
 
 //==============================================================================
@@ -87,6 +88,8 @@ public:
 
     void setGain(double _gain) { gain.setTargetValue(jr::Utils::constrainFloat(_gain) * maxGain); }
 
+    void setWaveShape(float _waveShape) { faders.setWaveShape(_waveShape); }
+
     float getMaxFreq() { return maxFreq; }
 
     float getMinFreq() { return minFreq; }
@@ -106,7 +109,7 @@ public:
     std::shared_ptr<std::vector<FaderPairs::RandomOsc>> getOscs() { return faders.getOscs(); }
 
 private:
-    float maxGain = 0.6;
+    float maxGain = 0.75;
     FaderPairs faders;              // class containing all RandomOscs controlled by their own random faders
     int maxOscCount{ 100 };
     float maxFreq{ 2000.0f };       // max freq in Hz that Osc Freq slider can be set
@@ -125,6 +128,7 @@ private:
     jr::ApvtsListener stereoWidthListener{ [&](float newValue) { setStereoWidth(newValue); } };
     jr::ApvtsListener minFreqRangeListener{ [&](float newValue) { setMinOscFreq(newValue); } };
     jr::ApvtsListener maxFreqRangeListener{ [&](float newValue) { setMaxOscFreq(newValue); } };
+    jr::ApvtsListener waveShapeListener{ [&](float newValue) { setWaveShape(newValue); } };
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MultiFaderDroneAudioProcessor)

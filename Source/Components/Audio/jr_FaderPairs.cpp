@@ -3,7 +3,7 @@
 #include <JuceHeader.h>
 #include <vector>
 #include "jr_Oscillators.h"
-#include "jr_NormalisedOscs.h"
+#include "jr_MultiWaveOsc.h"
 
 //=========================================//
 //************ FaderPair ******************//
@@ -23,6 +23,7 @@ void FaderPairs::RandomOsc::init(float _sampleRate, bool _silenced)
 	lfo.setFrequency(getLfoFreqFromScale(lfoBaseFreq));
 
 	resetPan();
+	resetShape();
 
 	initOsc(_sampleRate);
 
@@ -104,9 +105,7 @@ void FaderPairs::RandomOsc::initOsc(float _sampleRate)
 {
 	if (!isInitialised)
 	{
-		osc = MultiWaveOsc();
-		
-		resetShape();
+		osc = jr::MultiWaveOsc();
 		
 		osc.setSampleRate(_sampleRate);
 		osc.setFrequency(parent.getRandomOscFrequency());
@@ -132,7 +131,7 @@ void FaderPairs::RandomOsc::resetPan()
 
 void FaderPairs::RandomOsc::resetShape()
 {
-	osc.setWaveShape(parent.random.nextFloat());
+	osc.setWaveShape(parent.waveShape);
 }
 
 float FaderPairs::RandomOsc::getLfoFreqFromScale(float scale)
@@ -238,6 +237,11 @@ std::pair<float, float> FaderPairs::process()
 	out.second *= gain.getCurrentValue();
 
 	return out;
+}
+
+void FaderPairs::setWaveShape(float _waveShape)
+{
+	waveShape = jr::Utils::constrainFloat(_waveShape);
 }
 
 void FaderPairs::setMaxLevel(float _maxLevel)

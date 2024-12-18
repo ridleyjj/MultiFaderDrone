@@ -60,10 +60,11 @@ private:
     juce::Slider gainSlider{ juce::Slider::SliderStyle::RotaryVerticalDrag, juce::Slider::TextBoxBelow };
     juce::Slider lfoRateSlider{ juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow };
     juce::Slider stereoSlider{ juce::Slider::SliderStyle::TwoValueHorizontal, juce::Slider::NoTextBox };
+    juce::Slider waveShapeSlider{ juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::NoTextBox };
     jr::LockingTwoHeadedSlider freqRangeSlider{ true, juce::Slider::TextBoxBelow };
-    juce::Label voicesLabel, lfoRateLabel, freqRangeLabel, gainLabel, stereoLabel;
+    juce::Label voicesLabel, lfoRateLabel, freqRangeLabel, gainLabel, stereoLabel, waveShapeLabel;
 
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment, lfoRateAttachment, voicesAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> gainAttachment, lfoRateAttachment, voicesAttachment, waveShapeAttachment;
 
     std::unique_ptr<jr::MirrorSliderAttachment> stereoWidthAttachment;
 

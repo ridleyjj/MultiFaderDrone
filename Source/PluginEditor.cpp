@@ -22,6 +22,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices");
     initSimpleSlider(&gainSlider, &gainLabel, "Master Gain");
     initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate");
+    initSimpleSlider(&waveShapeSlider, &waveShapeLabel, "Wave Shape");
     initSimpleSliderWithRange(&stereoSlider, &stereoLabel, "Stereo Width", -1.0, 1.0, 0.01);
     initSimpleSliderWithRange(&freqRangeSlider, &freqRangeLabel, "Range", audioProcessor.getMinFreq(), audioProcessor.getMaxFreq(), 5.0f);
     
@@ -42,6 +43,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     stereoWidthAttachment = std::make_unique<jr::MirrorSliderAttachment>(*(audioProcessor.getAPVTS().getParameter(ID::STEREO_WIDTH)), stereoSlider);
     freqRangeAttachment = std::make_unique<jr::TwoHeadedSliderAttachment>(*(audioProcessor.getAPVTS().getParameter(ID::FREQ_RANGE_MIN)),
         *(audioProcessor.getAPVTS().getParameter(ID::FREQ_RANGE_MAX)), freqRangeSlider, [&]() { return audioProcessor.getRangeLocked(); });
+    waveShapeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.getAPVTS(), ID::WAVE_SHAPE.toString(), waveShapeSlider);
 
     // buttons
 
@@ -60,7 +62,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(600, 500);
+    setSize(600, 600);
 
     startTimerHz(24); // FPS
 }
@@ -106,21 +108,23 @@ void MultiFaderDroneAudioProcessorEditor::paint (juce::Graphics& g)
 
 void MultiFaderDroneAudioProcessorEditor::resized()
 {
-    voicesSlider.setBoundsRelative(0.55f, 0.1f, 0.25f, 0.25f);
+    voicesSlider.setBoundsRelative(0.55f, 0.1f, 0.25f, 0.2f);
 
-    gainSlider.setBoundsRelative(0.2f, 0.1f, 0.25f, 0.25f);
+    gainSlider.setBoundsRelative(0.2f, 0.1f, 0.25f, 0.2f);
 
-    freqRangeSlider.setBoundsRelative(0.02f, 0.1f, 0.2f, 0.65f);
+    freqRangeSlider.setBoundsRelative(0.02f, 0.1f, 0.2f, 0.55f);
 
-    lfoRateSlider.setBoundsRelative(0.78f, 0.1f, 0.2f, 0.65f);
+    lfoRateSlider.setBoundsRelative(0.78f, 0.1f, 0.2f, 0.55f);
 
-    lockRangeButton.setBoundsRelative(0.03f, 0.75f, 0.4f, 0.1f);
+    lockRangeButton.setBoundsRelative(0.03f, 0.65f, 0.4f, 0.1f);
 
-    stereoSlider.setBoundsRelative(0.02f, 0.9f, 0.96f, 0.1f);
+    visualiser.setBoundsRelative(0.25f, 0.3f, 0.5f, 0.5f);
 
-    visualiser.setBoundsRelative(0.25f, 0.33f, 0.5f, 0.5f);
+    darkModeButton.setBoundsRelative(0.92f, 0.0f, 0.06f, 0.06f);
 
-    darkModeButton.setBoundsRelative(0.92f, 0.0f, 0.08f, 0.08f);
+    stereoSlider.setBoundsRelative(0.02f, 0.8f, 0.96f, 0.08f);
+
+    waveShapeSlider.setBoundsRelative(0.02f, 0.92f, 0.96f, 0.08f);
 }
 
 void MultiFaderDroneAudioProcessorEditor::buttonClicked(juce::Button* button)

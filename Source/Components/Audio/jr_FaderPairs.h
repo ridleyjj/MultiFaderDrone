@@ -3,7 +3,7 @@
 #include <JuceHeader.h>
 #include <vector>
 #include "jr_Oscillators.h"
-#include "jr_NormalisedOscs.h"
+#include "jr_MultiWaveOsc.h"
 #include "../../Utils/jr_Utils.h"
 
 class FaderPairs
@@ -45,6 +45,11 @@ public:
 	* Sets the stereo width of the oscillators. 0.0f = mono, 1.0f = full stereo width.
 	*/
 	void setStereoWidth(float width);
+
+	/*
+	Sets the wave shape of the oscillators 0=Sine 1=Triange, between those values mixes the two shapes proportionally
+	*/
+	void setWaveShape(float _waveShape);
 
 	// =========================== Nested RandomOsc class start ===========================
 	// This class is nested so that it can access protected members of the FadersPairs class,
@@ -117,6 +122,8 @@ public:
 			return pan;
 		}
 
+		void setWaveShape(float _waveShape) { osc.setWaveShape(_waveShape); }
+
 	private:
 		/*
 		initialises Osc if it has not yet been created.
@@ -157,7 +164,7 @@ public:
 
 		FaderPairs& parent;										// contains shared values such as Frequency Range and Pan Range
 		SineOsc lfo;											// LFO to control level of fader					
-		MultiWaveOsc osc;										// Audible oscillator
+		jr::MultiWaveOsc osc;										// Audible oscillator
 		juce::SmoothedValue<float> masterGain{ 0.0f };			// master gain for fading in and out
 		bool silenced{ false };
 		bool waitingToRestart{ false };							// true if the voice is waiting to reach 0 master gain before restarting
@@ -210,6 +217,7 @@ protected:
 	float stereoWidth{ 0.0f };					// pan range 0 - 1.0
 	juce::SmoothedValue<float> maxLevel{};		// the maximum combined level of each osc fader - will be referenced by all oscillators
 	float normalRatio{ 1.0f };					// the factor to multiply current osc level by to get level in range of 0-1. Saving to avoid unecessary calculation repetition
+	float waveShape{ 0.0f };					// waveShape to be used by oscialltors, 0=Sine, 1=Tri
 
 };
 

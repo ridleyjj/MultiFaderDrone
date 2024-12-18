@@ -30,6 +30,7 @@ MultiFaderDroneAudioProcessor::MultiFaderDroneAudioProcessor()
     apvts.addParameterListener(ID::STEREO_WIDTH.toString(), &stereoWidthListener);
     apvts.addParameterListener(ID::FREQ_RANGE_MIN.toString(), &minFreqRangeListener);
     apvts.addParameterListener(ID::FREQ_RANGE_MAX.toString(), &maxFreqRangeListener);
+    apvts.addParameterListener(ID::WAVE_SHAPE.toString(), &waveShapeListener);
 }
 
 MultiFaderDroneAudioProcessor::~MultiFaderDroneAudioProcessor()
@@ -40,6 +41,7 @@ MultiFaderDroneAudioProcessor::~MultiFaderDroneAudioProcessor()
     apvts.removeParameterListener(ID::STEREO_WIDTH.toString(), &stereoWidthListener);
     apvts.removeParameterListener(ID::FREQ_RANGE_MIN.toString(), &minFreqRangeListener);
     apvts.removeParameterListener(ID::FREQ_RANGE_MAX.toString(), &maxFreqRangeListener);
+    apvts.removeParameterListener(ID::WAVE_SHAPE.toString(), &waveShapeListener);
 }
 
 //==============================================================================
@@ -235,6 +237,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MultiFaderDroneAudioProcesso
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::STEREO_WIDTH.toString(), "Stereo Width", 0.0f, 1.0f, 0.5f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FREQ_RANGE_MIN.toString(), "Frequency Range Min Value", minFreq, maxFreq, defaultMinFreq));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::FREQ_RANGE_MAX.toString(), "Frequency Range Max Value", minFreq, maxFreq, defaultMaxFreq));
+    layout.add(std::make_unique<juce::AudioParameterFloat>(ID::WAVE_SHAPE.toString(), "Wave Shape Modifier", 0.0f, 1.0f, 0.5f));
 
     return layout;
 }
