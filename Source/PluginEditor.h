@@ -17,6 +17,7 @@
 #include "Components/GUI/TwoHeadedSliderAttachment.h"
 #include "Components/GUI/LockingTwoHeadedSlider.h"
 #include "Components/GUI/DarkModeButton.h"
+#include "Components/GUI/WaveShapeIcon.h"
 
 //==============================================================================
 /**
@@ -69,6 +70,10 @@ private:
     std::unique_ptr<jr::MirrorSliderAttachment> stereoWidthAttachment;
 
     std::unique_ptr<jr::TwoHeadedSliderAttachment> freqRangeAttachment;
+
+    // Slider Icons
+
+    jr::WaveShapeIcon sineIcon{ 0 }, triangleIcon{ 1 };
 
     // buttons
     

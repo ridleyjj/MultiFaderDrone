@@ -57,8 +57,13 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
     lockRangeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::LOCK_RANGE.toString(), lockRangeButton);
     darkModeAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.getAPVTS(), ID::DARK_MODE.toString(), darkModeButton);
 
+    // other visuals
+
     visualiser.setPairs(audioProcessor.getOscs());
     addAndMakeVisible(visualiser);
+
+    addAndMakeVisible(sineIcon);
+    addAndMakeVisible(triangleIcon);
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -124,7 +129,11 @@ void MultiFaderDroneAudioProcessorEditor::resized()
 
     stereoSlider.setBoundsRelative(0.02f, 0.8f, 0.96f, 0.08f);
 
-    waveShapeSlider.setBoundsRelative(0.02f, 0.92f, 0.96f, 0.08f);
+    sineIcon.setBoundsRelative(0.02f, 0.92f, 0.08f, 0.08f);
+
+    waveShapeSlider.setBoundsRelative(0.1f, 0.92f, 0.8f, 0.08f);
+
+    triangleIcon.setBoundsRelative(0.9f, 0.92f, 0.08f, 0.08f);
 }
 
 void MultiFaderDroneAudioProcessorEditor::buttonClicked(juce::Button* button)

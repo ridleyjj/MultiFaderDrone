@@ -40,6 +40,7 @@
                 resource="0" file="Source/Components/GUI/TwoHeadedSliderAttachment.cpp"/>
           <FILE id="t0ViUG" name="TwoHeadedSliderAttachment.h" compile="0" resource="0"
                 file="Source/Components/GUI/TwoHeadedSliderAttachment.h"/>
+          <FILE id="Odwh68" name="WaveShapeIcon.h" compile="0" resource="0" file="Source/Components/GUI/WaveShapeIcon.h"/>
         </GROUP>
       </GROUP>
       <GROUP id="{BC387E24-C95D-9341-76CB-399380B476BC}" name="LookAndFeel">
