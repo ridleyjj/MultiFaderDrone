@@ -65,12 +65,6 @@ namespace jr
 
             void drawDarkModeButton(juce::Graphics& g, juce::Component& component, const bool ticked, juce::Colour colour);
 
-            void drawWaveShapeIcons(juce::Graphics& g, int x, int y, int width, int height,
-                float sliderPos,
-                float minSliderPos,
-                float maxSliderPos,
-                const juce::Slider::SliderStyle style, juce::Slider& slider, int iconWidth);
-
             /*
             Draws a cresent, where size is the diameter of the circle that the crescent would fill, and c is the centre
             */
