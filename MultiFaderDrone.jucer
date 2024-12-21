@@ -32,6 +32,8 @@
                 file="Source/Components/GUI/MirrorSliderAttachment.cpp"/>
           <FILE id="d4VBLZ" name="MirrorSliderAttachment.h" compile="0" resource="0"
                 file="Source/Components/GUI/MirrorSliderAttachment.h"/>
+          <FILE id="Y4n9je" name="NoValueColourSlider.h" compile="0" resource="0"
+                file="Source/Components/GUI/NoValueColourSlider.h"/>
           <FILE id="r9goKT" name="OscillatorVisualiser.cpp" compile="1" resource="0"
                 file="Source/Components/GUI/OscillatorVisualiser.cpp"/>
           <FILE id="kyXXL7" name="OscillatorVisualiser.h" compile="0" resource="0"

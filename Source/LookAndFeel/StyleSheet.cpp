@@ -12,6 +12,7 @@
 #include "../Utils/jr_utils.h"
 #include "../Components/GUI/LockingTwoHeadedSlider.h"
 #include "../Components/GUI/DarkModeButton.h"
+#include "../Components/GUI/NoValueColourSlider.h"
 
 jr::CustomLookAndFeel::CustomLookAndFeel()
 {
@@ -103,6 +104,7 @@ void jr::CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, in
     const juce::Slider::SliderStyle style, juce::Slider& slider)
 {
     auto isLocked = false;
+    auto useSeparateValueColour = true;
 
     // if slider is a LockingTwoHeadedSlider, check whether it is currently locked 
     if (dynamic_cast<jr::LockingTwoHeadedSlider*>(&slider) != nullptr)
@@ -110,10 +112,15 @@ void jr::CustomLookAndFeel::drawLinearSlider(juce::Graphics& g, int x, int y, in
         isLocked = dynamic_cast<jr::LockingTwoHeadedSlider*>(&slider)->isLocked();
     }
 
+    if (dynamic_cast<jr::NoValueColourSlider*>(&slider) != nullptr)
+    {
+        useSeparateValueColour = false;
+    }
+
     auto isTwoVal = (style == juce::Slider::SliderStyle::TwoValueVertical || style == juce::Slider::SliderStyle::TwoValueHorizontal);
 
     auto backgroundTrackColour = slider.findColour(juce::Slider::backgroundColourId);
-    auto valueTrackColour = getValueTrackColour(isLocked);
+    auto valueTrackColour = useSeparateValueColour ? getValueTrackColour(isLocked) : backgroundTrackColour;
 
     auto trackWidth = juce::jmin(6.0f, slider.isHorizontal() ? (float)height * 0.25f : (float)width * 0.25f);
 

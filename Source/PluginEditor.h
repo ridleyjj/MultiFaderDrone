@@ -18,6 +18,7 @@
 #include "Components/GUI/LockingTwoHeadedSlider.h"
 #include "Components/GUI/DarkModeButton.h"
 #include "Components/GUI/WaveShapeIcon.h"
+#include "Components/GUI/NoValueColourSlider.h"
 
 //==============================================================================
 /**
@@ -61,7 +62,7 @@ private:
     juce::Slider gainSlider{ juce::Slider::SliderStyle::RotaryVerticalDrag, juce::Slider::TextBoxBelow };
     juce::Slider lfoRateSlider{ juce::Slider::SliderStyle::LinearVertical, juce::Slider::TextBoxBelow };
     juce::Slider stereoSlider{ juce::Slider::SliderStyle::TwoValueHorizontal, juce::Slider::NoTextBox };
-    juce::Slider waveShapeSlider{ juce::Slider::SliderStyle::LinearHorizontal, juce::Slider::NoTextBox };
+    jr::NoValueColourSlider waveShapeSlider{};
     jr::LockingTwoHeadedSlider freqRangeSlider{ true, juce::Slider::TextBoxBelow };
     juce::Label voicesLabel, lfoRateLabel, freqRangeLabel, gainLabel, stereoLabel, waveShapeLabel;
 

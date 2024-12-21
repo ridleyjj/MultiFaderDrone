@@ -166,4 +166,6 @@ void MultiFaderDroneAudioProcessorEditor::sendNewLookAndFeel()
     freqRangeLabel.sendLookAndFeelChange();
     gainLabel.sendLookAndFeelChange();
     stereoLabel.sendLookAndFeelChange();
+    sineIcon.sendLookAndFeelChange();
+    triangleIcon.sendLookAndFeelChange();
 }
