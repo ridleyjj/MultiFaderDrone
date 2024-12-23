@@ -9,6 +9,8 @@
 */
 
 #include "OscillatorVisualiser.h"
+#include "../../Utils/jr_utils.h"
+#include "../../Utils/jr_juce_utils.h"
 
 void jr::OscillatorVisualiser::resized()
 {
@@ -18,7 +20,7 @@ void jr::OscillatorVisualiser::resized()
     maxRadius = visualiserSize * 0.01f;
     minRadius = visualiserSize * 0.0005f;
 
-    relativeCentre = getLocalBounds().getCentre().toFloat();;
+    relativeCentre = getLocalBounds().getCentre().toFloat();
 }
 
 void jr::OscillatorVisualiser::paint(juce::Graphics& g)
@@ -99,7 +101,7 @@ void jr::OscillatorVisualiser::drawWobble(juce::Graphics& g, juce::Point<float>&
         float centreOffset = size * 0.25f;
 
         // draw 3 extra random circles with noise from centre to create effect like the dot is shaking
-        for (int i{}; i < 3; i++)
+        for (int i{}; i < 4; i++)
         {
             g.fillEllipse(juce::Rectangle<float>(wobbleSize, wobbleSize).withCentre(addRandomNoiseToPoint(p, centreOffset)));
         }
@@ -108,8 +110,39 @@ void jr::OscillatorVisualiser::drawWobble(juce::Graphics& g, juce::Point<float>&
     g.fillEllipse(juce::Rectangle<float>(size, size).withCentre(p));
 }
 
-void jr::OscillatorVisualiser::drawDotForOsc(juce::Graphics& g, FaderPairs::RandomOsc& pair, bool direction, juce::Point<float>& circumferencePoint)
+void jr::OscillatorVisualiser::drawSpikes(juce::Graphics& g, juce::Point<float>& p, float size, FaderPairs::RandomOsc& osc)
 {
-    g.setColour(getColourFromOsc(pair));
-    drawWobble(g, getPointFromOsc(pair, direction, circumferencePoint), getDotSizeFromOsc(pair));
+    // only draw wobbles if more than 2 oscs to give effect like it is caused by interference
+    if (numActivePairs > 1)
+    {
+        if (osc.getWaveShape() < 0.01f) { return; }
+
+        float amount = 0.5f + 0.125f * osc.getWaveShape();
+        float wobbleSize = size * amount;
+
+        for (int i{}; i < 10; i++)
+        {
+            drawTriangle(g, wobbleSize, p, random.nextFloat() * 2.1f);
+        }
+    }
+}
+
+void jr::OscillatorVisualiser::drawTriangle(juce::Graphics& g, float r, juce::Point<float>& c, float offset)
+{
+    auto thirdTwoPi = juce::MathConstants<float>::twoPi / 3.0f;
+    offset = fmod(offset, thirdTwoPi);
+
+    auto point1 = jr::JuceUtils::getPointOnCircle(r, offset + 0.0f, c);
+    auto point2 = jr::JuceUtils::getPointOnCircle(r, offset + thirdTwoPi, c);
+    auto point3 = jr::JuceUtils::getPointOnCircle(r, offset + thirdTwoPi * 2.0f, c);
+    juce::Path triangle{};
+    triangle.addTriangle(point1, point2, point3);
+    g.fillPath(triangle);
+}
+
+void jr::OscillatorVisualiser::drawDotForOsc(juce::Graphics& g, FaderPairs::RandomOsc& osc, bool direction, juce::Point<float>& circumferencePoint)
+{
+    g.setColour(getColourFromOsc(osc));
+    drawWobble(g, getPointFromOsc(osc, direction, circumferencePoint), getDotSizeFromOsc(osc));
+    drawSpikes(g, getPointFromOsc(osc, direction, circumferencePoint), getDotSizeFromOsc(osc), osc);
 }

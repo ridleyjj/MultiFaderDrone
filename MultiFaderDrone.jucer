@@ -9,6 +9,9 @@
   <MAINGROUP id="n0vA9i" name="MultiFaderDrone">
     <GROUP id="{14812914-56F5-7AF6-83E5-A09F001AB246}" name="Source">
       <GROUP id="{F6021A7C-1B13-A4E4-206E-28CAF2F01235}" name="Utils">
+        <FILE id="GRpZNd" name="jr_juce_utils.cpp" compile="1" resource="0"
+              file="Source/Utils/jr_juce_utils.cpp"/>
+        <FILE id="WBFEZ8" name="jr_juce_utils.h" compile="0" resource="0" file="Source/Utils/jr_juce_utils.h"/>
         <FILE id="hyi4Ab" name="jr_utils.cpp" compile="1" resource="0" file="Source/Utils/jr_utils.cpp"/>
         <FILE id="eHpQyy" name="jr_utils.h" compile="0" resource="0" file="Source/Utils/jr_utils.h"/>
       </GROUP>

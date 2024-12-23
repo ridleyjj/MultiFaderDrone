@@ -124,6 +124,8 @@ public:
 
 		void setWaveShape(float _waveShape) { osc.setWaveShape(_waveShape); }
 
+		float getWaveShape() { return osc.getWaveShape(); }
+
 	private:
 		/*
 		initialises Osc if it has not yet been created.

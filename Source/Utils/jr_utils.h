@@ -16,7 +16,7 @@ namespace jr
 	{
 	public:
 		/*
-		* returns the value of the float provided, constrained by the min and max values given. By default constrains between 0 and 1
+		returns the value of the float provided, constrained by the min and max values given. By default constrains between 0 and 1
 		*/
 		static float constrainFloat(float val, float min = 0.0f, float max = 1.0f);
 	};

@@ -55,6 +55,8 @@ namespace jr
             return sine.getCurrentFrequency();
         }
 
+        float getWaveShape() { return shapeFactor.getCurrentValue(); }
+
     private:
         TriOsc tri{};
         SineOsc sine{};
