@@ -76,8 +76,8 @@
   <EXPORTFORMATS>
     <VS2022 targetFolder="Builds/VisualStudio2022">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="MuiltFaderDrone"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="MuiltFaderDrone"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="MultiFaderDrone"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="MultiFaderDrone"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../modules"/>
