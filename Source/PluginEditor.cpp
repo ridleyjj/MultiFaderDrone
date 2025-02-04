@@ -19,7 +19,7 @@ MultiFaderDroneAudioProcessorEditor::MultiFaderDroneAudioProcessorEditor (MultiF
 
     // sliders
 
-    initSimpleSlider(&voicesSlider, &voicesLabel, "Num Voices");
+    initSimpleSlider(&voicesSlider, &voicesLabel, "Voice Count");
     initSimpleSlider(&gainSlider, &gainLabel, "Master Gain");
     initSimpleSlider(&lfoRateSlider, &lfoRateLabel, "Rate");
     initSimpleSlider(&waveShapeSlider, &waveShapeLabel, "Wave Shape");

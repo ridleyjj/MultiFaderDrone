@@ -231,7 +231,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout MultiFaderDroneAudioProcesso
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::GAIN.toString(), "Gain", 0.0f, 1.0f, 1.0f));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::RATE.toString(), "Rate", 0.0f, 1.0f, 0.0f));
-    layout.add(std::make_unique<juce::AudioParameterInt>(ID::NUM_VOICES.toString(), "Num Voices", 1, maxOscCount, 3, "Num Voices"));
+    layout.add(std::make_unique<juce::AudioParameterInt>(ID::NUM_VOICES.toString(), "Voice Count", 1, maxOscCount, 3, "Voice Count"));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::LOCK_RANGE.toString(), "Lock", true, "Lock Frequency Range"));
     layout.add(std::make_unique<juce::AudioParameterBool>(ID::DARK_MODE.toString(), "Dark Mode", false, "Dark Mode"));
     layout.add(std::make_unique<juce::AudioParameterFloat>(ID::STEREO_WIDTH.toString(), "Stereo Width", 0.0f, 1.0f, 0.5f));
