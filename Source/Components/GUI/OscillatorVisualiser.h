@@ -67,30 +67,30 @@ namespace jr
         circumferencePoint is the point on a circle's circumference (with centre 0 and radius 66)
         marking the angle at which the dot should be drawn.
         */
-        juce::Point<float> getPointFromOsc(FaderPairs::RandomOsc& osc, bool direction, juce::Point<float>& circumferencePoint);
+        const juce::Point<float> getPointFromOsc(FaderPairs::RandomOsc& osc, bool direction, const juce::Point<float>& circumferencePoint);
 
         /*
         Draws a dot representation of the oscillator at the given index in the FaderPair, using
         circumferencePoint as the point on a 0 centred circle that matches the angle of the desired dot.
         */
-        void drawDotForOsc(juce::Graphics& g, FaderPairs::RandomOsc& osc, bool direction, juce::Point<float>& circumferencePoint);
+        void drawDotForOsc(juce::Graphics& g, FaderPairs::RandomOsc& osc, bool direction, const juce::Point<float>& circumferencePoint);
 
         /*
         Draws a dot with additional overlayed dots with random noise to cause a dynamic 'buzzing'/'wobbling' effect. Draws a
         dot with given size at point p.
         */
-        void drawWobble(juce::Graphics& g, juce::Point<float>& p, float size);
+        void drawWobble(juce::Graphics& g, const juce::Point<float>& p, float size);
         
         /*
         Draws spikes around the dot, spike size will be relative to waveshape of osc
         */
-        void drawSpikes(juce::Graphics& g, juce::Point<float>& p, float size, FaderPairs::RandomOsc& osc);
+        void drawSpikes(juce::Graphics& g, const juce::Point<float>& p, float size, FaderPairs::RandomOsc& osc);
 
         /*
         draws an equilateral triangle with centre point c, of size that fits in circle of radius r.
         offset will rotate the triangle. Offset wraps 0.0f-(twopi / 3)
         */
-        void drawTriangle(juce::Graphics& g, float r, juce::Point<float>& c, float offset = 0.0f);
+        void drawTriangle(juce::Graphics& g, float r, const juce::Point<float>& c, float offset = 0.0f);
 
         jr::CustomLookAndFeel& lookAndFeel;
         float maxDotSize{ 28.0f };                                              // maximum size for a dot in the visualiser (the size the dot will be at max volume)
